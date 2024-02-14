@@ -40,6 +40,9 @@ This repository currently uses Node v20. If you use `nvm` use the `.nvmrc` file.
 2. Install node packages: `npm i`
 3. Run locally: `npm run start`
 
+## Firebase
+1. Ensure firebase cli is installed `npm i -g firebase-tools`
+
 Contributors / Licensing
 ========================
 
