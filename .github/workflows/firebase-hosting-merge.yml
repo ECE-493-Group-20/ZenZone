@@ -21,4 +21,3 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZENZONE_90B7A }}'
           channelId: live
           projectId: zenzone-90b7a
-          entryPoint: ./app
