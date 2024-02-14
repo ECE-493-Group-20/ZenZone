@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg1"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#383f51;fill-opacity:1;stroke:#870700;stroke-width:0;stroke-opacity:0"
+       id="rect1"
+       width="500"
+       height="500"
+       x="6"
+       y="6"
+       ry="91.027664" />
+    <text
+       xml:space="preserve"
+       style="font-size:600px;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93, ';text-align:center;text-anchor:middle;fill:#d1beb0;fill-opacity:1;stroke:#870700;stroke-width:0;stroke-opacity:0"
+       x="256"
+       y="455.95117"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         x="256"
+         y="455.95117"
+         style="font-size:600px;text-align:center;text-anchor:middle;fill:#d1beb0;fill-opacity:1">Z</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:80px;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93, ';text-align:center;text-anchor:middle;fill:#383f51;fill-opacity:1;stroke:#870700;stroke-width:0;stroke-opacity:0"
+       x="368.92682"
+       y="430.03696"
+       id="text1-3"><tspan
+         sodipodi:role="line"
+         id="tspan1-5"
+         x="368.92682"
+         y="430.03696"
+         style="font-size:80px;text-align:center;text-anchor:middle;fill:#383f51;fill-opacity:1">Z</tspan></text>
+  </g>
+</svg>
