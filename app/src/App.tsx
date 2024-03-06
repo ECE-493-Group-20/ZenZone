@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {getMicrophonePermissions} from './microphone';
 
 function App() {
   return (
@@ -22,17 +23,6 @@ function App() {
       </header>
     </div>
   );
-}
-
-// https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Build_a_phone_with_peerjs/Connect_peers/Get_microphone_permission
-function getMicrophonePermissions() {
-  // Chrome saves this permission and handles the querying as well.
-  navigator.mediaDevices
-  .getUserMedia({video:false, audio:true})
-  .catch((err) => {
-    alert("Microphone permissions denied or closed. Please grant microphone permissions to use the microphone.");
-    alert(err);
-  });
 }
 
 export default App;
