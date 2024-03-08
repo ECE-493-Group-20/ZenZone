@@ -6,7 +6,7 @@ import "./index.css"
 const Map = () => {
     const { isLoaded } = useJsApiLoader({
         id: 'test-script',
-        googleMapsApiKey: 'AIzaSyAKfLRWwh4RB6-ReDOtr6IXq6ucV9OW7vc', // !!! PROD KEY IS RESTRICTED TO WEBSITE
+        googleMapsApiKey: process.env.NODE_ENV === 'production' ? process.env.REACT_APP_MAP_API_KEY || '': '', // !!! PROD KEY IS RESTRICTED TO WEBSITE
     });
     
     const center = {
