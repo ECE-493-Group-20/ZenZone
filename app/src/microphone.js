@@ -73,7 +73,7 @@ async function getMicrophonePermissions() {
     canvasCtx = canvas.getContext("2d");
     canvasCtx.clearRect(0, 0, canvas.width, canvas.height);*/
 
-
+    // Start data collection
     measureAudio();
 }
 
