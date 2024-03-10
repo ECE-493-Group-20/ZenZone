@@ -1,11 +1,12 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {getMicrophonePermissions, stopRecording} from './microphone';
+import {toggleMicrophone} from './microphone';
+import AudioAnalyser from './AudioAnalyser';
 
 // Start of microphone code
 // https://www.twilio.com/en-us/blog/audio-visualisation-web-audio-api--react
-let state: MediaStream | null;
+/*let state: MediaStream | null;
 state = null;
 
 function getMicrophone() {
@@ -28,7 +29,7 @@ function toggleMicrophone() {
   } else {
     getMicrophone();
   }
-}
+}*/
 // End of microphone code
 
 function App() {
