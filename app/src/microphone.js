@@ -4,6 +4,8 @@ https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Build_a_phone_with_p
 https://picovoice.ai/blog/how-to-record-audio-from-a-web-browser/
 https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/getFloatFrequencyData
 https://www.twilio.com/en-us/blog/audio-visualisation-web-audio-api--react
+https://community.st.com/t5/mems-sensors/is-it-possible-to-measure-sound-intensity-level-from-pcm-samples/td-p/97571
+https://www.ncbi.nlm.nih.gov/books/NBK236684/#:~:text=In%20air%2C%20the%20common%20reference,20%20log%2020%20%3D%2026).
 */
 
 let state = null;
@@ -38,7 +40,7 @@ async function getMicrophonePermissions() {
     });
     let options = {sampleRate:8000};
     audioContext = new AudioContext(options);
-    await audioContext.audioWorklet.addModule("zenzone-audio-processor.js");
+    // await audioContext.audioWorklet.addModule("zenzone-audio-processor.js");
     micStreamAudioSourceNode = audioContext.createMediaStreamSource(stream);
   
     // Create analyser
@@ -119,14 +121,25 @@ function measureAudio() {
   // Schedule next measure period if we want to keep recoding. Apparently scheduled by the browser.
   if (state) {
     requestAnimationFrame(measureAudio);
-    analyserNode.getFloatFrequencyData(dataArray);
+    //analyserNode.getFloatFrequencyData(dataArray);
+    analyserNode.getFloatTimeDomainData(dataArray);
     console.log(dataArray);
     // Don't put -Infinity into average
     if (dataArray[0] != -Infinity) {
       updates++;
+      let sum = 0;
+      // Get RMS value
+      // https://community.st.com/t5/mems-sensors/is-it-possible-to-measure-sound-intensity-level-from-pcm-samples/td-p/97571
+      // https://www.ncbi.nlm.nih.gov/books/NBK236684/#:~:text=In%20air%2C%20the%20common%20reference,20%20log%2020%20%3D%2026).
       for (let i = 0; i < bufferLen; i++) {
-        avgArray[i] += dataArray[i];
+        sum += dataArray[i] * dataArray[i];
       }
+      sum = Math.sqrt(sum);
+      // 10dB used as a "clip" value as this is the about the sound level of breathing.
+      // https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
+      let db = Math.max(10, 20 * Math.log10(sum / (20 * Math.pow(10, -6))));
+      avgArray[0] += db;
+      console.log("DB level:", db);
     }
 
     //https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/getFloatFrequencyData
