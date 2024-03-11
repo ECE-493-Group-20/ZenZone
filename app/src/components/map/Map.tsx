@@ -23,7 +23,7 @@ const Map = (props: GoogleMapProps) => {
         map.fitBounds(bounds);
         // fetching data to create markers
         setMap(map);
-    }, [center]);
+    }, []);
 
     const onUnmount = useCallback(() => {
         setMap(null);
