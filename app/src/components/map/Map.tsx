@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react"
+import { useCallback, useState, memo } from "react"
 import {GoogleMap, GoogleMapProps, useJsApiLoader} from "@react-google-maps/api"
 import "./index.css"
 import { LinearProgress } from "@mui/material";
@@ -52,5 +52,5 @@ const Map = (props: GoogleMapProps) => {
         </div>
 }
 
-export default Map;
+export default memo(Map);
 

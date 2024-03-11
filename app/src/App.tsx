@@ -1,13 +1,27 @@
+import { Button, Drawer, IconButton } from '@mui/material';
 import './App.css';
+import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
-import Logo from './logo.png'
+import AddIcon from '@mui/icons-material/Add';
+import SearchBar from './components/searchbar/SearchBar';
+import { useState } from 'react';
+import { DashboardProvider } from './components/dashboard/dashboardprovider/DashboardProvider';
+import { Dashboard } from './components/dashboard/Dashboard';
 
 function App() {
+  const isAdmin = true
+
   return (
-    <div className="App">
-      <img className='logo' src={Logo}/>
-      <Map />
-    </div>
+    <DashboardProvider>
+      <div className="App">
+        <Logo className="logo"/>
+        <SearchBar />
+        <Button className='signinButton'>Sign in</Button>
+        {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
+        <Map/>
+        <Dashboard />
+      </div>
+    </DashboardProvider>
   );
 }
 
