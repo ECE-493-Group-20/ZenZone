@@ -1,29 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
+import { Button, IconButton } from '@mui/material';
 import './App.css';
 import {toggleMicrophone} from './microphone';
+import Logo from './components/logo/Logo';
+import Map from './components/map/Map';
+import AddIcon from '@mui/icons-material/Add';
+import SearchBar from './components/searchbar/SearchBar';
+import { DashboardProvider } from './components/dashboard/dashboardprovider/DashboardProvider';
+import { Dashboard } from './components/dashboard/Dashboard';
 
 function App() {
+  const isAdmin = true
+  /*
+  Put this button back when we have a spot for it in the UI.
+  <button onClick={toggleMicrophone}>Microphone</button>
+  */
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <div className='micButton'>
-          <button onClick={toggleMicrophone}>Microphone</button>
-        </div>
-      </header>
-    </div>
+    <DashboardProvider>
+      <div className="App">
+        <Logo className="logo"/>
+        <SearchBar />
+        <Button className='signinButton'>Sign in</Button>
+        {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
+        <Map/>
+        <Dashboard />
+      </div>
+    </DashboardProvider>
   );
 }
 
