@@ -3,12 +3,25 @@ import React, { useContext, useRef } from "react";
 import { Button, Col, Container, Form, Navbar, Row} from "react-bootstrap";
 import { AuthContext } from "./context/AuthContext";
 import { auth } from "./firebaseSetup";
+import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 
 function App() {
   const user = useContext(AuthContext);
 
+  // Email and password sign in
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  // Google authentication
+  const provider = new GoogleAuthProvider();
+
+  const googleSignIn = async () => {
+
+    // Code from Firebase documentation
+    const auth = getAuth();
+    signInWithRedirect(auth, provider);
+    
+  }
 
   const createAccount = async () => {
     try {
@@ -71,6 +84,15 @@ function App() {
                 >
                   Sign In
                 </Button>
+              <Col xs = {6}>
+                <Button
+                onClick = {googleSignIn}
+                type = "button"
+                variant = "secondary"
+                >
+                  Google Sign In
+                </Button>
+              </Col>
               </Col>
             </Form.Group>
           </Form>
