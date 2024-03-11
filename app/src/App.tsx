@@ -1,10 +1,9 @@
-import { Button, Drawer, IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import './App.css';
 import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
 import AddIcon from '@mui/icons-material/Add';
 import SearchBar from './components/searchbar/SearchBar';
-import { useState } from 'react';
 import { DashboardProvider } from './components/dashboard/dashboardprovider/DashboardProvider';
 import { Dashboard } from './components/dashboard/Dashboard';
 

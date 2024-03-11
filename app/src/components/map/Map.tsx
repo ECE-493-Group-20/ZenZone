@@ -16,14 +16,14 @@ const Map = (props: GoogleMapProps) => {
         lng: -113.52,
     };
 
-    const [map, setMap] = useState<google.maps.Map | null>();
+    const [_, setMap] = useState<google.maps.Map | null>();
 
     const onLoad = useCallback((map: google.maps.Map) => {
         const bounds = new window.google.maps.LatLngBounds(center);
         map.fitBounds(bounds);
         // fetching data to create markers
         setMap(map);
-    }, []);
+    }, [center]);
 
     const onUnmount = useCallback(() => {
         setMap(null);
