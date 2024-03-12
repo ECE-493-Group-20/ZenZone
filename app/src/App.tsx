@@ -1,5 +1,6 @@
 import { Button, IconButton } from '@mui/material';
 import './App.css';
+import {toggleMicrophone} from './microphone';
 import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
 import AddIcon from '@mui/icons-material/Add';
@@ -9,7 +10,10 @@ import { Dashboard } from './components/dashboard/Dashboard';
 
 function App() {
   const isAdmin = true
-
+  /*
+  Put this button back when we have a spot for it in the UI.
+  <button onClick={toggleMicrophone}>Microphone</button>
+  */
   return (
     <DashboardProvider>
       <div className="App">
