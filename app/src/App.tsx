@@ -1,6 +1,6 @@
 import { Button, IconButton } from '@mui/material';
 import './App.css';
-import {toggleMicrophone} from './microphone';
+import {getStats} from './Firebase';
 import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
 import AddIcon from '@mui/icons-material/Add';
@@ -8,7 +8,7 @@ import SearchBar from './components/searchbar/SearchBar';
 import { DashboardProvider } from './components/dashboard/dashboardprovider/DashboardProvider';
 import { Dashboard } from './components/dashboard/Dashboard';
 
-function App() {
+export function Main() {
   const isAdmin = true
   /*
   Put this button back when we have a spot for it in the UI.
@@ -17,9 +17,10 @@ function App() {
   return (
     <DashboardProvider>
       <div className="App">
-        <Logo className="logo"/>
+        <Logo className="logo" />
         <SearchBar />
         <Button className='signinButton'>Sign in</Button>
+        <Button className='microphoneButton' onClick={getStats}>Upload Stats</Button>
         {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
         <Map/>
         <Dashboard />
@@ -28,4 +29,4 @@ function App() {
   );
 }
 
-export default App;
+export default Main;

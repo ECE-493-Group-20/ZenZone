@@ -20,6 +20,7 @@ let dataArray;
 let bufferLen;
 let updates;
 let avg;
+let loc;
 
 async function getMicrophonePermissions() {
     if (!window.AudioContext || !window.MediaStreamAudioSourceNode || !window.AudioWorkletNode) {
@@ -50,7 +51,7 @@ async function getMicrophonePermissions() {
     state = stream;
 
     // Start data collection, set callback to stop recording
-    audioInterval = setInterval(stopRecording, 15000);
+    //audioInterval = setInterval(stopRecording, 15000);
     measureAudio();
 }
 
@@ -60,13 +61,13 @@ function stopRecording() {
   state?.getTracks().forEach(track => track.stop());
   state = null;
   // Send averaged data to server
-  clearInterval(audioInterval);
-  getAverage();
+  //clearInterval(audioInterval);
+  //getAverage();
 }
 
 export function getAverage() {
   avg = avg / updates;
-  let label = "Silent";
+  var label = "Silent";
   // Set human label for how loud the area is
   // https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
   if (20 < avg <= 45) {
