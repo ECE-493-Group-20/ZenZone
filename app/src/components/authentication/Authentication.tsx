@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { useFormControl } from "@mui/material";
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
@@ -21,8 +22,8 @@ function UserSignIn() {
   const user = useContext(AuthContext);
 
   // Email and password sign in
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>();
+  const passwordRef = useRef<HTMLInputElement>();
 
   // Google authentication
   const provider = new GoogleAuthProvider();
@@ -32,15 +33,18 @@ function UserSignIn() {
     // Code from Firebase documentation
     const auth = getAuth();
     signInWithRedirect(auth, provider);
-    
+    console.log("Signed in as: ", auth.currentUser);
   }
 
   const signIn = async () => {
+    const email = emailRef.current!.value;
+    const password = passwordRef.current!.value;
     try {
       await auth.signInWithEmailAndPassword(
-        emailRef.current!.value,
-        passwordRef.current!.value
+        email,
+        password
       );
+      console.log("Signed in as: ", auth.currentUser);
     } catch (error) {
       console.error(error);
     }
@@ -49,6 +53,10 @@ function UserSignIn() {
   const signOut = async () => {
     await auth.signOut();
   };
+
+  const getUserEmail = async () => {
+    return user?.email;
+  }
 
   return (
     <>
@@ -68,7 +76,7 @@ function UserSignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={signIn} noValidate sx={{ mt: 1 }}>
+          <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -78,6 +86,7 @@ function UserSignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              inputRef={emailRef}
             />
             <TextField
               margin="normal"
@@ -88,16 +97,14 @@ function UserSignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              inputRef={passwordRef}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              onClick={signIn}
             >
               Sign In
             </Button>
@@ -111,16 +118,12 @@ function UserSignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={googleSignIn}
             >
               Continue with Google
             </Button>
 
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
               <Grid item>
                 <Link href="#" variant="body2">
                   {"Don't have an account? Sign Up"}
@@ -142,6 +145,17 @@ function UserSignUp() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
+  // Google authentication
+  const provider = new GoogleAuthProvider();
+
+  const googleSignIn = async () => {
+
+    // Code from Firebase documentation
+    const auth = getAuth();
+    signInWithRedirect(auth, provider);
+    console.log("Signed in as: ", auth.currentUser);
+  }
+
   const createAccount = async () => {
     try {
       await auth.createUserWithEmailAndPassword(
@@ -152,6 +166,7 @@ function UserSignUp() {
       console.error(error);
     }
   };
+
 
   return (
     <>
@@ -181,6 +196,7 @@ function UserSignUp() {
               name="email"
               autoComplete="email"
               autoFocus
+              inputRef={emailRef}
             />
             <TextField
               margin="normal"
@@ -191,11 +207,9 @@ function UserSignUp() {
               type="password"
               id="password"
               autoComplete="current-password"
+              inputRef={passwordRef}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             <Button
               type="submit"
               fullWidth
@@ -214,6 +228,7 @@ function UserSignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick = {googleSignIn}
             >
               Continue with Google
             </Button>
@@ -222,11 +237,6 @@ function UserSignUp() {
               <Grid item xs>
                 <Link href="#" variant="body2">
                   Already Have an account?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
@@ -247,6 +257,7 @@ function AdminSignIn() {
   // Google authentication
   const provider = new GoogleAuthProvider();
 
+  // TODO: IMPLEMENT CHECKING FOR ADMIN
   const googleSignIn = async () => {
 
     // Code from Firebase documentation
@@ -255,6 +266,7 @@ function AdminSignIn() {
     
   }
 
+  // TODO: IMPLEMENT CHECKING FOR ADMIN
   const signIn = async () => {
     try {
       await auth.signInWithEmailAndPassword(
@@ -294,6 +306,7 @@ function AdminSignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              inputRef={emailRef}
             />
             <TextField
               margin="normal"
@@ -304,6 +317,7 @@ function AdminSignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              inputRef={passwordRef}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -327,16 +341,12 @@ function AdminSignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick = {googleSignIn}
             >
               Continue with Google
             </Button>
 
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
               <Grid item>
                 <Link href="#" variant="body2">
                   {"Don't have an account? Sign Up"}
@@ -357,6 +367,19 @@ function AdminSignUp() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
+  // Google authentication
+  const provider = new GoogleAuthProvider();
+
+  // TODO: IMPLEMENT MAKING ADMIN
+  const googleSignIn = async () => {
+
+    // Code from Firebase documentation
+    const auth = getAuth();
+    signInWithRedirect(auth, provider);
+    console.log("Signed in as: ", auth.currentUser);
+  }
+
+  // TODO: IMPLEMENT MAKING ADMIN
   const createAccount = async () => {
     try {
       await auth.createUserWithEmailAndPassword(
@@ -396,6 +419,7 @@ function AdminSignUp() {
             name="email"
             autoComplete="email"
             autoFocus
+            inputRef={emailRef}
           />
           <TextField
             margin="normal"
@@ -406,6 +430,7 @@ function AdminSignUp() {
             type="password"
             id="password"
             autoComplete="current-password"
+            inputRef={passwordRef}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -429,16 +454,12 @@ function AdminSignUp() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            onClick = {googleSignIn}
           >
             Continue with Google
           </Button>
 
           <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
             <Grid item>
               <Link href="#" variant="body2">
                 {"Don't have an account? Sign Up"}

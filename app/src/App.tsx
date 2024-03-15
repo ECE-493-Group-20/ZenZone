@@ -10,7 +10,8 @@ import { Dashboard } from './components/dashboard/Dashboard';
 import {UserSignIn, UserSignUp, AdminSignIn, AdminSignUp} from './components/authentication/Authentication';
 
 function App() {
-  const isAdmin = true
+  const isAdmin = true;
+
   /*
   Put this button back when we have a spot for it in the UI.
   <button onClick={toggleMicrophone}>Microphone</button>
