@@ -1,38 +1,43 @@
+:root {
+  --background: #383F51;
+  --text: #DDDBF1;
+}
+
 .App {
-  text-align: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--background);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.logo {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  top: 1vh;
+  left: 1vh;
+  z-index: 10;
+  box-shadow: #282c34 10 10;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.signinButton {
+  position: fixed !important;
+  top: 1vh;
+  right: 1vh;
+  z-index: 10;
+  background-color: var(--background) !important;
+  color: var(--text) !important;
+  box-shadow: var(--text) 0px 0px 10px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.addButton {
+  position: fixed !important;
+  bottom: 3vh;
+  right: 1vh;
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  border-radius: 10% !important;
+  background-color: var(--background) !important;
+  color: var(--text) !important;
+  box-shadow: var(--text) 0px 0px 10px;
 }
