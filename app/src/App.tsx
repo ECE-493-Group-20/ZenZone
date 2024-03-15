@@ -7,14 +7,17 @@ import AddIcon from '@mui/icons-material/Add';
 import SearchBar from './components/searchbar/SearchBar';
 import { DashboardProvider } from './components/dashboard/dashboardprovider/DashboardProvider';
 import { Dashboard } from './components/dashboard/Dashboard';
+import {UserSignIn, UserSignUp, AdminSignIn, AdminSignUp} from './components/authentication/Authentication';
 
 function App() {
-  const isAdmin = true
+  const isAdmin = true;
+
   /*
   Put this button back when we have a spot for it in the UI.
   <button onClick={toggleMicrophone}>Microphone</button>
   */
   return (
+    <>
     <DashboardProvider>
       <div className="App">
         <Logo className="logo"/>
@@ -25,6 +28,7 @@ function App() {
         <Dashboard />
       </div>
     </DashboardProvider>
+    </>
   );
 }
 
