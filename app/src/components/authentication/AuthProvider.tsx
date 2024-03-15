@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { auth } from "../firebaseSetup";
+import { AuthContext } from "./AuthContext";
+import { auth } from "./firebaseSetup";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
