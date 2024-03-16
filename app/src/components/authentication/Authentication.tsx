@@ -50,10 +50,6 @@ function UserSignIn() {
     }
   };
 
-  const signOut = async () => {
-    await auth.signOut();
-  };
-
   const getUserEmail = async () => {
     return user?.email;
   }
@@ -473,9 +469,14 @@ function AdminSignUp() {
   )
 }
 
+function signOut() {
+    auth.signOut();
+}
+
 export {
   UserSignIn,
   UserSignUp,
   AdminSignIn,
-  AdminSignUp
+  AdminSignUp,
+  signOut
 }
