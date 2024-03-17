@@ -5,10 +5,11 @@ import Location from "./pages/Location";
 import Main from "./App";
 
 export default function App() {
+  //<Route path="/location" element={<Location />}/>
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/location" element={<Location />}/>
+        
         <Route path="/" element={<Main />}/>
       </Routes>
     </BrowserRouter>
