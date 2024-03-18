@@ -25,12 +25,9 @@ async function getMicrophonePermissions() {
       alert("Required APIs for sound level measurement not supported by this browser.");
     }
     // Chrome saves this permission and handles the querying as well.
+    // Error should be handled outside of this.
     const stream = await navigator.mediaDevices
-    //navigator.mediaDevices
-    .getUserMedia({video:false, audio:true})
-    .catch((err) => {
-      alert("Microphone permissions denied or closed. Please grant microphone permissions to use the microphone.");
-    });
+    .getUserMedia({video:false, audio:true});
     let options = {sampleRate:8000};
     audioContext = new AudioContext(options);
     micStreamAudioSourceNode = audioContext.createMediaStreamSource(stream);

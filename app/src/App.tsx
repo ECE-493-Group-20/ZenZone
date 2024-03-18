@@ -1,6 +1,6 @@
 import { Button, IconButton } from '@mui/material';
 import './App.css';
-import { getStats, requestAverageSound } from './Firebase';
+import { getStats, requestAverageSound } from './scripts/Firebase';
 import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
 import AddIcon from '@mui/icons-material/Add';
