@@ -1,0 +1,28 @@
+.drawer {
+    min-height: 25vh !important;
+}
+
+.paper {
+    background-color: #D1BEB0;
+    padding: 2em;
+    overflow: hidden;
+}
+
+.chart {
+    height: 25vh;
+    width: 100vw;
+}
+
+.levelCard {
+    margin: 1em;
+    background-color: #AB9F9D;
+    padding: 1em;
+    border-radius: 10px;
+}
+
+.levelCardContainer {
+    display: flexbox;
+    align-items: center;
+    align-content: center;
+    flex-direction: row;
+}
