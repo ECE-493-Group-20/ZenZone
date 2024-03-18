@@ -105,7 +105,9 @@ export async function requestAverageSound(loc) {
         numDocs++;
         averageSound += doc.data().loudnessmeasure;
     });
-    averageSound /= numDocs;
+    if (numDocs > 0) {
+        averageSound /= numDocs;
+    }
     console.log("Average sound for last hour at " + loc + ": ", averageSound);
     return averageSound;
 }
