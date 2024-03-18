@@ -47,17 +47,13 @@ function UserSignIn() {
       auth.signInWithEmailAndPassword(
         email,
         password
-      );
-      navigate("/");
-      console.log("Signed in as: ", auth.currentUser);
+      ).catch(function(error) {
+        // do sometime
+      }).then(function() {navigate("/")});
     } catch (error) {
       console.error(error);
     }
   };
-
-  const getUserEmail = async () => {
-    return user?.email;
-  }
 
   return (
     <>
