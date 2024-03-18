@@ -16,7 +16,8 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Link as RouteLink } from "react-router-dom";
+import "../../App.css";
 
 function UserSignIn() {
   const user = useContext(AuthContext);
@@ -56,6 +57,7 @@ function UserSignIn() {
 
   return (
     <>
+    <Button component={RouteLink} to={"/"}>Home</Button>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -121,7 +123,7 @@ function UserSignIn() {
 
             <Grid container>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link component={RouteLink} to="/register">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -129,6 +131,7 @@ function UserSignIn() {
           </Box>
         </Box>
       </Container>
+      <Button component={RouteLink} to={"/adminsignin"}>Admin Sign In</Button>
     </>
   );
 }
@@ -166,6 +169,7 @@ function UserSignUp() {
 
   return (
     <>
+    <Button component={RouteLink} to={"/"}>Home</Button>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -231,14 +235,15 @@ function UserSignUp() {
 
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Already Have an account?
+                <Link component={RouteLink} to="/signin">
+                  Already Have an account? Sign in here
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
       </Container>
+      <Button component={RouteLink} to={"/adminsignin"}>Admin Sign In</Button>
     </>
   )
 }
@@ -276,6 +281,7 @@ function AdminSignIn() {
 
   return (
     <>
+    <Button component={RouteLink} to={"/"}>Home</Button>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -344,7 +350,7 @@ function AdminSignIn() {
 
             <Grid container>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link component={RouteLink} to="/adminregister">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -352,6 +358,7 @@ function AdminSignIn() {
           </Box>
         </Box>
       </Container>
+      <Button component={RouteLink} to={"/signin"}>User Sign In</Button>
     </>
   )
 }
@@ -389,6 +396,7 @@ function AdminSignUp() {
 
   return (
     <>
+    <Button component={RouteLink} to={"/"}>Home</Button>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Box
@@ -457,14 +465,15 @@ function AdminSignUp() {
 
           <Grid container>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link component={RouteLink} to="/adminsignin">
+                {"Already have an account? Sign in here"}
               </Link>
             </Grid>
           </Grid>
         </Box>
       </Box>
     </Container>
+    <Button component={RouteLink} to={"/signin"}>User Sign In</Button>
   </>
   )
 }

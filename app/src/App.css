@@ -41,3 +41,13 @@
   color: var(--text) !important;
   box-shadow: var(--text) 0px 0px 10px;
 }
+
+.homeButton {
+  position: fixed !important;
+  top: 1vh;
+  right: 1vh;
+  z-index: 10;
+  background-color: var(--background) !important;
+  color: var(--text) !important;
+  box-shadow: var(--text) 0px 0px 10px;
+}
