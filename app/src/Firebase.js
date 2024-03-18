@@ -5,18 +5,15 @@ import 'firebase/compat/firestore';
 import { Timestamp, getDocs, collection, where, query } from 'firebase/firestore';
 import { getLocation } from './pages/Location';
 
-// Follow this pattern to import other Firebase services
-// import { } from 'firebase/<service>';
-
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyC1-JnK0jceEmz7_-XqjaLv2qh9qzqBFdg",
-    authDomain: "zenzone-90b7a.firebaseapp.com",
-    projectId: "zenzone-90b7a",
-    storageBucket: "zenzone-90b7a.appspot.com",
-    messagingSenderId: "956790020992",
-    appId: "1:956790020992:web:fa7a6337be4d0ea911bf65",
-    measurementId: "G-VRYF87GJDY"
+    apiKey: "",
+    authDomain: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: "",
+    measurementId: ""
 };
 
 const app = firebase.initializeApp(firebaseConfig);
@@ -55,8 +52,8 @@ export function getStats() {
 const findLoc = (loc) => {
     console.log(loc);
     // Loc is an array of [lat, lon]. Values below for testing purposes
-    loc[0] = 53.52716644287327;
-    loc[1] = -113.5302139343207;
+    //loc[0] = 53.52716644287327;
+    //loc[1] = -113.5302139343207;
     var minDist = 1000000000;
     var dist = 0;
     // https://stackoverflow.com/questions/47227550/using-await-inside-non-async-function
@@ -64,6 +61,8 @@ const findLoc = (loc) => {
         const queryColl = await getDocs(collection(db, "Locations"));
         queryColl.forEach((doc) => {
             dist = distanceLatLon(loc[0], loc[1], doc.data().position.latitude, doc.data().position.longitude);
+            console.log(dist);
+            console.log(doc.data().name);
             if (dist < minDist && dist < doc.data().size) {
                 closest = doc.id;
                 minDist = dist;
@@ -105,6 +104,7 @@ export async function requestAverageSound(loc) {
         numDocs++;
         averageSound += doc.data().loudnessmeasure;
     });
+    console.log(numDocs);
     if (numDocs > 0) {
         averageSound /= numDocs;
     }
