@@ -5,7 +5,7 @@ export const getLocation = (getLoc: (loc: any) => any) => {
     var loc = null;
     navigator.geolocation.getCurrentPosition(function (position) {
       getLoc([position.coords.latitude, position.coords.longitude]);
-    });
+    }, null, {enableHighAccuracy: true} );
   } else {
     console.log("Geolocation is not available in your browser.");
   }
