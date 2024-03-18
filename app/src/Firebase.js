@@ -2,7 +2,7 @@ import {getAverage, toggleMicrophone} from './microphone';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 //import { initializeApp } from 'firebase/app';
-import { Timestamp, getDocs, collection } from 'firebase/firestore';
+import { Timestamp, getDocs, collection, where, query } from 'firebase/firestore';
 import { getLocation } from './pages/Location';
 
 // Follow this pattern to import other Firebase services
@@ -61,8 +61,8 @@ const findLoc = (loc) => {
     var dist = 0;
     // https://stackoverflow.com/questions/47227550/using-await-inside-non-async-function
     const getClosest = (async() => { 
-        const query = await getDocs(collection(db, "Locations"));
-        query.forEach((doc) => {
+        const queryColl = await getDocs(collection(db, "Locations"));
+        queryColl.forEach((doc) => {
             dist = distanceLatLon(loc[0], loc[1], doc.data().position.latitude, doc.data().position.longitude);
             if (dist < minDist && dist < doc.data().size) {
                 closest = doc.id;
@@ -80,9 +80,32 @@ function upload() {
     const data = {
         loudnessmeasure: audio[0],
         location: locString.concat(closest),
-        time: Timestamp.now(),
+        timestamp: Timestamp.now().toMillis(),
     }
     // ID for now is milliseconds since epoch plus loudness measure
     let id = (Timestamp.now().toMillis() + audio[0]).toString();
     NoiseLevel.doc(id).set(data);
+}
+
+export async function requestAverageSound(loc) {
+    const compareTimestamp = Timestamp.now().toMillis() - 3600000;  // Timestamp from one hour ago.
+    var averageSound = 0;
+    var numDocs = 0;
+
+    // For debugging only. This should be replaced with just calling from a given locations "card"
+    if (closest == "") {
+        getLocation(findLoc);
+    }
+    loc = locString.concat(closest);
+
+    // Must use collection(...) for queries
+    const q = query(collection(db, "NoiseLevel"), where("timestamp", ">", compareTimestamp), where("location", "==", loc));
+    const queryColl = await getDocs(q);
+    queryColl.forEach((doc) => {
+        numDocs++;
+        averageSound += doc.data().loudnessmeasure;
+    });
+    averageSound /= numDocs;
+    console.log("Average sound for last hour at " + loc + ": ", averageSound);
+    return averageSound;
 }

@@ -39,6 +39,16 @@
   box-shadow: var(--text) 0px 0px 10px;
 }
 
+.averageButton {
+  position: fixed !important;
+  top: 8vh;
+  right: 15vh;
+  z-index: 10;
+  background-color: var(--background) !important;
+  color: var(--text) !important;
+  box-shadow: var(--text) 0px 0px 10px;
+}
+
 .addButton {
   position: fixed !important;
   bottom: 3vh;
