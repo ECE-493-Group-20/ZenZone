@@ -43,7 +43,7 @@ const Map = (props: GoogleMapProps) => {
             {...props}
         >
             <CustomMarker position={{lat: 53.53, lng: -113.52,}}/>
-            <CustomMarker position={{lat: 53, lng: -113,}}/>
+            <CustomMarker position={{lat: 53, lng: -113,}} favorite/>
         </GoogleMap>
         )
         :
