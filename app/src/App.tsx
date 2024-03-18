@@ -15,9 +15,8 @@ import { Link } from "react-router-dom";
 
 
 function App() {
-  const isAdmin = true;
   const user = useContext(AuthContext);
-
+  const isAdmin = true;
 
   /*
   Put this button back when we have a spot for it in the UI.

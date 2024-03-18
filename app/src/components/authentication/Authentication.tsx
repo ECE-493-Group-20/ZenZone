@@ -18,9 +18,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Link as RouteLink } from "react-router-dom";
 import "../../App.css";
+import {useNavigate} from "react-router-dom";
 
 function UserSignIn() {
   const user = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // Email and password sign in
   const emailRef = useRef<HTMLInputElement>();
@@ -35,16 +37,18 @@ function UserSignIn() {
     const auth = getAuth();
     signInWithRedirect(auth, provider);
     console.log("Signed in as: ", auth.currentUser);
+    navigate("/");
   }
 
   const signIn = async () => {
     const email = emailRef.current!.value;
     const password = passwordRef.current!.value;
     try {
-      await auth.signInWithEmailAndPassword(
+      auth.signInWithEmailAndPassword(
         email,
         password
       );
+      navigate("/");
       console.log("Signed in as: ", auth.currentUser);
     } catch (error) {
       console.error(error);
@@ -72,7 +76,7 @@ function UserSignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign in {user?.email}
           </Typography>
           <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
@@ -139,6 +143,7 @@ function UserSignIn() {
 function UserSignUp() {
   
   const user = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // Email and password sign in
   const emailRef = useRef<HTMLInputElement>(null);
@@ -153,14 +158,16 @@ function UserSignUp() {
     const auth = getAuth();
     signInWithRedirect(auth, provider);
     console.log("Signed in as: ", auth.currentUser);
+    navigate("/");
   }
 
   const createAccount = async () => {
     try {
-      await auth.createUserWithEmailAndPassword(
+      auth.createUserWithEmailAndPassword(
         emailRef.current!.value,
         passwordRef.current!.value
       );
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
@@ -250,6 +257,7 @@ function UserSignUp() {
 
 function AdminSignIn() {
   const user = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // Email and password sign in
   const emailRef = useRef<HTMLInputElement>(null);
@@ -264,16 +272,17 @@ function AdminSignIn() {
     // Code from Firebase documentation
     const auth = getAuth();
     signInWithRedirect(auth, provider);
-    
+    navigate("/");
   }
 
   // TODO: IMPLEMENT CHECKING FOR ADMIN
   const signIn = async () => {
     try {
-      await auth.signInWithEmailAndPassword(
+      auth.signInWithEmailAndPassword(
         emailRef.current!.value,
         passwordRef.current!.value
       );
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
@@ -365,6 +374,7 @@ function AdminSignIn() {
 
 function AdminSignUp() {
   const user = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // Email and password sign in
   const emailRef = useRef<HTMLInputElement>(null);
@@ -380,15 +390,17 @@ function AdminSignUp() {
     const auth = getAuth();
     signInWithRedirect(auth, provider);
     console.log("Signed in as: ", auth.currentUser);
+    navigate("/");
   }
 
   // TODO: IMPLEMENT MAKING ADMIN
   const createAccount = async () => {
     try {
-      await auth.createUserWithEmailAndPassword(
+      auth.createUserWithEmailAndPassword(
         emailRef.current!.value,
         passwordRef.current!.value
       );
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
