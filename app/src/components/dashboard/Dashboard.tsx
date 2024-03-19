@@ -8,6 +8,12 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis'
 export const Dashboard = () => {
     const {open, setOpen} = useDashboard()
 
+    // #7765AC (25dB) FAINT
+    // #4D74B2 (40dB) SOFT
+    // #659360 (60dB) MODERATE
+    // #FCB955 (80dB) LOUD (long periods past 85 is dangerous)
+    // #E95658 (120dB) VERY LOUD
+
     return (
         <Drawer 
           className="drawer" 
