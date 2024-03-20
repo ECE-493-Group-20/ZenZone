@@ -9,8 +9,15 @@
 }
 
 .chart {
-    height: 25vh;
-    width: 100vw;
+    max-height: 40vh;
+    height: 50vw;
+    width: 100%;
+}
+
+.chartContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .levelCard {
@@ -18,11 +25,21 @@
     background-color: #AB9F9D;
     padding: 1em;
     border-radius: 10px;
+    width: 100%;
 }
 
 .levelCardContainer {
-    display: flexbox;
+    display: flex;
     align-items: center;
-    align-content: center;
-    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.favoriteButton {
+    position: absolute !important;
+    right: 1em;
+    top: 1em;
+    background-color: var(--background) !important;
+    color: var(--text) !important;
+    box-shadow: var(--text) 0 0 10px;
+    transition: 0.5s;
 }

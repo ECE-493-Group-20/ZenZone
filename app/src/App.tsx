@@ -25,7 +25,7 @@ function App() {
         <Button className='signinButton'>Sign in</Button>
         {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
         <Map/>
-        <Dashboard />
+        <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
       </div>
     </DashboardProvider>
     </>
