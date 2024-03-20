@@ -1,6 +1,6 @@
 import { Button, IconButton } from '@mui/material';
 import './App.css';
-import {toggleMicrophone} from './microphone';
+import {toggleMicrophone} from './scripts/microphone';
 import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
 import AddIcon from '@mui/icons-material/Add';
