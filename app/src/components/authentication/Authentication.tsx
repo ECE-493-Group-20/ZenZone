@@ -1,5 +1,5 @@
 // This was copied from this tutorial: https://medium.com/geekculture/firebase-auth-with-react-and-typescript-abeebcd7940a
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
 import { auth } from "./firebaseSetup";
 import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Link as RouteLink } from "react-router-dom";
 import "../../App.css";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, redirectDocument} from "react-router-dom";
 
 function UserSignIn() {
   const user = useContext(AuthContext);
@@ -31,28 +31,37 @@ function UserSignIn() {
   // Google authentication
   const provider = new GoogleAuthProvider();
 
+  
+  // redirect after login
+  useEffect(() => {
+    // Go back to home
+    if (user != null) {
+      navigate("/");
+    }
+  }, [user]);
+
   const googleSignIn = async () => {
 
     // Code from Firebase documentation
     const auth = getAuth();
     signInWithRedirect(auth, provider);
     console.log("Signed in as: ", auth.currentUser);
-    navigate("/");
   }
 
   const signIn = async () => {
-    const email = emailRef.current!.value;
-    const password = passwordRef.current!.value;
-    try {
-      auth.signInWithEmailAndPassword(
-        email,
-        password
-      ).catch(function(error) {
-        // do sometime
-      }).then(function() {navigate("/")});
-    } catch (error) {
-      console.error(error);
-    }
+    await auth.signInWithEmailAndPassword(
+      emailRef.current!.value,
+      passwordRef.current!.value
+      ).catch(function(error){// Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if (errorCode === 'auth/wrong-password') {
+        alert('Wrong password.');
+      } else {
+        alert(errorMessage);
+      }
+      console.log(error);
+    });
   };
 
   return (
@@ -74,7 +83,7 @@ function UserSignIn() {
           <Typography component="h1" variant="h5">
             Sign in {user?.email}
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          
             <TextField
               margin="normal"
               required
@@ -129,7 +138,6 @@ function UserSignIn() {
               </Grid>
             </Grid>
           </Box>
-        </Box>
       </Container>
       <Button component={RouteLink} to={"/adminsignin"}>Admin Sign In</Button>
     </>
@@ -148,22 +156,38 @@ function UserSignUp() {
   // Google authentication
   const provider = new GoogleAuthProvider();
 
+  // redirect after login
+  useEffect(() => {
+    // Go back to home
+    if (user != null) {
+      navigate("/");
+    }
+  }, [user]);
+
   const googleSignIn = async () => {
 
     // Code from Firebase documentation
     const auth = getAuth();
     signInWithRedirect(auth, provider);
     console.log("Signed in as: ", auth.currentUser);
-    navigate("/");
   }
 
   const createAccount = async () => {
     try {
-      auth.createUserWithEmailAndPassword(
+      await auth.createUserWithEmailAndPassword(
         emailRef.current!.value,
         passwordRef.current!.value
-      );
-      navigate("/");
+      ).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode == 'auth/weak-password') {
+          alert('The password is too weak.');
+        } else {
+          alert(errorMessage);
+        }
+        console.log(error);
+      });
     } catch (error) {
       console.error(error);
     }
@@ -189,7 +213,7 @@ function UserSignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" onSubmit={createAccount} noValidate sx={{ mt: 1 }}>
+          
             <TextField
               margin="normal"
               required
@@ -218,6 +242,7 @@ function UserSignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={createAccount}
             >
               Sign Up
             </Button>
@@ -244,7 +269,7 @@ function UserSignUp() {
               </Grid>
             </Grid>
           </Box>
-        </Box>
+
       </Container>
       <Button component={RouteLink} to={"/adminsignin"}>Admin Sign In</Button>
     </>
@@ -261,32 +286,46 @@ function AdminSignIn() {
 
   // Google authentication
   const provider = new GoogleAuthProvider();
+  
+  
+  // redirect after login
+  useEffect(() => {
+    // Go back to home
+    if (user != null) {
+      navigate("/");
+    }
+  }, [user]); 
 
   // TODO: IMPLEMENT CHECKING FOR ADMIN
   const googleSignIn = async () => {
-
     // Code from Firebase documentation
     const auth = getAuth();
     signInWithRedirect(auth, provider);
-    navigate("/");
   }
 
   // TODO: IMPLEMENT CHECKING FOR ADMIN
   const signIn = async () => {
-    try {
-      auth.signInWithEmailAndPassword(
-        emailRef.current!.value,
-        passwordRef.current!.value
-      );
-      navigate("/");
-    } catch (error) {
-      console.error(error);
-    }
+
+    await auth.signInWithEmailAndPassword(
+      emailRef.current!.value,
+      passwordRef.current!.value
+    ).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if (errorCode === 'auth/wrong-password') {
+        alert('Wrong password.');
+      } else {
+        alert(errorMessage);
+      }
+      console.log(error);
+    });
+
   };
 
   return (
     <>
-    <Button component={RouteLink} to={"/"}>Home</Button>
+    <Button component={RouteLink} to="/">Home</Button>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -303,7 +342,7 @@ function AdminSignIn() {
           <Typography component="h1" variant="h5">
             Admin Sign in
           </Typography>
-          <Box component="form" onSubmit={signIn} noValidate sx={{ mt: 1 }}>
+         
             <TextField
               margin="normal"
               required
@@ -335,6 +374,7 @@ function AdminSignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={signIn}
             >
               Sign In
             </Button>
@@ -361,7 +401,7 @@ function AdminSignIn() {
               </Grid>
             </Grid>
           </Box>
-        </Box>
+        
       </Container>
       <Button component={RouteLink} to={"/signin"}>User Sign In</Button>
     </>
@@ -379,6 +419,14 @@ function AdminSignUp() {
   // Google authentication
   const provider = new GoogleAuthProvider();
 
+  // redirect after login
+  useEffect(() => {
+    // Go back to home
+    if (user != null) {
+      navigate("/");
+    }
+  }, [user]); 
+
   // TODO: IMPLEMENT MAKING ADMIN
   const googleSignIn = async () => {
 
@@ -386,20 +434,23 @@ function AdminSignUp() {
     const auth = getAuth();
     signInWithRedirect(auth, provider);
     console.log("Signed in as: ", auth.currentUser);
-    navigate("/");
   }
 
   // TODO: IMPLEMENT MAKING ADMIN
   const createAccount = async () => {
-    try {
-      auth.createUserWithEmailAndPassword(
-        emailRef.current!.value,
-        passwordRef.current!.value
-      );
-      navigate("/");
-    } catch (error) {
-      console.error(error);
-    }
+    await auth.createUserWithEmailAndPassword(
+      emailRef.current!.value,
+      passwordRef.current!.value).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode == 'auth/weak-password') {
+          alert('The password is too weak.');
+        } else {
+          alert(errorMessage);
+        }
+        console.log(error);
+      });
   };
 
   return (
@@ -421,7 +472,6 @@ function AdminSignUp() {
         <Typography component="h1" variant="h5">
           Admin Sign up
         </Typography>
-        <Box component="form" onSubmit={createAccount} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
@@ -453,6 +503,7 @@ function AdminSignUp() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            onClick={createAccount}
           >
             Sign In
           </Button>
@@ -479,7 +530,6 @@ function AdminSignUp() {
             </Grid>
           </Grid>
         </Box>
-      </Box>
     </Container>
     <Button component={RouteLink} to={"/signin"}>User Sign In</Button>
   </>

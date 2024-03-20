@@ -31,10 +31,9 @@ function App() {
       <div className="App">
         <Logo className="logo"/>
         <SearchBar />
-        {user == null ? <Button className='signinButton' component={Link} to={"/signin"}>Sign in HERE</Button>
+        {user == null ? <Button className='signinButton' component={Link} to={"/signin"}>Sign in</Button>
           : <Button className='signinButton' onClick = {signOut}>Sign Out</Button>}
         {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
-        <Map/>
         <Dashboard />
       </div>
     </DashboardProvider>
