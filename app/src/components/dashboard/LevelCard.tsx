@@ -28,7 +28,10 @@ const LevelCard = (props: LevelCardProps) => {
 
     return (
         <div className="levelCard">
-            <h4>{props.title}</h4>
+            <div className="levelCardTitle">
+                <h4>{props.title}</h4>
+                <p>{props.value}{props.type == 'busy' ? '%' : 'dB'}</p>
+            </div>
             
             <LinearProgress title={props.title} variant="determinate" value={props.value} sx={{'& .MuiLinearProgress-bar': {backgroundColor: valueToColor(props.value, props.type)}}}/>
         </div>
