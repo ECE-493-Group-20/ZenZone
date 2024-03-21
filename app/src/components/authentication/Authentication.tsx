@@ -1,7 +1,7 @@
 // This was copied from this tutorial: https://medium.com/geekculture/firebase-auth-with-react-and-typescript-abeebcd7940a
 import React, { useContext, useRef, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
-import { auth } from "./firebaseSetup";
+import { auth, db } from "./firebaseSetup";
 import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -19,6 +19,7 @@ import Container from '@mui/material/Container';
 import { Link as RouteLink } from "react-router-dom";
 import "../../App.css";
 import {useNavigate, redirectDocument} from "react-router-dom";
+
 
 function UserSignIn() {
   const user = useContext(AuthContext);
@@ -320,7 +321,6 @@ function AdminSignIn() {
       }
       console.log(error);
     });
-
   };
 
   return (
@@ -440,7 +440,12 @@ function AdminSignUp() {
   const createAccount = async () => {
     await auth.createUserWithEmailAndPassword(
       emailRef.current!.value,
-      passwordRef.current!.value).catch(function(error) {
+      passwordRef.current!.value).then((userCredential) => {
+        // add the user as an admin
+        const user = userCredential.user;
+        const userInfo = db.collection("UserInformation");
+        userInfo.doc(user?.uid).set({isAdmin : true});
+      }).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -450,7 +455,7 @@ function AdminSignUp() {
           alert(errorMessage);
         }
         console.log(error);
-      });
+      })
   };
 
   return (

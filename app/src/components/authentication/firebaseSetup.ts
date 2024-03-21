@@ -13,6 +13,8 @@ const firebaseConfig = {
 }; //this is where your firebase app values you copied will go
 
 
-firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
+const auth = app.auth();
+const db = firebase.firestore(app);
 
-export const auth = firebase.auth();
+export {app, auth, db};
