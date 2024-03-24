@@ -1,0 +1,16 @@
+.logo:hover {
+    cursor: pointer;
+}
+
+.toggleContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    margin: 1em;
+}
+
+.toggleContainer > p {
+    margin-right: 1em;
+}

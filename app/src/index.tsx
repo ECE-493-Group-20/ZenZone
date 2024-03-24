@@ -1,20 +1,14 @@
-import ReactDOM from "react-dom/client";
-import './App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Location from "./pages/Location";
-import Main from "./App";
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import { AuthProvider } from "./components/authentication/AuthProvider";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function App() {
-  //<Route path="/location" element={<Location />}/>
-  return (
-    <BrowserRouter>
-      <Routes>
-        
-        <Route path="/" element={<Main />}/>
-      </Routes>
-    </BrowserRouter>
-  );
-}
-
-const root = ReactDOM.createRoot(document.getElementById("root")!);
-root.render(<App />);
+ReactDOM.render(
+  <React.StrictMode>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
+);
