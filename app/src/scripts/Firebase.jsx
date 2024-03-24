@@ -7,8 +7,7 @@ import { getLocation } from '../pages/Location';
 
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
-    //apiKey: process.env(REACT_APP_FIRESTORE_KEY),
-    apiKey: "AIzaSyC1-JnK0jceEmz7_-XqjaLv2qh9qzqBFdg",
+    apiKey: process.env(REACT_APP_FIRESTORE_KEY),
     authDomain: "zenzone-90b7a.firebaseapp.com",
     projectId: "zenzone-90b7a",
     storageBucket: "zenzone-90b7a.appspot.com",
