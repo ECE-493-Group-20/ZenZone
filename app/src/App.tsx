@@ -24,8 +24,6 @@ function App() {
         <Logo className="logo" />
         <SearchBar />
         <Button className='signinButton'>Sign in</Button>
-        <Button className='microphoneButton' onClick={getStats}>Upload Stats</Button>
-        <Button className='averageButton' onClick={requestAverageSound}>Average Sound</Button>
         {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
         <Map/>
         <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
