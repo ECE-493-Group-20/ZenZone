@@ -21,6 +21,7 @@ let updates;
 let avg;
 
 async function getMicrophonePermissions() {
+  // TODO: Update for firefox
     if (!window.AudioContext || !window.MediaStreamAudioSourceNode || !window.AudioWorkletNode) {
       alert("Required APIs for sound level measurement not supported by this browser.");
     }
