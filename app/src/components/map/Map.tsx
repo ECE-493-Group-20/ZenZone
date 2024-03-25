@@ -25,7 +25,7 @@ const Map = (props: GoogleMapProps) => {
         const getLocs = (async() => { 
             const locs = await getAllLocs("University of Alberta");
             locs.forEach((doc) => {
-                console.log(doc);  // Actually make a new marker here
+                console.log(doc);  // Actually make a new marker here. List of firebase documents is returned
             });
         });
         getLocs();

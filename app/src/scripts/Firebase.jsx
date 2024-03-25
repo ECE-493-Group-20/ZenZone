@@ -1,7 +1,7 @@
 import {getAverage, toggleMicrophone} from './microphone';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
-import { Timestamp, getDocs, collection, where, query } from 'firebase/firestore';
+import { Timestamp, getDocs, doc, getDoc, collection, where, query } from 'firebase/firestore';
 import { getLocation } from '../pages/Location';
 
 const firebaseConfig = {
@@ -28,6 +28,8 @@ const BusyLevel = db.collection('BusyLevel');
 var recording = false;
 var locString = '/Locations/';
 var closest = "";
+var numDocsSound = 0;
+var numDocsBusy = 0;
 
 function degToRad(deg) {
     return deg * (Math.PI / 180);
@@ -88,36 +90,86 @@ export function upload() {
         loudnessmeasure: audio[0],
         location: locString.concat(closest),
         timestamp: Timestamp.now().toMillis(),
+        submitted: "server",
     }
     // ID for now is milliseconds since epoch plus loudness measure
     let id = (Timestamp.now().toMillis() + audio[0]).toString();
     NoiseLevel.doc(id).set(data);
 }
 
-export async function requestAverageSound(loc) {
+export async function requestAverageSound(location) {
     const compareTimestamp = Timestamp.now().toMillis() - 3600000;  // Timestamp from one hour ago.
     var averageSound = 0;
-    var numDocs = 0;
-
-    // For debugging only. This should be replaced with just calling from a given locations "card"
-    if (closest == "") {
-        getLocation(findLoc);
-    }
-    loc = locString.concat(closest);
+    numDocsSound = 0;
+    var loc = locString.concat(location);
 
     // Must use collection(...) for queries
     const q = query(collection(db, "NoiseLevel"), where("timestamp", ">", compareTimestamp), where("location", "==", loc));
     const queryColl = await getDocs(q);
     queryColl.forEach((doc) => {
-        numDocs++;
+        numDocsSound++;
         averageSound += doc.data().loudnessmeasure;
     });
-    console.log(numDocs);
-    if (numDocs > 0) {
-        averageSound /= numDocs;
+    console.log(numDocsSound);
+    if (numDocsSound > 0) {
+        averageSound /= numDocsSound;
     }
     console.log("Average sound for last hour at " + loc + ": ", averageSound);
     return averageSound;
+}
+
+export async function requestBusyMeasure(location) {
+    /* Checks number of submitted sound requests, and busy requests for a given location.
+    Averages the user submitted busy measures, then adds estimate based on total number of submitted requests.
+    Intuition is that people using the application will make their own reports on sound level and busy measures
+    which can be used to estimate current number of individuals in a given location.
+
+    Assumes 20% of people use the application, so multiplies number of reports by 5.
+    */
+    const compareTimestamp = Timestamp.now().toMillis() - 3600000;  // Timestamp from one hour ago.
+    var loc = locString.concat(location);
+    var busyLevel = 0;  // Percentage, stored from 0-100 internally
+    numDocsBusy = 0;
+    if (numDocsSound == 0) {
+        await requestAverageSound(location);
+    }
+
+    const q = query(collection(db, "BusyLevel"), where("timestamp", ">", compareTimestamp), where("location", "==", loc), where("submitted", "==", "user"));
+    const queryColl = await getDocs(q);
+    queryColl.forEach((doc) => {
+        numDocsBusy++;
+        busyLevel += doc.data().busymeasure;
+    });
+    console.log(numDocsBusy);
+
+    if (numDocsBusy > 0) {
+        busyLevel /= numDocsBusy;
+    }
+    console.log("Computed busy level: ", busyLevel);
+
+    // Total user reports. Multiplier explained above.
+    var reports = (numDocsSound + numDocsBusy) * 5;
+    console.log("Estimated number of users: ", reports);
+    const locDoc = doc(db, "Locations", location);
+    const locDocSnap = await getDoc(locDoc);
+    if (reports > 0 && locDocSnap.exists()) {
+        var busyComp = (reports / locDocSnap.data().capacity) * 100;
+        // For now, just average user and system levels.
+        busyLevel = (busyLevel + busyComp) / 2;
+    }
+
+    // Might just be no reason to actually upload this
+    /*const data = {
+        busymeasure: busyLevel,
+        location: locString.concat(closest),
+        timestamp: Timestamp.now().toMillis(),
+        submitted: "server",
+    }
+
+    let id = (Timestamp.now().toMillis() + busyLevel).toString();
+    BusyLevel.doc(id).set(data);*/
+    console.log("The busy level at " + loc + " is: ", busyLevel, " percent.");
+    return busyLevel;
 }
 
 export async function getAllLocs(org) {
@@ -126,7 +178,35 @@ export async function getAllLocs(org) {
     const locs = []
     const queryColl = await getDocs(q);
     queryColl.forEach((doc) => {
-        locs.push([doc.data().position.latitude,doc.data().position.longitude,doc.data().name,doc.data().description]);
+        locs.push(doc);
     })
     return locs;
+}
+
+// Example function for measuring data trends over time.
+export async function getTrendAllLocs() {
+    // Timestamp from last hour. Function assumed to be called on the hour, to collect the data from the
+    // previous hour. The hour, in military time, is used as the index in the trend array.
+    const timestamp = Timestamp.now().toMillis();
+    var date = new Date(timestamp);
+    var ind = date.getHours();  // Firebase seems to be in MST
+    if (ind < 0) {
+        ind += 24;
+    }
+    console.log(date);
+    console.log(ind);
+    var locs = await getAllLocs("University of Alberta");
+    locs.forEach((loc) => {
+        console.log(loc.id);
+        requestAverageSound(loc.id).then((avgSound) => {
+            let loudData = loc.data().loudtrend;
+            loudData[ind] = avgSound;
+            Locations.doc(loc.id).update({loudtrend: loudData});
+            requestBusyMeasure(loc.id).then((busyLevel) => {
+                let busyData = loc.data().busytrend;
+                busyData[ind] = busyLevel;
+                Locations.doc(loc.id).update({busytrend: busyData});
+            });
+        });
+    });
 }

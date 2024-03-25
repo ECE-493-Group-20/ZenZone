@@ -57,7 +57,7 @@ const Logo = (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTML
                         selected={locationRec}
                         onChange={() => {
                             // Query location every ten minutes
-                            if (locationRec) {
+                            if (!locationRec) {
                                 findCurrentLocation();
                                 locationInterval = setInterval(findCurrentLocation, 600000);
                             } else if (locationInterval) {
