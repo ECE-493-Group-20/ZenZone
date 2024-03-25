@@ -54,7 +54,7 @@ async function getMicrophonePermissions() {
     measureAudio();
 }
 
-function stopRecording() {
+async function stopRecording() {
   micStreamAudioSourceNode.disconnect();
   audioContext.close();
   state?.getTracks().forEach(track => track.stop());
@@ -82,11 +82,11 @@ export function getAverage() {
   return [avg, label];
 }
 
-export function toggleMicrophone() {
+export async function toggleMicrophone() {
   if (state) {
-    stopRecording();
+    await stopRecording();
   } else {
-    getMicrophonePermissions();
+    await getMicrophonePermissions();
   }
 }
 

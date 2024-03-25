@@ -44,15 +44,15 @@ function distanceLatLon(lat1, lon1, lat2, lon2) {
     return earthRad * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-export function getMicrophoneStats() {
+export async function getMicrophoneStats() {
     // Location here should point to an existing location in the firebase
     if (!recording) {
+        await toggleMicrophone();
         findCurrentLocation();
-        toggleMicrophone();
         recording = true;
         setTimeout(upload, 15000);
     } else {
-        toggleMicrophone();
+        await toggleMicrophone();
         recording = false;
     }
 }
