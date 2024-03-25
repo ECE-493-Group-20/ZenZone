@@ -45,7 +45,7 @@ function distanceLatLon(lat1, lon1, lat2, lon2) {
 export function getMicrophoneStats() {
     // Location here should point to an existing location in the firebase
     if (!recording) {
-        getLocation(findLoc);
+        findCurrentLocation();
         toggleMicrophone();
         recording = true;
         setTimeout(upload, 15000);
@@ -53,6 +53,10 @@ export function getMicrophoneStats() {
         toggleMicrophone();
         recording = false;
     }
+}
+
+export function findCurrentLocation() {
+    getLocation(findLoc);
 }
 
 const findLoc = (loc) => {

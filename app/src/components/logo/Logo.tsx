@@ -3,13 +3,15 @@ import logo from "./logo.png"
 import { Box, Popover, ToggleButton, Typography } from "@mui/material"
 import CheckIcon from '@mui/icons-material/Check'
 import './index.css'
-import { getMicrophoneStats } from "../../scripts/Firebase"
+import { getMicrophoneStats, findCurrentLocation } from "../../scripts/Firebase"
 
 
 const Logo = (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
     const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
     const [open, setOpen] = useState<boolean>(false)
     const [recording, setRecording] = useState<boolean>(false)
+    const [locationRec, setLocationRec] = useState<boolean>(false)
+    var locationInterval: NodeJS.Timeout | null;
 
     const handleClick = (event: React.MouseEvent<HTMLImageElement   >) => {
         setAnchorEl(event.currentTarget)
@@ -41,6 +43,27 @@ const Logo = (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTML
                         onChange={() => {
                             getMicrophoneStats()
                             setRecording(!recording);
+                        }}
+                        >
+                            <CheckIcon />
+                    </ToggleButton>
+                </div>
+                <div className="toggleContainer">
+                    <Typography>
+                        Toggle Location
+                    </Typography>
+                    <ToggleButton
+                        value="check"
+                        selected={locationRec}
+                        onChange={() => {
+                            // Query location every ten minutes
+                            if (locationRec) {
+                                findCurrentLocation();
+                                locationInterval = setInterval(findCurrentLocation, 600000);
+                            } else if (locationInterval) {
+                                clearInterval(locationInterval);
+                            }
+                            setLocationRec(!locationRec);
                         }}
                         >
                             <CheckIcon />
