@@ -1,6 +1,6 @@
 import { Button, IconButton } from '@mui/material';
 import './App.css';
-import { getStats, requestAverageSound } from './scripts/Firebase';
+import { getMicrophoneStats, requestAverageSound } from './scripts/Firebase';
 import {toggleMicrophone} from './scripts/microphone';
 import Logo from './components/logo/Logo';
 import Map from './components/map/Map';

@@ -3,7 +3,7 @@ import logo from "./logo.png"
 import { Box, Popover, ToggleButton, Typography } from "@mui/material"
 import CheckIcon from '@mui/icons-material/Check'
 import './index.css'
-import { toggleMicrophone } from "../../scripts/microphone"
+import { getMicrophoneStats } from "../../scripts/Firebase"
 
 
 const Logo = (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
@@ -39,7 +39,7 @@ const Logo = (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTML
                         value="check"
                         selected={recording}
                         onChange={() => {
-                            toggleMicrophone()
+                            getMicrophoneStats()
                             setRecording(!recording);
                         }}
                         >
