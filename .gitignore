@@ -64,3 +64,8 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
+# backend
+backend/private.json
+backend/venv
+backend/app/__pycache__
