@@ -30,7 +30,11 @@ async function getMicrophonePermissions() {
     const stream = await navigator.mediaDevices
     .getUserMedia({video:false, audio:true});
     let options = {sampleRate:8000};
-    audioContext = new AudioContext(options);
+    if (navigator.userAgent.indexOf("Firefox") > 0) {
+      audioContext = new AudioContext();  // Firefox does not support different sample rates
+    } else {
+      audioContext = new AudioContext(options);
+    }
     micStreamAudioSourceNode = audioContext.createMediaStreamSource(stream);
   
     // Create analyser
@@ -94,7 +98,7 @@ function measureAudio() {
     requestAnimationFrame(measureAudio);
     //analyserNode.getFloatFrequencyData(dataArray);
     analyserNode.getFloatTimeDomainData(dataArray);
-    console.log(dataArray);
+    //console.log(dataArray);
     // Don't put -Infinity into average
     if (dataArray[0] != -Infinity) {
       updates++;
@@ -110,7 +114,7 @@ function measureAudio() {
       // https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
       let db = Math.max(10, 20 * Math.log10(sum / (20 * Math.pow(10, -6))));
       avg += db;
-      console.log("DB level:", db);
+      //console.log("DB level:", db);
     }
   }
 }
