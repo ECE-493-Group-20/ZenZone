@@ -21,7 +21,7 @@ if (!firebase.apps.length) {
     app = firebase.app();
 }
 const db = firebase.firestore(app);
-//const Locations = db.collection('Locations');
+const Locations = db.collection('Locations');
 const NoiseLevel = db.collection('NoiseLevel'); 
 const BusyLevel = db.collection('BusyLevel');
 
@@ -118,4 +118,15 @@ export async function requestAverageSound(loc) {
     }
     console.log("Average sound for last hour at " + loc + ": ", averageSound);
     return averageSound;
+}
+
+export async function getAllLocs(org) {
+    console.log(org);
+    const q = query(collection(db, "Locations"), where("organization", "==", org));
+    const locs = []
+    const queryColl = await getDocs(q);
+    queryColl.forEach((doc) => {
+        locs.push([doc.data().position.latitude,doc.data().position.longitude,doc.data().name,doc.data().description]);
+    })
+    return locs;
 }
