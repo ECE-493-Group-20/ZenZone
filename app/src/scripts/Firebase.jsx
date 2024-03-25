@@ -210,3 +210,21 @@ export async function getTrendAllLocs() {
         });
     });
 }
+
+
+export async function newLocation(name, org, pos, size, cap, desc) {
+    var busy = Array(24).fill(0);
+    var loud = Array(24).fill(10);
+    const data = {
+        name: name,
+        organization: org,
+        position: pos,
+        size: size,
+        description: desc,
+        capacity: cap,
+        busytrend: busy,
+        loudtrend: loud
+    }
+    var id = name.toLowerCase().replaceAll(' ', '');
+    Locations.doc(id).set(data);
+}
