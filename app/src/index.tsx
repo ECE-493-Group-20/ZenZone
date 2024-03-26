@@ -4,7 +4,7 @@ import App from "./App";
 import { AuthProvider } from "./components/authentication/AuthProvider";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import {UserSignIn, UserSignUp, AdminSignIn, AdminSignUp} from './components/authentication/Authentication';
+import {UserSignIn, UserSignUp, AdminSignUp} from './components/authentication/Authentication';
 
 
 const router = createBrowserRouter([
@@ -21,11 +21,7 @@ const router = createBrowserRouter([
     element: <UserSignUp />
   },
   {
-    path: "/AdminSignIn",
-    element: <AdminSignIn />
-  },
-  {
-    path: "/AdminRegister",
+    path: "/adminregister",
     element: <AdminSignUp />
   }
     

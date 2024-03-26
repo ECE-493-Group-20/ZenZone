@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import SearchBar from './components/searchbar/SearchBar';
 import { DashboardProvider } from './components/dashboard/dashboardprovider/DashboardProvider';
 import { Dashboard } from './components/dashboard/Dashboard';
-import {UserSignIn, UserSignUp, AdminSignIn, AdminSignUp, signOut} from './components/authentication/Authentication';
+import {UserSignIn, UserSignUp, AdminSignUp, signOut} from './components/authentication/Authentication';
 import { useContext } from 'react';
 import { AuthContext } from './components/authentication/AuthContext';
 import Typography from '@mui/material/Typography';
@@ -53,9 +53,6 @@ function App() {
   return (
     <>
     <DashboardProvider>
-    <Typography component="h1" variant="h5">
-        {user?.email}
-      </Typography>
       <div className="App">
         <Logo className="logo" />
         <SearchBar />

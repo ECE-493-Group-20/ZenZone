@@ -10,7 +10,7 @@ const firebaseConfig = {
     messagingSenderId: "956790020992",
     appId: process.env.REACT_APP_FIRESTORE_ID,
     measurementId: "G-VRYF87GJDY"
-}; //this is where your firebase app values you copied will go
+};
 
 
 const app = firebase.initializeApp(firebaseConfig);
