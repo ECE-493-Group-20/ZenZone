@@ -8,6 +8,8 @@ https://community.st.com/t5/mems-sensors/is-it-possible-to-measure-sound-intensi
 https://www.ncbi.nlm.nih.gov/books/NBK236684/#:~:text=In%20air%2C%20the%20common%20reference,20%20log%2020%20%3D%2026).
 https://stackoverflow.com/questions/40315433/analysernodes-getfloatfrequencydata-vs-getfloattimedomaindata
 https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
+
+This file covers FR10, allowing the user to upload microphone data.
 */
 
 let state = null;

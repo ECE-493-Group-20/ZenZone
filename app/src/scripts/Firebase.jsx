@@ -1,3 +1,9 @@
+/*
+This file primarily covers FR20 and FR21, however also covers all non-authentication database actions. This includes
+getting locations for FR7, sending data for FR10 and FR11, storing and updating locations for FR14 and FR15, and
+getting all location data for FR17, FR18 and FR19.
+*/
+
 import {getAverage, toggleMicrophone} from './microphone';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
