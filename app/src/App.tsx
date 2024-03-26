@@ -1,6 +1,7 @@
 import { Button, IconButton } from '@mui/material';
 import './App.css';
-import {toggleMicrophone} from './microphone';
+import { getMicrophoneStats, requestAverageSound, getTrendAllLocs } from './scripts/Firebase';
+import {toggleMicrophone} from './scripts/microphone';
 import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
 import AddIcon from '@mui/icons-material/Add';
@@ -56,12 +57,14 @@ function App() {
         {user?.email}
       </Typography>
       <div className="App">
-        <Logo className="logo"/>
+        <Logo className="logo" />
         <SearchBar />
         {user == null ? <Button className='signinButton' component={Link} to={"/signin"}>Sign in</Button>
           : <Button className='signinButton' onClick = {signOut}>Sign Out</Button>}
+        <Button className='microphoneButton' onClick={getTrendAllLocs}>All Test</Button>
         {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
-        <Dashboard />
+        <Map/>
+        <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
       </div>
     </DashboardProvider>
     </>
