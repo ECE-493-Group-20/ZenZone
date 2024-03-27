@@ -37,10 +37,12 @@ var closest = "";
 var numDocsSound = 0;
 var numDocsBusy = 0;
 
+// Helper function to reduce code copying
 function degToRad(deg) {
     return deg * (Math.PI / 180);
 }
 
+// Calculates distance between two (lat, lon) points
 // https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
 function distanceLatLon(lat1, lon1, lat2, lon2) {
     let earthRad = 6371000;  // radius of earth in m
@@ -50,13 +52,14 @@ function distanceLatLon(lat1, lon1, lat2, lon2) {
     return earthRad * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
+// Gets 
 export async function getMicrophoneStats() {
-    // Location here should point to an existing location in the firebase
     if (!recording) {
+        // Await microphone to ensure permissions are requested separately
         await toggleMicrophone();
         findCurrentLocation();
         recording = true;
-        setTimeout(upload, 15000);
+        setTimeout(uploadLoudness, 15000);  // Upload microphone data after 15 seconds
     } else {
         await toggleMicrophone();
         recording = false;
@@ -70,14 +73,13 @@ export function findCurrentLocation() {
 const findLoc = (loc) => {
     console.log(loc);
     // Loc is an array of [lat, lon]. Values below for testing purposes
-    //loc[0] = 53.52716644287327;
-    //loc[1] = -113.5302139343207;
     var minDist = 1000000000;
     var dist = 0;
+    // Check user position against each location, here we specify University of Alberta locations only.
     // https://stackoverflow.com/questions/47227550/using-await-inside-non-async-function
     const getClosest = (async() => { 
-        const queryColl = await getDocs(collection(db, "Locations"));
-        queryColl.forEach((doc) => {
+        const locs = await getAllLocs("University of Alberta");
+        locs.forEach((doc) => {
             dist = distanceLatLon(loc[0], loc[1], doc.data().position.latitude, doc.data().position.longitude);
             console.log(dist);
             console.log(doc.data().name);
@@ -90,7 +92,8 @@ const findLoc = (loc) => {
     getClosest();
 }
 
-export function upload() {
+// Send last 15s of microphone data to the database.
+export function uploadLoudness() {
     var audio = getAverage();
     const data = {
         loudnessmeasure: audio[0],
@@ -109,7 +112,7 @@ export async function requestAverageSound(location) {
     numDocsSound = 0;
     var loc = locString.concat(location);
 
-    // Must use collection(...) for queries
+    // Must use collection(...) for queries. Averages all noise data from a given location for the last hour.
     const q = query(collection(db, "NoiseLevel"), where("timestamp", ">", compareTimestamp), where("location", "==", loc));
     const queryColl = await getDocs(q);
     queryColl.forEach((doc) => {
@@ -140,6 +143,7 @@ export async function requestBusyMeasure(location) {
         await requestAverageSound(location);
     }
 
+    // Only check reports at the given location from the last hour
     const q = query(collection(db, "BusyLevel"), where("timestamp", ">", compareTimestamp), where("location", "==", loc), where("submitted", "==", "user"));
     const queryColl = await getDocs(q);
     queryColl.forEach((doc) => {
@@ -178,6 +182,7 @@ export async function requestBusyMeasure(location) {
     return busyLevel;
 }
 
+// Get every location for a given organization
 export async function getAllLocs(org) {
     console.log(org);
     const q = query(collection(db, "Locations"), where("organization", "==", org));
@@ -217,7 +222,7 @@ export async function getTrendAllLocs() {
     });
 }
 
-
+// Upload new location to the database. Busy and loud data are prefilled.
 export async function newLocation(name, org, pos, size, cap, desc) {
     var busy = Array(24).fill(0);
     var loud = Array(24).fill(10);
