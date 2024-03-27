@@ -8,6 +8,8 @@ https://community.st.com/t5/mems-sensors/is-it-possible-to-measure-sound-intensi
 https://www.ncbi.nlm.nih.gov/books/NBK236684/#:~:text=In%20air%2C%20the%20common%20reference,20%20log%2020%20%3D%2026).
 https://stackoverflow.com/questions/40315433/analysernodes-getfloatfrequencydata-vs-getfloattimedomaindata
 https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
+
+This file covers FR10, allowing the user to upload microphone data.
 */
 
 let state = null;
@@ -21,7 +23,6 @@ let updates;
 let avg;
 
 async function getMicrophonePermissions() {
-  // TODO: Update for firefox
     if (!window.AudioContext || !window.MediaStreamAudioSourceNode || !window.AudioWorkletNode) {
       alert("Required APIs for sound level measurement not supported by this browser.");
     }
@@ -37,7 +38,7 @@ async function getMicrophonePermissions() {
     }
     micStreamAudioSourceNode = audioContext.createMediaStreamSource(stream);
   
-    // Create analyser
+    // Create analyser, fftSize of 64 for performance reasons
     analyserNode = audioContext.createAnalyser();
     analyserNode.fftSize = 64;
     bufferLen = analyserNode.frequencyBinCount;
@@ -54,16 +55,15 @@ async function getMicrophonePermissions() {
     measureAudio();
 }
 
+// Stop user microphone from recording
 async function stopRecording() {
   micStreamAudioSourceNode.disconnect();
   audioContext.close();
   state?.getTracks().forEach(track => track.stop());
   state = null;
-  // Send averaged data to server
-  //clearInterval(audioInterval);
-  //getAverage();
 }
 
+// Gets the average of all sound data recorded.
 export function getAverage() {
   avg = avg / updates;
   var label = "Silent";
@@ -82,6 +82,7 @@ export function getAverage() {
   return [avg, label];
 }
 
+// This function should be called by all external files to start or stop microphone recording.
 export async function toggleMicrophone() {
   if (state) {
     await stopRecording();
@@ -96,10 +97,8 @@ function measureAudio() {
   // Schedule next measure period if we want to keep recoding. Apparently scheduled by the browser.
   if (state) {
     requestAnimationFrame(measureAudio);
-    //analyserNode.getFloatFrequencyData(dataArray);
-    analyserNode.getFloatTimeDomainData(dataArray);
-    //console.log(dataArray);
-    // Don't put -Infinity into average
+    analyserNode.getFloatTimeDomainData(dataArray);  // Get Pulse-Code Modulation data from microphone
+    // Don't put -Infinity into average, will ruin all values
     if (dataArray[0] != -Infinity) {
       updates++;
       let sum = 0;
@@ -114,7 +113,6 @@ function measureAudio() {
       // https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
       let db = Math.max(10, 20 * Math.log10(sum / (20 * Math.pow(10, -6))));
       avg += db;
-      //console.log("DB level:", db);
     }
   }
 }

@@ -1,3 +1,7 @@
+/*
+This file covers the location detection portion of FR11.
+*/
+
 import React, { useState, useEffect } from "react";
 
 export const getLocation = (getLoc: (loc: any) => any) => {
