@@ -3,6 +3,7 @@ import {GoogleMap, GoogleMapProps, useJsApiLoader} from "@react-google-maps/api"
 import "./index.css"
 import { LinearProgress } from "@mui/material";
 import CustomMarker from "../marker/Marker"
+import { getAllLocs } from "../../scripts/Firebase"
 
 
 const Map = (props: GoogleMapProps) => {
@@ -10,10 +11,10 @@ const Map = (props: GoogleMapProps) => {
         id: 'test-script',
         googleMapsApiKey: process.env.REACT_APP_MAP_API_KEY || '', // !!! PROD KEY IS RESTRICTED TO WEBSITE
     });
-    
+    // Map centered on ETLC
     const center = {
-        lat: 53.53,
-        lng: -113.52,
+        lat: 53.52716644287327,
+        lng: -113.5302139343207,
     };
 
     const [_, setMap] = useState<google.maps.Map | null>();
@@ -21,7 +22,13 @@ const Map = (props: GoogleMapProps) => {
     const onLoad = useCallback((map: google.maps.Map) => {
         const bounds = new window.google.maps.LatLngBounds(center);
         map.fitBounds(bounds);
-        // fetching data to create markers
+        const getLocs = (async() => { 
+            const locs = await getAllLocs("University of Alberta");
+            locs.forEach((doc) => {
+                console.log(doc);  // Actually make a new marker here. List of firebase documents is returned
+            });
+        });
+        getLocs();
         setMap(map);
     }, []);
 
@@ -40,7 +47,8 @@ const Map = (props: GoogleMapProps) => {
             mapContainerClassName="map"        
             onLoad={onLoad}
             onUnmount={onUnmount}   
-            zoom={10}
+            zoom={18}
+            id="gmap"
             options={{
                 disableDefaultUI: true,                
                 styles: require("./mapStyle.json"),

@@ -8,37 +8,37 @@ https://community.st.com/t5/mems-sensors/is-it-possible-to-measure-sound-intensi
 https://www.ncbi.nlm.nih.gov/books/NBK236684/#:~:text=In%20air%2C%20the%20common%20reference,20%20log%2020%20%3D%2026).
 https://stackoverflow.com/questions/40315433/analysernodes-getfloatfrequencydata-vs-getfloattimedomaindata
 https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
+
+This file covers FR10, allowing the user to upload microphone data.
 */
 
 let state = null;
 
 let audioContext;
 let micStreamAudioSourceNode;
-let audioWorkletNode;
 let analyserNode;
 let dataArray;
 let bufferLen;
 let updates;
 let avg;
-let canvas;
-let canvasCtx;
 
 async function getMicrophonePermissions() {
     if (!window.AudioContext || !window.MediaStreamAudioSourceNode || !window.AudioWorkletNode) {
       alert("Required APIs for sound level measurement not supported by this browser.");
     }
     // Chrome saves this permission and handles the querying as well.
+    // Error should be handled outside of this.
     const stream = await navigator.mediaDevices
-    //navigator.mediaDevices
-    .getUserMedia({video:false, audio:true})
-    .catch((err) => {
-      alert("Microphone permissions denied or closed. Please grant microphone permissions to use the microphone.");
-    });
+    .getUserMedia({video:false, audio:true});
     let options = {sampleRate:8000};
-    audioContext = new AudioContext(options);
+    if (navigator.userAgent.indexOf("Firefox") > 0) {
+      audioContext = new AudioContext();  // Firefox does not support different sample rates
+    } else {
+      audioContext = new AudioContext(options);
+    }
     micStreamAudioSourceNode = audioContext.createMediaStreamSource(stream);
   
-    // Create analyser
+    // Create analyser, fftSize of 64 for performance reasons
     analyserNode = audioContext.createAnalyser();
     analyserNode.fftSize = 64;
     bufferLen = analyserNode.frequencyBinCount;
@@ -48,34 +48,46 @@ async function getMicrophonePermissions() {
 
     // Setup network for nodes
     micStreamAudioSourceNode.connect(analyserNode);
-    analyserNode.connect(audioContext.destination);
     state = stream;
 
-    // Start data collection
+    // Start data collection, set callback to stop recording
+    //audioInterval = setInterval(stopRecording, 15000);
     measureAudio();
 }
 
-function stopRecording() {
+// Stop user microphone from recording
+async function stopRecording() {
   micStreamAudioSourceNode.disconnect();
   audioContext.close();
   state?.getTracks().forEach(track => track.stop());
   state = null;
-  // Send averaged data to server
-  uploadAverage();
 }
 
-// TODO: Should be called with some set interval
-function uploadAverage() {
+// Gets the average of all sound data recorded.
+export function getAverage() {
   avg = avg / updates;
-  // Make this an actual call to send data to backend
-  console.log("Average!", avg);
+  var label = "Silent";
+  // Set human label for how loud the area is, explicitly for display to the user.
+  // https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
+  if (20 < avg && avg <= 45) {
+    label = "Quiet";
+  } else if (45 < avg && avg <= 65) {
+    label = "Moderate";
+  } else if (65 < avg && avg <= 85) {
+    label = "Loud";
+  } else if (85 < avg) {
+    label = "Very Loud";
+  }
+  console.log("Average:", avg, label);
+  return [avg, label];
 }
 
-export function toggleMicrophone() {
+// This function should be called by all external files to start or stop microphone recording.
+export async function toggleMicrophone() {
   if (state) {
-    stopRecording();
+    await stopRecording();
   } else {
-    getMicrophonePermissions();
+    await getMicrophonePermissions();
   }
 }
 
@@ -85,10 +97,8 @@ function measureAudio() {
   // Schedule next measure period if we want to keep recoding. Apparently scheduled by the browser.
   if (state) {
     requestAnimationFrame(measureAudio);
-    //analyserNode.getFloatFrequencyData(dataArray);
-    analyserNode.getFloatTimeDomainData(dataArray);
-    console.log(dataArray);
-    // Don't put -Infinity into average
+    analyserNode.getFloatTimeDomainData(dataArray);  // Get Pulse-Code Modulation data from microphone
+    // Don't put -Infinity into average, will ruin all values
     if (dataArray[0] != -Infinity) {
       updates++;
       let sum = 0;
@@ -103,7 +113,6 @@ function measureAudio() {
       // https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
       let db = Math.max(10, 20 * Math.log10(sum / (20 * Math.pow(10, -6))));
       avg += db;
-      console.log("DB level:", db);
     }
   }
 }

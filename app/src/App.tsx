@@ -1,5 +1,6 @@
 import { Button, IconButton } from '@mui/material';
 import './App.css';
+import { getMicrophoneStats, requestAverageSound, getTrendAllLocs, tester } from './scripts/Firebase';
 import {toggleMicrophone} from './scripts/microphone';
 import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
@@ -21,9 +22,10 @@ function App() {
     <>
     <DashboardProvider>
       <div className="App">
-        <Logo className="logo"/>
+        <Logo className="logo" />
         <SearchBar />
         <Button className='signinButton'>Sign in</Button>
+        <Button className='microphoneButton' onClick={tester}>All Test</Button>
         <Map/>
         {isAdmin ?  <CreateLocation/>: null}
         </div>
