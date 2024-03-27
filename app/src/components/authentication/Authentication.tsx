@@ -1,7 +1,7 @@
 // This was copied from this tutorial: https://medium.com/geekculture/firebase-auth-with-react-and-typescript-abeebcd7940a
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
-import { auth } from "./firebaseSetup";
+import { auth, db } from "./firebaseSetup";
 import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -16,10 +16,15 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Link as RouteLink } from "react-router-dom";
+import "../../App.css";
+import {useNavigate, redirectDocument} from "react-router-dom";
+
 
 function UserSignIn() {
+  // both admin an regular users use the same signin page
   const user = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // Email and password sign in
   const emailRef = useRef<HTMLInputElement>();
@@ -27,6 +32,14 @@ function UserSignIn() {
 
   // Google authentication
   const provider = new GoogleAuthProvider();
+
+  // redirect after login
+  useEffect(() => {
+    // Go back to home
+    if (user != null) {
+      navigate("/");
+    }
+  }, [user]);
 
   const googleSignIn = async () => {
 
@@ -37,29 +50,24 @@ function UserSignIn() {
   }
 
   const signIn = async () => {
-    const email = emailRef.current!.value;
-    const password = passwordRef.current!.value;
-    try {
-      await auth.signInWithEmailAndPassword(
-        email,
-        password
-      );
-      console.log("Signed in as: ", auth.currentUser);
-    } catch (error) {
-      console.error(error);
-    }
+    await auth.signInWithEmailAndPassword(
+      emailRef.current!.value,
+      passwordRef.current!.value
+      ).catch(function(error){// Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if (errorCode === 'auth/wrong-password') {
+        alert('Wrong password.');
+      } else {
+        alert(errorMessage);
+      }
+      console.log(error);
+    });
   };
-
-  const signOut = async () => {
-    await auth.signOut();
-  };
-
-  const getUserEmail = async () => {
-    return user?.email;
-  }
 
   return (
     <>
+    <Button component={RouteLink} to={"/"}>Home</Button>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -74,9 +82,9 @@ function UserSignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign in {user?.email}
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          
             <TextField
               margin="normal"
               required
@@ -125,13 +133,12 @@ function UserSignIn() {
 
             <Grid container>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link component={RouteLink} to="/register">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
           </Box>
-        </Box>
       </Container>
     </>
   );
@@ -140,6 +147,7 @@ function UserSignIn() {
 function UserSignUp() {
   
   const user = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // Email and password sign in
   const emailRef = useRef<HTMLInputElement>(null);
@@ -147,6 +155,17 @@ function UserSignUp() {
 
   // Google authentication
   const provider = new GoogleAuthProvider();
+
+  // redirect after login
+  useEffect(() => {
+    // Go back to home
+    if (user != null) {
+      const userInfo = db.collection("UserInformation");
+      userInfo.doc(user?.uid).set({isAdmin : false});
+
+      navigate("/");
+    }
+  }, [user]);
 
   const googleSignIn = async () => {
 
@@ -161,7 +180,17 @@ function UserSignUp() {
       await auth.createUserWithEmailAndPassword(
         emailRef.current!.value,
         passwordRef.current!.value
-      );
+      ).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode == 'auth/weak-password') {
+          alert('The password is too weak.');
+        } else {
+          alert(errorMessage);
+        }
+        console.log(error);
+      });
     } catch (error) {
       console.error(error);
     }
@@ -170,6 +199,7 @@ function UserSignUp() {
 
   return (
     <>
+    <Button component={RouteLink} to={"/"}>Home</Button>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -186,7 +216,7 @@ function UserSignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" onSubmit={createAccount} noValidate sx={{ mt: 1 }}>
+          
             <TextField
               margin="normal"
               required
@@ -215,6 +245,7 @@ function UserSignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={createAccount}
             >
               Sign Up
             </Button>
@@ -235,133 +266,31 @@ function UserSignUp() {
 
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Already Have an account?
+                <Link component={RouteLink} to="/signin">
+                  Already Have an account? Sign in here
                 </Link>
               </Grid>
             </Grid>
-          </Box>
-        </Box>
-      </Container>
-    </>
-  )
-}
-
-function AdminSignIn() {
-  const user = useContext(AuthContext);
-
-  // Email and password sign in
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-
-  // Google authentication
-  const provider = new GoogleAuthProvider();
-
-  // TODO: IMPLEMENT CHECKING FOR ADMIN
-  const googleSignIn = async () => {
-
-    // Code from Firebase documentation
-    const auth = getAuth();
-    signInWithRedirect(auth, provider);
-    
-  }
-
-  // TODO: IMPLEMENT CHECKING FOR ADMIN
-  const signIn = async () => {
-    try {
-      await auth.signInWithEmailAndPassword(
-        emailRef.current!.value,
-        passwordRef.current!.value
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  return (
-    <>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Admin Sign in
-          </Typography>
-          <Box component="form" onSubmit={signIn} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              inputRef={emailRef}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              inputRef={passwordRef}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-
-            <Typography component="h1" variant="h5" align='center'>
-            Or
-            </Typography>
-
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick = {googleSignIn}
-            >
-              Continue with Google
-            </Button>
 
             <Grid container>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+              <Grid item xs>
+                <Link component={RouteLink} to="/adminregister">
+                  Click here to register as a system admin.
                 </Link>
               </Grid>
             </Grid>
           </Box>
-        </Box>
+
       </Container>
     </>
   )
 }
+
+
 
 function AdminSignUp() {
   const user = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // Email and password sign in
   const emailRef = useRef<HTMLInputElement>(null);
@@ -370,29 +299,46 @@ function AdminSignUp() {
   // Google authentication
   const provider = new GoogleAuthProvider();
 
+  // redirect after login
+  useEffect(() => {
+    // Go back to home
+    if (user != null) {
+      // Make new user an admin
+      // This cannot be done from within the googleSignIn function
+      const userInfo = db.collection("UserInformation");
+      userInfo.doc(user?.uid).set({isAdmin : true});
+      navigate("/");
+    }
+  }, [user]); 
+
   // TODO: IMPLEMENT MAKING ADMIN
   const googleSignIn = async () => {
-
     // Code from Firebase documentation
     const auth = getAuth();
     signInWithRedirect(auth, provider);
-    console.log("Signed in as: ", auth.currentUser);
+    // User gets assigned admin when redirected to main page
   }
 
-  // TODO: IMPLEMENT MAKING ADMIN
+
   const createAccount = async () => {
-    try {
-      await auth.createUserWithEmailAndPassword(
-        emailRef.current!.value,
-        passwordRef.current!.value
-      );
-    } catch (error) {
-      console.error(error);
-    }
+    await auth.createUserWithEmailAndPassword(
+      emailRef.current!.value,
+      passwordRef.current!.value).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode == 'auth/weak-password') {
+          alert('The password is too weak.');
+        } else {
+          alert(errorMessage);
+        }
+        console.log(error);
+      })
   };
 
   return (
     <>
+    <Button component={RouteLink} to={"/"}>Home</Button>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Box
@@ -409,7 +355,6 @@ function AdminSignUp() {
         <Typography component="h1" variant="h5">
           Admin Sign up
         </Typography>
-        <Box component="form" onSubmit={createAccount} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
@@ -441,8 +386,9 @@ function AdminSignUp() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            onClick={createAccount}
           >
-            Sign In
+            Sign Up
           </Button>
 
           <Typography component="h1" variant="h5" align='center'>
@@ -461,21 +407,24 @@ function AdminSignUp() {
 
           <Grid container>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link component={RouteLink} to="/signin">
+                {"Already have an account? Sign in here"}
               </Link>
             </Grid>
           </Grid>
         </Box>
-      </Box>
     </Container>
   </>
   )
 }
 
+function signOut() {
+    auth.signOut();
+}
+
 export {
   UserSignIn,
   UserSignUp,
-  AdminSignIn,
-  AdminSignUp
+  AdminSignUp,
+  signOut
 }
