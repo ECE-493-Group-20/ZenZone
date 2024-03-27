@@ -10,10 +10,13 @@ import { useState } from "react"
 import { BarPlot, ChartsLegend } from "@mui/x-charts"
 import TextField from '@mui/material/TextField';
 import Map from '../map/Map';
-
+// Button Icons
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
+// Firebase functions
+import { newLocation } from '../../scripts/Firebase'
+import { GeoPoint } from "firebase/firestore";
 
 interface DashboardProps {
   locationName: string,
@@ -28,6 +31,8 @@ export const CreateLocation = () => {
     const nameRef = useRef<HTMLInputElement>();
     const descriptionRef = useRef<HTMLInputElement>();
     const capacityRef = useRef<HTMLInputElement>();
+    const sizeRef = useRef<HTMLInputElement>();
+    const orgRef = useRef<HTMLInputElement>();
 
     let lat = "Hello";
     let long = "World";
@@ -55,6 +60,9 @@ export const CreateLocation = () => {
 
     const saveLocation = async () => {
       // preform necessary checks and save to firebase
+      // TODO: Get the actual location from the map.
+      const position = new GeoPoint(53.52849865168634, -113.5293148688232)
+      newLocation(nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value);
     }
 
     const closeDrawer = async () => {
@@ -75,7 +83,8 @@ export const CreateLocation = () => {
             {locationPicker==true ? <p>{"Click on the map to select the location"}</p> : null}
 
           <div className="paper">
-            <TextField label="Location Name" inputRef = {nameRef}/>
+            <TextField label="Location Name" inputRef = {nameRef} required={true}/>
+            <TextField label="Organization" inputRef = {orgRef} defaultValue={"University of Alberta"}/>
             <div className="description">
               <Button
               onClick={getLocation}>
@@ -89,6 +98,7 @@ export const CreateLocation = () => {
                 <AccountBox />
               </Tooltip>
               <TextField label="Capacity" inputRef = {capacityRef} type="number"/>
+              <TextField label="Size" inputRef = {sizeRef} type="number"/>
             </div>
             <div className="description">
               <Tooltip title="Description">

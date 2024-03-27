@@ -274,6 +274,7 @@ export async function newLocation(name, org, pos, size, cap, desc) {
         loudtrend: loud
     }
     var id = name.toLowerCase().replaceAll(' ', '');
+    // TODO: Check if location already exists
     Locations.doc(id).set(data);
 }
 
