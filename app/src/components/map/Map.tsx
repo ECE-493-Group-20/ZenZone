@@ -29,6 +29,11 @@ const Map = (props: GoogleMapProps) => {
         setMap(null);
     }, []);
 
+    const getCoordinates = async (event : any) => {
+        console.log(JSON.stringify(event.latLng?.toJSON(), null, 2));
+    }
+
+
     return isLoaded ? (
         <GoogleMap
             center={center}
@@ -41,6 +46,8 @@ const Map = (props: GoogleMapProps) => {
                 styles: require("./mapStyle.json"),
             }}
             {...props}
+
+            onClick={getCoordinates}
         >
             <CustomMarker position={{lat: 53.53, lng: -113.52,}}/>
             <CustomMarker position={{lat: 53, lng: -113,}} favorite/>

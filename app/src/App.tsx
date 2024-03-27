@@ -8,6 +8,7 @@ import SearchBar from './components/searchbar/SearchBar';
 import { DashboardProvider } from './components/dashboard/dashboardprovider/DashboardProvider';
 import { Dashboard } from './components/dashboard/Dashboard';
 import {UserSignIn, UserSignUp, AdminSignIn, AdminSignUp} from './components/authentication/Authentication';
+import { CreateLocation } from './components/admin/CreateLocation';
 
 function App() {
   const isAdmin = true;
@@ -23,10 +24,9 @@ function App() {
         <Logo className="logo"/>
         <SearchBar />
         <Button className='signinButton'>Sign in</Button>
-        {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
         <Map/>
-        <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
-      </div>
+        {isAdmin ?  <CreateLocation/>: null}
+        </div>
     </DashboardProvider>
     </>
   );
