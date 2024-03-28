@@ -27,7 +27,7 @@ function App() {
         <Button className='signinButton'>Sign in</Button>
         <Button className='microphoneButton' onClick={tester}>All Test</Button>
         <Map/>
-        {isAdmin ?  <CreateLocation/>: null}
+        {/*{isAdmin ?  <CreateLocation/>: null} */}
         </div>
     </DashboardProvider>
     </>

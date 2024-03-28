@@ -1,11 +1,11 @@
-import { Drawer, ToggleButton, Tooltip, Button, IconButton } from "@mui/material"
-import { useRef, useEffect } from "react";
+import { Drawer, ToggleButton, Tooltip, Button, IconButton, Box } from "@mui/material"
+import { useRef, useEffect, useContext } from "react";
 
 import "./index.css"
 import { ResponsiveChartContainer } from "@mui/x-charts/ResponsiveChartContainer"
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis'
 //import LevelCard from "./LevelCard"
-import { AccountBox, Description, GpsFixed, TurnedIn, TurnedInNot } from "@mui/icons-material"
+import { AccountBox, Description, GpsFixed, TurnedIn, TurnedInNot, WidthFull } from "@mui/icons-material"
 import { useState } from "react"
 import { BarPlot, ChartsLegend } from "@mui/x-charts"
 import TextField from '@mui/material/TextField';
@@ -18,24 +18,27 @@ import AddIcon from '@mui/icons-material/Add';
 import { newLocation } from '../../scripts/Firebase'
 import { GeoPoint } from "firebase/firestore";
 
-interface DashboardProps {
-  locationName: string,
-  location: string,
-  capacity: number,
-  description: string,
+import { LocationContext } from "../map/LocationContext";
+
+
+interface adminProps {
+  locationName?: string,
+  lat?: string | null,
+  long?: string | null,
+  capacity?: number,
+  description?: string,
   busyLevel?: number,
   soundLevel?: number,
 }
 
-export const CreateLocation = () => {
+export const CreateLocation = (props : adminProps) => {
     const nameRef = useRef<HTMLInputElement>();
     const descriptionRef = useRef<HTMLInputElement>();
     const capacityRef = useRef<HTMLInputElement>();
     const sizeRef = useRef<HTMLInputElement>();
     const orgRef = useRef<HTMLInputElement>();
 
-    let lat = "Hello";
-    let long = "World";
+    const locationContext = useContext(LocationContext);
 
     // used to indicate when the admin user is picking the coordinates of a new location
     const [locationPicker, setLocation] = useState<boolean>(false);
@@ -51,7 +54,9 @@ export const CreateLocation = () => {
         // open location prompt
         setLocation(true);
         // get the location from the map
-        
+        console.log("recieved coordinates");
+        console.log(locationContext.lat);
+        console.log(locationContext.long);
       } else {
         // close location prompt
         setLocation(false);
@@ -61,8 +66,9 @@ export const CreateLocation = () => {
     const saveLocation = async () => {
       // preform necessary checks and save to firebase
       // TODO: Get the actual location from the map.
-      const position = new GeoPoint(53.52849865168634, -113.5293148688232)
+      const position = new GeoPoint(locationContext.lat, locationContext.long);
       newLocation(nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value);
+      // display error message if location already exits in map
     }
 
     const closeDrawer = async () => {
@@ -80,11 +86,17 @@ export const CreateLocation = () => {
           open={open} 
           variant = "persistent"
           >
+            <h1>{locationContext.lat}</h1>
+            <h1>{locationContext.long}</h1>
             {locationPicker==true ? <p>{"Click on the map to select the location"}</p> : null}
 
           <div className="paper">
-            <TextField label="Location Name" inputRef = {nameRef} required={true}/>
-            <TextField label="Organization" inputRef = {orgRef} defaultValue={"University of Alberta"}/>
+            <Box sx={{width: 1/2, p:1}}>
+            <TextField label="Location Name" inputRef = {nameRef} required={true} fullWidth={true}/>
+            </Box>
+            <Box sx={{width: 1/2, p:1}}>
+            <TextField label="Organization" inputRef = {orgRef} defaultValue={"University of Alberta"} fullWidth={true}/>
+            </Box>
             <div className="description">
               <Button
               onClick={getLocation}>
@@ -92,8 +104,8 @@ export const CreateLocation = () => {
                   <GpsFixed />              
                 </Tooltip>
               </Button>
-              <TextField label="Latitude" disabled={true}>{lat}</TextField>
-              <TextField label="Longitude" disabled={true}>{long}</TextField>
+              <h1 id="Latitude"/>
+              <h1 id="Longitude"/>
               <Tooltip title="Capacity">
                 <AccountBox />
               </Tooltip>
@@ -104,7 +116,7 @@ export const CreateLocation = () => {
               <Tooltip title="Description">
                 <Description />
               </Tooltip>
-              <TextField label="Description" inputRef = {descriptionRef} fullWidth={true}/>
+              <TextField label="Description" inputRef = {descriptionRef} fullWidth={true} />
             </div>
             <IconButton className = "saveButton" onClick={saveLocation}><SaveIcon/></IconButton>
             <IconButton className = "closeButton" onClick={closeDrawer}><CloseIcon/></IconButton>
