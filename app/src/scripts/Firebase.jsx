@@ -259,7 +259,9 @@ export async function getTrendLoc(loc, ind=-1) {
 }
 
 // Upload new location to the database. Busy and loud data are prefilled.
-// pos should be a GeoPoint.
+// pos should be a GeoPoint. Returns true if the location did not previously
+// exist and is now created. Returns false if location already existed, and the
+// location will not be recreated.
 export async function newLocation(name, org, pos, size, cap, desc) {
     var busy = Array(24).fill(0);
     var loud = Array(24).fill(10);
@@ -274,7 +276,13 @@ export async function newLocation(name, org, pos, size, cap, desc) {
         loudtrend: loud
     }
     var id = name.toLowerCase().replaceAll(' ', '');
-    Locations.doc(id).set(data);
+    const locDocQuery = doc(db, "Locations", id);
+    const locDoc = await getDoc(locDocQuery);
+    if (!locDoc.exists()) {
+        Locations.doc(id).set(data);
+        return true;
+    }
+    return false;
 }
 
 // Function to update a location at the given document id. Any default values will remain unchanged.
