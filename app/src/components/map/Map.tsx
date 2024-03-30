@@ -4,9 +4,43 @@ import "./index.css"
 import { LinearProgress } from "@mui/material";
 import CustomMarker from "../marker/Marker"
 import { getAllLocs } from "../../scripts/Firebase"
+import { useEffect } from "react";
+
+export const getLocation = (getLoc: (loc: any) => any) => {
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        getLoc([position.coords.latitude, position.coords.longitude]);
+      },
+      null,
+      { enableHighAccuracy: true }
+    );
+  } else {
+    console.log("Geolocation is not available in your browser.");
+  }
+};
 
 
 const Map = (props: GoogleMapProps) => {
+
+    const [position, setPosition] = useState({
+      latitude: null as unknown as number,
+      longitude: null as unknown as number,
+    });
+
+    useEffect(() => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          setPosition({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        });
+      } else {
+        console.log("Geolocation is not available in your browser.");
+      }
+    }, []);
+    
     const { isLoaded } = useJsApiLoader({
         id: 'test-script',
         googleMapsApiKey: process.env.REACT_APP_MAP_API_KEY || '', // !!! PROD KEY IS RESTRICTED TO WEBSITE
@@ -37,27 +71,31 @@ const Map = (props: GoogleMapProps) => {
     }, []);
 
     return isLoaded ? (
-        <GoogleMap
-            center={center}
-            mapContainerClassName="map"        
-            onLoad={onLoad}
-            onUnmount={onUnmount}   
-            zoom={18}
-            id="gmap"
-            options={{
-                disableDefaultUI: true,                
-                styles: require("./mapStyle.json"),
-            }}
-            {...props}
-        >
-            <CustomMarker position={{lat: 53.53, lng: -113.52,}}/>
-            <CustomMarker position={{lat: 53, lng: -113,}} favorite/>
-        </GoogleMap>
-        )
-        :
-        <div className="map">
-            <LinearProgress />
-        </div>
+      <GoogleMap
+        center={{
+          lat: position.latitude,
+          lng: position.longitude,
+        }}
+        mapContainerClassName="map"
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        zoom={18}
+        id="gmap"
+        options={{
+          disableDefaultUI: true,
+          styles: require("./mapStyle.json"),
+        }}
+        {...props}
+      >
+        <CustomMarker position={{ lat: position.latitude, lng: position.longitude }}/>
+        <CustomMarker position={{ lat: 53.53, lng: -113.52 }} />
+        <CustomMarker position={{ lat: 53, lng: -113 }} favorite />
+      </GoogleMap>
+    ) : (
+      <div className="map">
+        <LinearProgress />
+      </div>
+    );
 }
 
 export default memo(Map);
