@@ -17,6 +17,7 @@ import { auth, db } from "./components/authentication/firebaseSetup";
 import { doc, getDoc } from "firebase/firestore";
 import {useEffect, useState} from "react";
 import Permissions from './components/permissions/Permissions';
+import { AddLocation, Map as MapIcon } from '@mui/icons-material';
 
 // Checks if the current user is an admin. Returns true if isAdmin = true and 
 // false if isAdmin = false or user is not in table
@@ -60,7 +61,10 @@ function App() {
         <Button className='microphoneButton' onClick={() => {tester(user?.uid)}}>All Test</Button>
         {user == null ? <Button className='signinButton' component={Link} to={"/signin"}>Sign in</Button>
           : <Button className='signinButton' onClick = {signOut}>Sign Out</Button>}
-        {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
+        <div className='buttonContainer'>
+          {isAdmin ? <IconButton className='addButton'><AddLocation /></IconButton> : null}
+          <IconButton className='addButton' ><MapIcon /></IconButton>
+        </div>
         <Map/>
         <Permissions />
         <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
