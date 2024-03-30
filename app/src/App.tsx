@@ -62,7 +62,7 @@ function App() {
           : <Button className='signinButton' onClick = {signOut}>Sign Out</Button>}
         {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
         <Map/>
-        <Permissions style={{position: 'fixed', top: '3em', left: '1em'}} />
+        <Permissions />
         <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
       </div>
     </DashboardProvider>

@@ -82,6 +82,7 @@ const Map = (props: GoogleMapProps) => {
             }}
             {...props}
         >
+            <CustomMarker position={center} type='whereami'/>
             {
                 locations ? 
                 locations.map((location, index) => {
@@ -89,7 +90,6 @@ const Map = (props: GoogleMapProps) => {
                 })
                 : null
             }
-            <CustomMarker position={center} type='whereami'/>
         </GoogleMap>
         )
         :
