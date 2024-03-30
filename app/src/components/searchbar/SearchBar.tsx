@@ -1,6 +1,5 @@
-import { Input, InputAdornment, Autocomplete, TextField } from "@mui/material"
-import { BorderAll, Search } from "@mui/icons-material";
-import {app, auth, db} from "../authentication/firebaseSetup"
+import { Autocomplete, TextField } from "@mui/material"
+import { Search } from "@mui/icons-material";
 import {getAllLocs} from "../../scripts/Firebase"
 import { useState, useEffect } from "react";
 import "./index.css"
@@ -13,7 +12,7 @@ const SearchBar = () => {
     const fetchLocations = async () => {
       const locations: any[] = await getAllLocs("University of Alberta");
       const updatedItems = locations.map((location, index) => ({
-        label: `${location.id}`,
+        label: `${location.data().name}`,
         value: index + 1,
       }));
       setItems(updatedItems);
@@ -21,6 +20,7 @@ const SearchBar = () => {
 
     fetchLocations();
   }, []);
+  // solved border issues with: https://github.com/mui/material-ui/issues/30597
   return (
     <div className="searchBar">
       <Autocomplete
@@ -38,13 +38,10 @@ const SearchBar = () => {
                   {params.InputProps.startAdornment}
                 </>
               ),
-              // inputProps: {
-              //   style: {
-              //     border: "none", // Remove the border
-              //   },
-              // },
             }}
-            sx={{ border: "none" }}
+            sx={{ 
+              "& .MuiOutlinedInput-notchedOutline":{ border: 'none' },
+             }}
           />
         )}
       />
