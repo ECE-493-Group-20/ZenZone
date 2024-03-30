@@ -1,0 +1,14 @@
+.permissionContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.permissionContainer > * {
+    margin-top: 0.5em;
+}
+
+.icons {
+    color: var(--text);
+}

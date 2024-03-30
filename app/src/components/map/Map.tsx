@@ -18,20 +18,6 @@ interface LocationData {
     size: string,
 }
 
-export const getLocation = (getLoc: (loc: any) => any) => {
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        getLoc([position.coords.latitude, position.coords.longitude]);
-      },
-      null,
-      { enableHighAccuracy: true }
-    );
-  } else {
-    console.log("Geolocation is not available in your browser.");
-  }
-};
-
 
 const Map = (props: GoogleMapProps) => {
     const [_, setMap] = useState<google.maps.Map | null>();
@@ -74,9 +60,9 @@ const Map = (props: GoogleMapProps) => {
 
     const onLoad = useCallback((map: google.maps.Map) => {
         const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
+        map.setZoom(15)
         setMap(map);
-    }, []);
+    }, [center]);
 
     const onUnmount = useCallback(() => {
         setMap(null);
@@ -97,14 +83,13 @@ const Map = (props: GoogleMapProps) => {
             {...props}
         >
             {
-                // locations ? 
-                // locations.map((location) => {
-                //     return <CustomMarker position={{lat: 53.53, lng: -113.52,}}/>
-                // })
-                // : null
+                locations ? 
+                locations.map((location, index) => {
+                    return <CustomMarker key={index} type='default' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
+                })
+                : null
             }
-            <CustomMarker position={{lat: 53.53, lng: -113.52,}}/>
-            <CustomMarker position={{lat: 53, lng: -113,}} favorite/>
+            <CustomMarker position={center} type='whereami'/>
         </GoogleMap>
         )
         :
