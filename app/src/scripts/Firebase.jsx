@@ -108,6 +108,9 @@ export function uploadLoudness() {
 
 // Upload user loudness data for a location. usrData should be loudness data in dB, location should be id of a location.
 export async function userLoudUpload(usrData, location) {
+    if (typeof usrData == "string") {
+        usrData = parseFloat(usrData);
+    }
     const data = {
         loudnessmeasure: usrData,
         location: locString.concat(location),
@@ -121,6 +124,9 @@ export async function userLoudUpload(usrData, location) {
 // Upload user busy data for a location. usrData should be busy level, a value in [0, 100], and location should
 // be the id of a location.
 export async function userBusyUpload(usrData, location) {
+    if (typeof usrData == "string") {
+        usrData = parseFloat(usrData);
+    }
     const data = {
         busymeasure: usrData,
         location: locString.concat(location),
@@ -265,6 +271,12 @@ export async function getTrendLoc(loc, ind=-1) {
 export async function newLocation(name, org, pos, size, cap, desc) {
     var busy = Array(24).fill(0);
     var loud = Array(24).fill(10);
+    if (typeof cap == "string") {
+        cap = parseInt(cap);
+    }
+    if (typeof size == "string") {
+        size = parseInt(size);
+    }
     const data = {
         name: name,
         organization: org,
@@ -286,10 +298,17 @@ export async function newLocation(name, org, pos, size, cap, desc) {
 }
 
 // Function to update a location at the given document id. Any default values will remain unchanged.
+// Returns false if location doesn't exist, true otherwise
 export async function updateLocation(id, name, org, pos, size, cap, desc) {
     // Get individual location
     const locDocQuery = doc(db, "Locations", id);
     const locDoc = await getDoc(locDocQuery);
+    if (typeof cap == "string") {
+        cap = parseInt(cap);
+    }
+    if (typeof size == "string") {
+        size = parseInt(size);
+    }
     if (locDoc.exists()) {
         // Always update entire document, so make sure to set any values we don't want to change.
         const data = {
@@ -303,7 +322,9 @@ export async function updateLocation(id, name, org, pos, size, cap, desc) {
         Locations.doc(id).update(data);
     } else {
         console.log("Location ", id, " does not exist.");
+        return false;
     }
+    return true;
 }
 
 // Allow admins to delete a location from the database
