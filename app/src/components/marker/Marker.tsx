@@ -48,7 +48,7 @@ const CustomMarker = (props: MarkerProps & CustomMarkerProps) => {
       }
     }
 
-    return <Marker {...props} icon={icons[props.type]} onClick={() => setOpen(true)}/>
+    return <Marker {...props} icon={icons[props.type]} onClick={() => {if (props.type != 'whereami') setOpen(true)}}/>
 }
 
 export default CustomMarker;
