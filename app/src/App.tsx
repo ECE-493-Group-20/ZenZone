@@ -1,4 +1,4 @@
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, ToggleButton } from '@mui/material';
 import './App.css';
 import { getMicrophoneStats, requestAverageSound, getTrendAllLocs, tester } from './scripts/Firebase';
 import {toggleMicrophone} from './scripts/microphone';
@@ -36,6 +36,7 @@ async function checkIsAdmin(user : any) {
 
 function App() {
   const user =  useContext(AuthContext);
+  const [heatmapToggle, setHeatmapToggle] = useState<boolean>(false)
 
   // Used to show/hide the "plus" button depending if the user is an admin
   const [isAdmin, setShowAdminButton] = useState(false);
@@ -63,9 +64,9 @@ function App() {
           : <Button className='signinButton' onClick = {signOut}>Sign Out</Button>}
         <div className='buttonContainer'>
           {isAdmin ? <IconButton className='addButton'><AddLocation /></IconButton> : null}
-          <IconButton className='addButton' ><MapIcon /></IconButton>
+          <ToggleButton value={heatmapToggle} onClick={() => setHeatmapToggle(!heatmapToggle)} className='addButton'><MapIcon /></ToggleButton>
         </div>
-        <Map/>
+        <Map heatmap={heatmapToggle}/>
         <Permissions />
         <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
       </div>
