@@ -4,6 +4,17 @@ import "./index.css"
 import { LinearProgress } from "@mui/material";
 import CustomMarker from "../marker/Marker"
 import { getAllLocs } from "../../scripts/Firebase"
+import { GeoPoint } from "firebase/firestore";
+
+interface LocationData {
+    busytrend: number[],
+    capacity: number,
+    description: string,
+    loudtrend: number[],
+    name: string,
+    position: GeoPoint,
+    size: string,
+}
 
 
 const Map = (props: GoogleMapProps) => {
@@ -18,15 +29,14 @@ const Map = (props: GoogleMapProps) => {
     };
 
     const [_, setMap] = useState<google.maps.Map | null>();
+    const [locations, setLocations] = useState<LocationData[] | null>(null);
 
     const onLoad = useCallback((map: google.maps.Map) => {
         const bounds = new window.google.maps.LatLngBounds(center);
         map.fitBounds(bounds);
-        const getLocs = (async() => { 
+        const getLocs = (async() => {
             const locs = await getAllLocs("University of Alberta");
-            locs.forEach((doc) => {
-                console.log(doc);  // Actually make a new marker here. List of firebase documents is returned
-            });
+            setLocations(locs.map((doc) => doc.data()));
         });
         getLocs();
         setMap(map);
@@ -36,7 +46,7 @@ const Map = (props: GoogleMapProps) => {
         setMap(null);
     }, []);
 
-    return isLoaded ? (
+    return isLoaded && locations ? (
         <GoogleMap
             center={center}
             mapContainerClassName="map"        
@@ -50,6 +60,13 @@ const Map = (props: GoogleMapProps) => {
             }}
             {...props}
         >
+            {
+                // locations ? 
+                // locations.map((location) => {
+                //     return <CustomMarker position={{lat: 53.53, lng: -113.52,}}/>
+                // })
+                // : null
+            }
             <CustomMarker position={{lat: 53.53, lng: -113.52,}}/>
             <CustomMarker position={{lat: 53, lng: -113,}} favorite/>
         </GoogleMap>
