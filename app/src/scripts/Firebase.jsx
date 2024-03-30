@@ -7,7 +7,7 @@ getting all location data for FR17, FR18 and FR19.
 import {getAverage, toggleMicrophone} from './microphone';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
-import { Timestamp, getDocs, doc, getDoc, collection, where, query, deleteDoc, GeoPoint } from 'firebase/firestore';
+import { Timestamp, getDocs, doc, getDoc, collection, where, query, deleteDoc, GeoPoint, arrayUnion, arrayRemove, updateDoc } from 'firebase/firestore';
 import { getLocation } from '../pages/Location';
 
 const firebaseConfig = {
@@ -30,6 +30,7 @@ const db = firebase.firestore(app);
 const Locations = db.collection('Locations');
 const NoiseLevel = db.collection('NoiseLevel'); 
 const BusyLevel = db.collection('BusyLevel');
+const Users = db.collection('UserInformation');
 
 var recording = false;
 var locString = '/Locations/';
@@ -319,7 +320,7 @@ export async function updateLocation(id, name, org, pos, size, cap, desc) {
             description: desc,
             capacity: cap
         }
-        Locations.doc(id).update(data);
+        await Locations.doc(id).update(data);
     } else {
         console.log("Location ", id, " does not exist.");
         return false;
@@ -332,10 +333,32 @@ export async function deleteLoc(id) {
     deleteDoc(doc(db, "Locations", id));
 }
 
+// Adds favourite location for the user (usr). Pass location id to be added.
+// usr should be the uid of the signed in user.
+export async function addFavourite(usr, id) {
+    const usrDocQuery = doc(db, "UserInformation", usr);
+    const usrDoc = await getDoc(usrDocQuery);
+    if (usrDoc.exists()) {
+        await Users.doc(usr).update({favourites : firebase.firestore.FieldValue.arrayUnion(id)});
+    }
+}
+
+// Removes favourite location from a user (usr) with the provided location id
+// usr should be the uid of the signed in user.
+export async function removeFavourite(usr, id) {
+    const usrDocQuery = doc(db, "UserInformation", usr);
+    const usrDoc = await getDoc(usrDocQuery);
+    if (usrDoc.exists()) {
+        await Users.doc(usr).update({favourites : firebase.firestore.FieldValue.arrayRemove(id)});
+    }
+}
+
 // TS: For debugging purposes for all functions that don't have corresponding frontend implementations.
-export async function tester() {
+// User it tests with: 4EyDNDXRXFfggZEQrlUwfFYZfJi1 (testuser@email.com)
+export async function tester(usr) {
     console.log("New loc");
     deleteLoc("test");
+    removeFavourite(usr, "test");
     await newLocation("Test", "University of Alberta", new GeoPoint(53.53,-113.53), 100, 10, "Hello!");
     console.log("Loc doesn't exist");
     updateLocation("fake");
@@ -349,4 +372,6 @@ export async function tester() {
     }
     userLoudUpload(63.432432, "test");
     userBusyUpload(45, "test");
+    console.log(usr);
+    addFavourite(usr, 'test');
 }

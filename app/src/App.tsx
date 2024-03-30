@@ -56,7 +56,7 @@ function App() {
       <div className="App">
         <Logo className="logo" />
         <SearchBar />
-        <Button className='microphoneButton' onClick={tester}>All Test</Button>
+        <Button className='microphoneButton' onClick={() => {tester(user?.uid)}}>All Test</Button>
         {user == null ? <Button className='signinButton' component={Link} to={"/signin"}>Sign in</Button>
           : <Button className='signinButton' onClick = {signOut}>Sign Out</Button>}
         {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
