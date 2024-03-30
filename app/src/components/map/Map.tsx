@@ -4,25 +4,24 @@ import "./index.css"
 import { LinearProgress } from "@mui/material";
 import CustomMarker from "../marker/Marker"
 import { getAllLocs } from "../../scripts/Firebase"
+import { GeoPoint } from "firebase/firestore";
 import { useEffect } from "react";
 
-export const getLocation = (getLoc: (loc: any) => any) => {
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        getLoc([position.coords.latitude, position.coords.longitude]);
-      },
-      null,
-      { enableHighAccuracy: true }
-    );
-  } else {
-    console.log("Geolocation is not available in your browser.");
-  }
-};
+
+interface LocationData {
+    busytrend: number[],
+    capacity: number,
+    description: string,
+    loudtrend: number[],
+    name: string,
+    position: GeoPoint,
+    size: string,
+}
 
 
 const Map = (props: GoogleMapProps) => {
-
+    const [_, setMap] = useState<google.maps.Map | null>();
+    const [locations, setLocations] = useState<LocationData[] | null>(null);
     const [position, setPosition] = useState({
       latitude: null as unknown as number,
       longitude: null as unknown as number,
@@ -40,6 +39,14 @@ const Map = (props: GoogleMapProps) => {
         console.log("Geolocation is not available in your browser.");
       }
     }, []);
+
+    useEffect(() => {
+        const getLocs = (async() => {
+            const locs = await getAllLocs("University of Alberta");
+            setLocations(locs.map((doc) => doc.data()));
+        });
+        getLocs();
+    }, [])
     
     const { isLoaded } = useJsApiLoader({
         id: 'test-script',
@@ -47,55 +54,48 @@ const Map = (props: GoogleMapProps) => {
     });
     // Map centered on ETLC
     const center = {
-        lat: 53.52716644287327,
-        lng: -113.5302139343207,
+        lat: position.latitude || 53.52716644287327, 
+        lng: position.longitude || -113.5302139343207,
     };
-
-    const [_, setMap] = useState<google.maps.Map | null>();
 
     const onLoad = useCallback((map: google.maps.Map) => {
         const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
-        const getLocs = (async() => { 
-            const locs = await getAllLocs("University of Alberta");
-            locs.forEach((doc) => {
-                console.log(doc);  // Actually make a new marker here. List of firebase documents is returned
-            });
-        });
-        getLocs();
+        map.setZoom(15)
         setMap(map);
-    }, []);
+    }, [center]);
 
     const onUnmount = useCallback(() => {
         setMap(null);
     }, []);
 
-    return isLoaded ? (
-      <GoogleMap
-        center={{
-          lat: position.latitude,
-          lng: position.longitude,
-        }}
-        mapContainerClassName="map"
-        onLoad={onLoad}
-        onUnmount={onUnmount}
-        zoom={18}
-        id="gmap"
-        options={{
-          disableDefaultUI: true,
-          styles: require("./mapStyle.json"),
-        }}
-        {...props}
-      >
-        <CustomMarker position={{ lat: position.latitude, lng: position.longitude }}/>
-        <CustomMarker position={{ lat: 53.53, lng: -113.52 }} />
-        <CustomMarker position={{ lat: 53, lng: -113 }} favorite />
-      </GoogleMap>
-    ) : (
-      <div className="map">
-        <LinearProgress />
-      </div>
-    );
+    return isLoaded && locations ? (
+        <GoogleMap
+            center={center}
+            mapContainerClassName="map"        
+            onLoad={onLoad}
+            onUnmount={onUnmount}   
+            zoom={18}
+            id="gmap"
+            options={{
+                disableDefaultUI: true,                
+                styles: require("./mapStyle.json"),
+            }}
+            {...props}
+        >
+            <CustomMarker position={center} type='whereami'/>
+            {
+                locations ? 
+                locations.map((location, index) => {
+                    return <CustomMarker key={index} type='default' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
+                })
+                : null
+            }
+        </GoogleMap>
+        )
+        :
+        <div className="map">
+            <LinearProgress />
+        </div>
 }
 
 export default memo(Map);

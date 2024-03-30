@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { auth, db } from "./components/authentication/firebaseSetup";
 import { doc, getDoc } from "firebase/firestore";
 import {useEffect, useState} from "react";
+import Permissions from './components/permissions/Permissions';
 
 // Checks if the current user is an admin. Returns true if isAdmin = true and 
 // false if isAdmin = false or user is not in table
@@ -61,6 +62,7 @@ function App() {
           : <Button className='signinButton' onClick = {signOut}>Sign Out</Button>}
         {isAdmin ? <IconButton className='addButton'><AddIcon /></IconButton> : null}
         <Map/>
+        <Permissions />
         <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
       </div>
     </DashboardProvider>

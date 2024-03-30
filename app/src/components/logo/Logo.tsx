@@ -1,31 +1,9 @@
-import { DetailedHTMLProps, ImgHTMLAttributes, useRef, useState } from "react"
+import { DetailedHTMLProps, ImgHTMLAttributes } from "react"
 import logo from "./logo.png"
-import { Box, Popover, ToggleButton, Typography } from "@mui/material"
-import CheckIcon from '@mui/icons-material/Check'
 import './index.css'
-import { getMicrophoneStats, findCurrentLocation } from "../../scripts/Firebase"
 
 
-const Logo = (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
-    const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
-    const [open, setOpen] = useState<boolean>(false)
-    const [recording, setRecording] = useState<boolean>(false)
-    const [locationRec, setLocationRec] = useState<boolean>(false)
-    var locationInterval: NodeJS.Timeout | null;
-
-    const handleClick = (event: React.MouseEvent<HTMLImageElement   >) => {
-        setAnchorEl(event.currentTarget)
-        setOpen(true)
-      };
-    
-      const handleClose = () => {
-        setAnchorEl(null);
-        setOpen(false)
-      };
-
-    return <>
-        <img className="logo" src={logo} alt="zenzone logo" onClick={handleClick} {...props}/>
-        <Popover
+{/* <Popover
             anchorEl={anchorEl}
             onClose={handleClose}
             open={open}
@@ -69,8 +47,10 @@ const Logo = (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTML
                             <CheckIcon />
                     </ToggleButton>
                 </div>
-        </Popover>
-    </>
+        </Popover> */}
+
+const Logo = (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
+    return <img className="logo" src={logo} alt="zenzone logo" {...props}/>
 }
 
 export default Logo;
