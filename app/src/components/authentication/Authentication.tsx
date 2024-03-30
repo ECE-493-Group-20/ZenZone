@@ -161,7 +161,7 @@ function UserSignUp() {
     // Go back to home
     if (user != null) {
       const userInfo = db.collection("UserInformation");
-      userInfo.doc(user?.uid).set({isAdmin : false});
+      userInfo.doc(user?.uid).set({isAdmin : false, favourites : []});
 
       navigate("/");
     }
@@ -306,7 +306,7 @@ function AdminSignUp() {
       // Make new user an admin
       // This cannot be done from within the googleSignIn function
       const userInfo = db.collection("UserInformation");
-      userInfo.doc(user?.uid).set({isAdmin : true});
+      userInfo.doc(user?.uid).set({isAdmin : true, favourites : []});
       navigate("/");
     }
   }, [user]); 
