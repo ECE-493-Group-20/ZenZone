@@ -18,6 +18,7 @@ import { doc, getDoc } from "firebase/firestore";
 import {useEffect, useState} from "react";
 import Permissions from './components/permissions/Permissions';
 import { AddLocation, Map as MapIcon } from '@mui/icons-material';
+import SearchMap from './components/searchmap/SearchMap';
 
 // Checks if the current user is an admin. Returns true if isAdmin = true and 
 // false if isAdmin = false or user is not in table
@@ -55,22 +56,50 @@ function App() {
   */
   return (
     <>
-    <DashboardProvider>
-      <div className="App">
-        <Logo className="logo" />
-        <SearchBar />
-        <Button className='microphoneButton' onClick={() => {tester(user?.uid)}}>All Test</Button>
-        {user == null ? <Button className='signinButton' component={Link} to={"/signin"}>Sign in</Button>
-          : <Button className='signinButton' onClick = {signOut}>Sign Out</Button>}
-        <div className='buttonContainer'>
-          {isAdmin ? <IconButton className='addButton'><AddLocation /></IconButton> : null}
-          <ToggleButton value={heatmapToggle} onClick={() => setHeatmapToggle(!heatmapToggle)} className='addButton'><MapIcon /></ToggleButton>
+      <DashboardProvider>
+        <div className="App">
+          <Logo className="logo" />
+          <SearchMap heatmap={heatmapToggle}></SearchMap>
+          <Button
+            className="microphoneButton"
+            onClick={() => {
+              tester(user?.uid);
+            }}
+          >
+            All Test
+          </Button>
+          {user == null ? (
+            <Button className="signinButton" component={Link} to={"/signin"}>
+              Sign in
+            </Button>
+          ) : (
+            <Button className="signinButton" onClick={signOut}>
+              Sign Out
+            </Button>
+          )}
+          <div className="buttonContainer">
+            {isAdmin ? (
+              <IconButton className="addButton">
+                <AddLocation />
+              </IconButton>
+            ) : null}
+            <ToggleButton
+              value={heatmapToggle}
+              onClick={() => setHeatmapToggle(!heatmapToggle)}
+              className="addButton"
+            >
+              <MapIcon />
+            </ToggleButton>
+          </div>
+          <Permissions />
+          <Dashboard
+            locationName="ELTC"
+            location="53.527172826716836, -113.53013883407911"
+            capacity={50}
+            description="it's a place!"
+          />
         </div>
-        <Map heatmap={heatmapToggle}/>
-        <Permissions />
-        <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
-      </div>
-    </DashboardProvider>
+      </DashboardProvider>
     </>
   );
 }

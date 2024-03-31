@@ -19,12 +19,20 @@ interface LocationData {
 }
 
 interface MapProps {
-    heatmap: boolean
+  heatmap: boolean;
+  handleItemClick: (itemId: string) => Promise<void>;
+  position: {
+    latitude: number;
+    longitude: number;
+  };
+  map: google.maps.Map;
+  setMap: React.Dispatch<
+    React.SetStateAction<google.maps.Map | null | undefined>
+  >;
 }
 
 
 const Map = (props: GoogleMapProps & MapProps) => {
-    const [map, setMap] = useState<google.maps.Map | null>();
     const [heatmap, setHeatMap] = useState<google.maps.visualization.HeatmapLayer | null>();
     const [locations, setLocations] = useState<LocationData[] | null>(null);
     const [heatmapData, setHeatMapData] = useState<google.maps.LatLng[]>([]);
@@ -32,6 +40,7 @@ const Map = (props: GoogleMapProps & MapProps) => {
       latitude: null as unknown as number,
       longitude: null as unknown as number,
     });
+    const map = props.map;
 
     useEffect(() => {
       if ("geolocation" in navigator) {
@@ -89,11 +98,11 @@ const Map = (props: GoogleMapProps & MapProps) => {
             new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.53034307}),
             new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.5302143207}),
         ]);
-        setMap(map);
+        props.setMap(map);
     }, [center]);
 
     const onUnmount = useCallback(() => {
-        setMap(null);
+        props.setMap(null);
     }, []);
 
     const onHeatMapLoad = useCallback((heatmapLayer: google.maps.visualization.HeatmapLayer) => {
