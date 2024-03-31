@@ -7,7 +7,7 @@ getting all location data for FR17, FR18 and FR19.
 import {getAverage, toggleMicrophone} from './microphone';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
-import { Timestamp, getDocs, doc, getDoc, collection, where, query, deleteDoc, GeoPoint } from 'firebase/firestore';
+import { Timestamp, getDocs, doc, getDoc, collection, where, query, deleteDoc, GeoPoint, arrayUnion, arrayRemove, updateDoc } from 'firebase/firestore';
 import { getLocation } from '../pages/Location';
 
 const firebaseConfig = {
@@ -30,6 +30,7 @@ const db = firebase.firestore(app);
 const Locations = db.collection('Locations');
 const NoiseLevel = db.collection('NoiseLevel'); 
 const BusyLevel = db.collection('BusyLevel');
+const Users = db.collection('UserInformation');
 
 var recording = false;
 var locString = '/Locations/';
@@ -108,6 +109,9 @@ export function uploadLoudness() {
 
 // Upload user loudness data for a location. usrData should be loudness data in dB, location should be id of a location.
 export async function userLoudUpload(usrData, location) {
+    if (typeof usrData == "string") {
+        usrData = parseFloat(usrData);
+    }
     const data = {
         loudnessmeasure: usrData,
         location: locString.concat(location),
@@ -121,6 +125,9 @@ export async function userLoudUpload(usrData, location) {
 // Upload user busy data for a location. usrData should be busy level, a value in [0, 100], and location should
 // be the id of a location.
 export async function userBusyUpload(usrData, location) {
+    if (typeof usrData == "string") {
+        usrData = parseFloat(usrData);
+    }
     const data = {
         busymeasure: usrData,
         location: locString.concat(location),
@@ -259,10 +266,18 @@ export async function getTrendLoc(loc, ind=-1) {
 }
 
 // Upload new location to the database. Busy and loud data are prefilled.
-// pos should be a GeoPoint.
+// pos should be a GeoPoint. Returns true if the location did not previously
+// exist and is now created. Returns false if location already existed, and the
+// location will not be recreated.
 export async function newLocation(name, org, pos, size, cap, desc) {
     var busy = Array(24).fill(0);
     var loud = Array(24).fill(10);
+    if (typeof cap == "string") {
+        cap = parseInt(cap);
+    }
+    if (typeof size == "string") {
+        size = parseInt(size);
+    }
     const data = {
         name: name,
         organization: org,
@@ -274,15 +289,27 @@ export async function newLocation(name, org, pos, size, cap, desc) {
         loudtrend: loud
     }
     var id = name.toLowerCase().replaceAll(' ', '');
-    // TODO: Check if location already exists
-    Locations.doc(id).set(data);
+    const locDocQuery = doc(db, "Locations", id);
+    const locDoc = await getDoc(locDocQuery);
+    if (!locDoc.exists()) {
+        Locations.doc(id).set(data);
+        return true;
+    }
+    return false;
 }
 
 // Function to update a location at the given document id. Any default values will remain unchanged.
+// Returns false if location doesn't exist, true otherwise
 export async function updateLocation(id, name, org, pos, size, cap, desc) {
     // Get individual location
     const locDocQuery = doc(db, "Locations", id);
     const locDoc = await getDoc(locDocQuery);
+    if (typeof cap == "string") {
+        cap = parseInt(cap);
+    }
+    if (typeof size == "string") {
+        size = parseInt(size);
+    }
     if (locDoc.exists()) {
         // Always update entire document, so make sure to set any values we don't want to change.
         const data = {
@@ -293,10 +320,12 @@ export async function updateLocation(id, name, org, pos, size, cap, desc) {
             description: desc,
             capacity: cap
         }
-        Locations.doc(id).update(data);
+        await Locations.doc(id).update(data);
     } else {
         console.log("Location ", id, " does not exist.");
+        return false;
     }
+    return true;
 }
 
 // Allow admins to delete a location from the database
@@ -304,10 +333,32 @@ export async function deleteLoc(id) {
     deleteDoc(doc(db, "Locations", id));
 }
 
+// Adds favourite location for the user (usr). Pass location id to be added.
+// usr should be the uid of the signed in user.
+export async function addFavourite(usr, id) {
+    const usrDocQuery = doc(db, "UserInformation", usr);
+    const usrDoc = await getDoc(usrDocQuery);
+    if (usrDoc.exists()) {
+        await Users.doc(usr).update({favourites : firebase.firestore.FieldValue.arrayUnion(id)});
+    }
+}
+
+// Removes favourite location from a user (usr) with the provided location id
+// usr should be the uid of the signed in user.
+export async function removeFavourite(usr, id) {
+    const usrDocQuery = doc(db, "UserInformation", usr);
+    const usrDoc = await getDoc(usrDocQuery);
+    if (usrDoc.exists()) {
+        await Users.doc(usr).update({favourites : firebase.firestore.FieldValue.arrayRemove(id)});
+    }
+}
+
 // TS: For debugging purposes for all functions that don't have corresponding frontend implementations.
-export async function tester() {
+// User it tests with: 4EyDNDXRXFfggZEQrlUwfFYZfJi1 (testuser@email.com)
+export async function tester(usr) {
     console.log("New loc");
     deleteLoc("test");
+    removeFavourite(usr, "test");
     await newLocation("Test", "University of Alberta", new GeoPoint(53.53,-113.53), 100, 10, "Hello!");
     console.log("Loc doesn't exist");
     updateLocation("fake");
@@ -321,4 +372,6 @@ export async function tester() {
     }
     userLoudUpload(63.432432, "test");
     userBusyUpload(45, "test");
+    console.log(usr);
+    addFavourite(usr, 'test');
 }

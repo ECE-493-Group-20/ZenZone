@@ -1,4 +1,4 @@
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, ToggleButton } from '@mui/material';
 import './App.css';
 import { getMicrophoneStats, requestAverageSound, getTrendAllLocs, tester } from './scripts/Firebase';
 import {toggleMicrophone} from './scripts/microphone';
@@ -16,6 +16,8 @@ import { Link } from "react-router-dom";
 import { auth, db } from "./components/authentication/firebaseSetup";
 import { doc, getDoc } from "firebase/firestore";
 import {useEffect, useState} from "react";
+import Permissions from './components/permissions/Permissions';
+import { AddLocation, Map as MapIcon } from '@mui/icons-material';
 
 // Checks if the current user is an admin. Returns true if isAdmin = true and 
 // false if isAdmin = false or user is not in table
@@ -35,6 +37,7 @@ import { CreateLocation } from './components/admin/CreateLocation';
 
 function App() {
   const user =  useContext(AuthContext);
+  const [heatmapToggle, setHeatmapToggle] = useState<boolean>(false)
 
   // Used to show/hide the "plus" button depending if the user is an admin
   const [isAdmin, setShowAdminButton] = useState(false);
@@ -57,12 +60,17 @@ function App() {
       <div className="App">
         <Logo className="logo" />
         <SearchBar />
-        <Button className='microphoneButton' onClick={tester}>All Test</Button>
+        <Button className='microphoneButton' onClick={() => {tester(user?.uid)}}>All Test</Button>
         {user == null ? <Button className='signinButton' component={Link} to={"/signin"}>Sign in</Button>
           : <Button className='signinButton' onClick = {signOut}>Sign Out</Button>}
-        <Map/>
-        {/*{isAdmin ?  <CreateLocation/>: null} */}
+        <div className='buttonContainer'>
+          {isAdmin ? <IconButton className='addButton'><AddLocation /></IconButton> : null}
+          <ToggleButton value={heatmapToggle} onClick={() => setHeatmapToggle(!heatmapToggle)} className='addButton'><MapIcon /></ToggleButton>
         </div>
+        <Map heatmap={heatmapToggle}/>
+        <Permissions />
+        <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
+      </div>
     </DashboardProvider>
     </>
   );

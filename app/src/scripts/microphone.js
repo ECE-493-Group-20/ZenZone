@@ -22,7 +22,7 @@ let bufferLen;
 let updates;
 let avg;
 
-async function getMicrophonePermissions() {
+export async function getMicrophonePermissions() {
     if (!window.AudioContext || !window.MediaStreamAudioSourceNode || !window.AudioWorkletNode) {
       alert("Required APIs for sound level measurement not supported by this browser.");
     }

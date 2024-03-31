@@ -16,35 +16,92 @@ interface coordinates {
     long: number
 }
 
+import { useEffect } from "react";
 
-const Map = (props: GoogleMapProps) => {
+
+interface LocationData {
+    busytrend: number[],
+    capacity: number,
+    description: string,
+    loudtrend: number[],
+    name: string,
+    position: GeoPoint,
+    size: string,
+}
+
+interface MapProps {
+    heatmap: boolean
+}
+
+
+const Map = (props: GoogleMapProps & MapProps) => {
 
     const [coordinates, clickCoordinates] = useState<coordinates>({lat: 0, long: 0})
 
+    const [map, setMap] = useState<google.maps.Map | null>();
+    const [heatmap, setHeatMap] = useState<google.maps.visualization.HeatmapLayer | null>();
+    const [locations, setLocations] = useState<LocationData[] | null>(null);
+    const [heatmapData, setHeatMapData] = useState<google.maps.LatLng[]>([]);
+    const [position, setPosition] = useState({
+      latitude: null as unknown as number,
+      longitude: null as unknown as number,
+    });
+
+    useEffect(() => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          setPosition({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        });
+      } else {
+        console.log("Geolocation is not available in your browser.");
+      }
+    }, []);
+
+    useEffect(() => {
+        const getLocs = (async() => {
+            const locs = await getAllLocs("University of Alberta");
+            setLocations(locs.map((doc) => doc.data()));
+        });
+        getLocs();
+    }, [])
+
+    useEffect(() => {
+        if (!heatmap) {
+            return
+        }
+        if (props.heatmap && heatmap && map) {
+            heatmap.setMap(map)
+        } else {
+            heatmap.setMap(null)
+        }
+    }, [props.heatmap, map, heatmap])
+    
     const { isLoaded } = useJsApiLoader({
         id: 'test-script',
         googleMapsApiKey: process.env.REACT_APP_MAP_API_KEY || '', // !!! PROD KEY IS RESTRICTED TO WEBSITE
+        libraries: ['visualization'],
     });
     // Map centered on ETLC
     const center = {
-        lat: 53.52716644287327,
-        lng: -113.5302139343207,
+        lat: position.latitude || 53.52716644287327, 
+        lng: position.longitude || -113.5302139343207,
     };
 
-    const [_, setMap] = useState<google.maps.Map | null>();
-
     const onLoad = useCallback((map: google.maps.Map) => {
-        const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
-        const getLocs = (async() => { 
-            const locs = await getAllLocs("University of Alberta");
-            locs.forEach((doc) => {
-                console.log(doc);  // Actually make a new marker here. List of firebase documents is returned
-            });
-        });
-        getLocs();
+        map.setZoom(15)
+        map.setCenter(center)
+        // TODO: FETCH DATA
+        setHeatMapData([
+            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.5302139343207}),
+            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.530213907}),
+            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.53034307}),
+            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.5302143207}),
+        ]);
         setMap(map);
-    }, []);
+    }, [center]);
 
     const onUnmount = useCallback(() => {
         setMap(null);
@@ -59,7 +116,6 @@ const Map = (props: GoogleMapProps) => {
     return isLoaded ? (
         
         <GoogleMap
-            center={center}
             mapContainerClassName="map"        
             onLoad={onLoad}
             onUnmount={onUnmount}   
