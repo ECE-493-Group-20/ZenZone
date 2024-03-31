@@ -1,5 +1,5 @@
-import { useCallback, useState, memo } from "react"
-import {GoogleMap, GoogleMapProps, HeatmapLayer, Libraries, useJsApiLoader} from "@react-google-maps/api"
+import { useCallback, useState, memo, useMemo } from "react"
+import {GoogleMap, GoogleMapProps, HeatmapLayer, useJsApiLoader} from "@react-google-maps/api"
 import "./index.css"
 import { LinearProgress } from "@mui/material";
 import CustomMarker from "../marker/Marker"
@@ -65,16 +65,19 @@ const Map = (props: GoogleMapProps & MapProps) => {
         }
     }, [props.heatmap, map, heatmap])
     
+    
     const { isLoaded } = useJsApiLoader({
         id: 'test-script',
         googleMapsApiKey: process.env.REACT_APP_MAP_API_KEY || '', // !!! PROD KEY IS RESTRICTED TO WEBSITE
         libraries: ['visualization'],
     });
-    // Map centered on ETLC
-    const center = {
-        lat: position.latitude || 53.52716644287327, 
+
+    const center = useMemo(() => {
+      return {
+        lat: position.latitude || 53.52716644287327,
         lng: position.longitude || -113.5302139343207,
-    };
+      };
+    }, [position]);
 
     const onLoad = useCallback((map: google.maps.Map) => {
         map.setZoom(15)
