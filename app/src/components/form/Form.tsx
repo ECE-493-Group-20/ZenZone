@@ -2,6 +2,7 @@ import { Button, Slider, SxProps } from '@mui/material'
 import './index.css'
 import { useState } from 'react'
 import { Check, Close } from '@mui/icons-material'
+import { userBusyUpload, userLoudUpload } from '../../scripts/Firebase'
 
 type LevelType = 'sound' | 'busy'
 
@@ -72,6 +73,17 @@ const Form = (props: FormProps) => {
         },
     }
 
+    const submit = async () => {
+        try {
+            console.log("Submitting Data");
+            // await userLoudUpload(soundLevel, )
+            // await userBusyUpload(busyLevel, )
+        } catch {
+            //!!!TODO: add snackbar for user responses
+            console.error("Failed to upload form")
+        }
+    }
+
     return (
         <div className="form">
             <h1>Manual Input</h1>
@@ -88,7 +100,7 @@ const Form = (props: FormProps) => {
             </div>
             <Slider value={busyLevel} onChange={(_, value) => setBusyLevel(value as number)} sx={sliderStyle['busy']}/>
             
-            <Button className='button' startIcon={<Check />}>Submit</Button>
+            <Button className='button' onClick={submit} startIcon={<Check />}>Submit</Button>
             <Button className='button' onClick={props.close} startIcon={<Close />}>Cancel</Button>
         </div>
     )
