@@ -1,5 +1,5 @@
 import { useCallback, useState, memo } from "react"
-import {GoogleMap, GoogleMapProps, useJsApiLoader} from "@react-google-maps/api"
+import {GoogleMap, GoogleMapProps, HeatmapLayer, Libraries, useJsApiLoader} from "@react-google-maps/api"
 import "./index.css"
 import { LinearProgress } from "@mui/material";
 import CustomMarker from "../marker/Marker"
@@ -18,10 +18,16 @@ interface LocationData {
     size: string,
 }
 
+interface MapProps {
+    heatmap: boolean
+}
 
-const Map = (props: GoogleMapProps) => {
-    const [_, setMap] = useState<google.maps.Map | null>();
+
+const Map = (props: GoogleMapProps & MapProps) => {
+    const [map, setMap] = useState<google.maps.Map | null>();
+    const [heatmap, setHeatMap] = useState<google.maps.visualization.HeatmapLayer | null>();
     const [locations, setLocations] = useState<LocationData[] | null>(null);
+    const [heatmapData, setHeatMapData] = useState<google.maps.LatLng[]>([]);
     const [position, setPosition] = useState({
       latitude: null as unknown as number,
       longitude: null as unknown as number,
@@ -47,10 +53,22 @@ const Map = (props: GoogleMapProps) => {
         });
         getLocs();
     }, [])
+
+    useEffect(() => {
+        if (!heatmap) {
+            return
+        }
+        if (props.heatmap && heatmap && map) {
+            heatmap.setMap(map)
+        } else {
+            heatmap.setMap(null)
+        }
+    }, [props.heatmap, map, heatmap])
     
     const { isLoaded } = useJsApiLoader({
         id: 'test-script',
         googleMapsApiKey: process.env.REACT_APP_MAP_API_KEY || '', // !!! PROD KEY IS RESTRICTED TO WEBSITE
+        libraries: ['visualization'],
     });
     // Map centered on ETLC
     const center = {
@@ -59,8 +77,15 @@ const Map = (props: GoogleMapProps) => {
     };
 
     const onLoad = useCallback((map: google.maps.Map) => {
-        const bounds = new window.google.maps.LatLngBounds(center);
         map.setZoom(15)
+        map.setCenter(center)
+        // TODO: FETCH DATA
+        setHeatMapData([
+            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.5302139343207}),
+            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.530213907}),
+            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.53034307}),
+            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.5302143207}),
+        ]);
         setMap(map);
     }, [center]);
 
@@ -68,9 +93,17 @@ const Map = (props: GoogleMapProps) => {
         setMap(null);
     }, []);
 
+    const onHeatMapLoad = useCallback((heatmapLayer: google.maps.visualization.HeatmapLayer) => {
+        heatmapLayer.setMap(null)
+        setHeatMap(heatmapLayer)
+    }, [])
+
+    const onHeatMapUnmount = useCallback((heatmapLayer: google.maps.visualization.HeatmapLayer) => {
+        heatmapLayer.setMap(null)
+    }, [])
+
     return isLoaded && locations ? (
         <GoogleMap
-            center={center}
             mapContainerClassName="map"        
             onLoad={onLoad}
             onUnmount={onUnmount}   
@@ -90,6 +123,7 @@ const Map = (props: GoogleMapProps) => {
                 })
                 : null
             }
+            <HeatmapLayer onLoad={onHeatMapLoad} onUnmount={onHeatMapUnmount} data={heatmapData} />
         </GoogleMap>
         )
         :
