@@ -77,8 +77,8 @@ const Map = (props: GoogleMapProps & MapProps) => {
     };
 
     const onLoad = useCallback((map: google.maps.Map) => {
-        const bounds = new window.google.maps.LatLngBounds(center);
         map.setZoom(15)
+        map.setCenter(center)
         // TODO: FETCH DATA
         setHeatMapData([
             new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.5302139343207}),
@@ -104,7 +104,6 @@ const Map = (props: GoogleMapProps & MapProps) => {
 
     return isLoaded && locations ? (
         <GoogleMap
-            center={center}
             mapContainerClassName="map"        
             onLoad={onLoad}
             onUnmount={onUnmount}   
