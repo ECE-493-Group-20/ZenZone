@@ -1,4 +1,4 @@
-import { Button, IconButton, Modal } from '@mui/material';
+import { Button, IconButton, Modal, ToggleButton } from '@mui/material';
 import './App.css';
 import { getMicrophoneStats, requestAverageSound, getTrendAllLocs, tester } from './scripts/Firebase';
 import {toggleMicrophone} from './scripts/microphone';
@@ -16,9 +16,9 @@ import { Link } from "react-router-dom";
 import { auth, db } from "./components/authentication/firebaseSetup";
 import { doc, getDoc } from "firebase/firestore";
 import {useEffect, useState} from "react";
-import { AddLocation } from '@mui/icons-material';
 import Form from './components/form/Form';
 import Permissions from './components/permissions/Permissions';
+import { AddLocation, Map as MapIcon } from '@mui/icons-material';
 
 // Checks if the current user is an admin. Returns true if isAdmin = true and 
 // false if isAdmin = false or user is not in table
@@ -37,6 +37,7 @@ async function checkIsAdmin(user : any) {
 
 function App() {
   const user =  useContext(AuthContext);
+  const [heatmapToggle, setHeatmapToggle] = useState<boolean>(false)
 
   // Used to show/hide the "plus" button depending if the user is an admin
   const [isAdmin, setShowAdminButton] = useState(false);
@@ -66,8 +67,9 @@ function App() {
         <div className='buttonContainer'>
           {isAdmin ? <IconButton className='addButton'><AddLocation /></IconButton> : null}
           <IconButton className='addButton' onClick={() => setOpenForm(true)}><AddIcon /></IconButton>
+          <ToggleButton value={heatmapToggle} onClick={() => setHeatmapToggle(!heatmapToggle)} className='addButton'><MapIcon /></ToggleButton>
         </div>
-        <Map/>
+        <Map heatmap={heatmapToggle}/>
         <Permissions />
         <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
       </div>
