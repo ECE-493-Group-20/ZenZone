@@ -1,4 +1,4 @@
-import { Drawer, ToggleButton, Tooltip, Button, IconButton, Box } from "@mui/material"
+import { Drawer, ToggleButton, Tooltip, Button, IconButton, Box} from "@mui/material"
 import { useRef, useEffect, useContext } from "react";
 
 import "./index.css"
@@ -89,8 +89,6 @@ export const CreateLocation = (props : adminProps) => {
           open={open} 
           variant = "persistent"
           >
-            <h1>{locationContext.lat}</h1>
-            <h1>{locationContext.long}</h1>
             {locationPicker==true ? <p>{"Click on the map to select the location"}</p> : null}
 
           <div className="paper">
@@ -107,8 +105,8 @@ export const CreateLocation = (props : adminProps) => {
                   <GpsFixed />              
                 </Tooltip>
               </Button>
-              <h1 id="Latitude"/>
-              <h1 id="Longitude"/>
+              <TextField id="Latitude" label="Laitiude" value={locationContext.lat}/>
+              <TextField id="Longitude" label="Longitiude" value={locationContext.long}/>
               <Tooltip title="Capacity">
                 <AccountBox />
               </Tooltip>
