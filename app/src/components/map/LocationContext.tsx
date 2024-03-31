@@ -1,5 +1,4 @@
 import React from 'react';
-import { GeoPoint } from 'firebase/firestore';
 
 interface coordinates {
     lat: number,

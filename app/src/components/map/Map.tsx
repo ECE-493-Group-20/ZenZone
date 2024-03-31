@@ -1,4 +1,4 @@
-import { useCallback, useState, memo, useContext } from "react"
+import { useCallback, useState, memo, useEffect } from "react"
 import {GoogleMap, GoogleMapProps,  useJsApiLoader} from "@react-google-maps/api"
 import "./index.css"
 import { LinearProgress } from "@mui/material";
@@ -15,8 +15,6 @@ interface coordinates {
     lat : number,
     long: number
 }
-
-import { useEffect } from "react";
 
 
 interface LocationData {
@@ -107,6 +105,7 @@ const Map = (props: GoogleMapProps & MapProps) => {
         setMap(null);
     }, []);
 
+    // Used to send the coordinates to the create/modify drawer for admin
     const getCoordinates = async (event : any) => {
         console.log(JSON.stringify(event.latLng?.toJSON(), null, 2));
         clickCoordinates({lat : event.latLng?.toJSON().lat, long : event.latLng?.toJSON().lng});
@@ -129,8 +128,8 @@ const Map = (props: GoogleMapProps & MapProps) => {
 
             onClick={getCoordinates}
         >
-            <CustomMarker position={{lat: 53.53, lng: -113.52,}}/>
-            <CustomMarker position={{lat: 53, lng: -113,}} favorite/>
+            <CustomMarker position={{lat: 53.53, lng: -113.52,}} type={'default'}/>
+            <CustomMarker position={{lat: 53, lng: -113,}} type={'favorite'}/>
             
             <LocationContext.Provider value={{lat : coordinates.lat, long : coordinates.long}}>
                 <CreateLocation/>

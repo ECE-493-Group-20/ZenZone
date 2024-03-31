@@ -19,6 +19,7 @@ import { newLocation } from '../../scripts/Firebase'
 import { GeoPoint } from "firebase/firestore";
 
 import { LocationContext } from "../map/LocationContext";
+import { useAdminFeat } from "./AdminFeatProvider";
 
 
 interface adminProps {
@@ -38,11 +39,14 @@ export const CreateLocation = (props : adminProps) => {
     const sizeRef = useRef<HTMLInputElement>();
     const orgRef = useRef<HTMLInputElement>();
 
+    // used to get the location clicked on the map
     const locationContext = useContext(LocationContext);
 
     // used to indicate when the admin user is picking the coordinates of a new location
     const [locationPicker, setLocation] = useState<boolean>(false);
-    const [open, setOpen] = useState<boolean>(false);
+  
+    // used to open/close the drawer
+    const{open, setOpen} = useAdminFeat();  
 
     //const [favorite, setFavorite] = useState<boolean>(false);
     function openAddLocation () : void {
@@ -65,7 +69,6 @@ export const CreateLocation = (props : adminProps) => {
 
     const saveLocation = async () => {
       // preform necessary checks and save to firebase
-      // TODO: Get the actual location from the map.
       const position = new GeoPoint(locationContext.lat, locationContext.long);
       newLocation(nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value);
       // display error message if location already exits in map
@@ -78,7 +81,7 @@ export const CreateLocation = (props : adminProps) => {
 
     return (
       <>
-      {open == false ? <IconButton className='addButton' onClick={openAddLocation}><AddIcon /></IconButton> : 
+      {open == false ? <IconButton  onClick={openAddLocation}><AddIcon /></IconButton> : 
         <Drawer 
           id="createLocation"
           className="drawer" 
