@@ -1,4 +1,4 @@
-import { Button, IconButton, ToggleButton } from '@mui/material';
+import { Button, IconButton, Modal, ToggleButton } from '@mui/material';
 import './App.css';
 import { getMicrophoneStats, requestAverageSound, getTrendAllLocs, tester } from './scripts/Firebase';
 import {toggleMicrophone} from './scripts/microphone';
@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { auth, db } from "./components/authentication/firebaseSetup";
 import { doc, getDoc } from "firebase/firestore";
 import {useEffect, useState} from "react";
+import Form from './components/form/Form';
 import Permissions from './components/permissions/Permissions';
 import { AddLocation, Map as MapIcon } from '@mui/icons-material';
 
@@ -40,6 +41,7 @@ function App() {
 
   // Used to show/hide the "plus" button depending if the user is an admin
   const [isAdmin, setShowAdminButton] = useState(false);
+  const [openForm, setOpenForm] = useState(false)
   useEffect(() => {
     const checkAdminStatus = async () => {
       const isAdmin = await checkIsAdmin(user?.uid);
@@ -48,7 +50,7 @@ function App() {
 
     checkAdminStatus();
   }, [user]);
-  
+
   /*
   Put this button back when we have a spot for it in the UI.
   <button onClick={toggleMicrophone}>Microphone</button>
@@ -64,12 +66,19 @@ function App() {
           : <Button className='signinButton' onClick = {signOut}>Sign Out</Button>}
         <div className='buttonContainer'>
           {isAdmin ? <IconButton className='addButton'><AddLocation /></IconButton> : null}
+          <IconButton className='addButton' onClick={() => setOpenForm(true)}><AddIcon /></IconButton>
           <ToggleButton value={heatmapToggle} onClick={() => setHeatmapToggle(!heatmapToggle)} className='addButton'><MapIcon /></ToggleButton>
         </div>
         <Map heatmap={heatmapToggle}/>
         <Permissions />
         <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
       </div>
+      <Modal
+        open={openForm}
+        onClose={() => setOpenForm(false)}
+      >
+        <Form close={() => setOpenForm(false)}/>
+      </Modal>
     </DashboardProvider>
     </>
   );
