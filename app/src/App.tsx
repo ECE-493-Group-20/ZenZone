@@ -18,6 +18,7 @@ import { doc, getDoc } from "firebase/firestore";
 import {useEffect, useState} from "react";
 import { AddLocation } from '@mui/icons-material';
 import Form from './components/form/Form';
+import Permissions from './components/permissions/Permissions';
 
 // Checks if the current user is an admin. Returns true if isAdmin = true and 
 // false if isAdmin = false or user is not in table
@@ -67,6 +68,7 @@ function App() {
           <IconButton className='addButton' onClick={() => setOpenForm(true)}><AddIcon /></IconButton>
         </div>
         <Map/>
+        <Permissions />
         <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
       </div>
       <Modal
