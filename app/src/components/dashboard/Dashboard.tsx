@@ -1,12 +1,15 @@
-import { Drawer, ToggleButton, Tooltip } from "@mui/material"
+import { Drawer, IconButton, ToggleButton, Tooltip } from "@mui/material"
 import { useDashboard } from "./dashboardprovider/DashboardProvider"
 import "./index.css"
 import { ResponsiveChartContainer } from "@mui/x-charts/ResponsiveChartContainer"
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis'
 import LevelCard from "./LevelCard"
 import { AccountBox, Description, GpsFixed, TurnedIn, TurnedInNot } from "@mui/icons-material"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { BarPlot, ChartsLegend } from "@mui/x-charts"
+import EditIcon from '@mui/icons-material/Edit';
+import { useAdminFeat } from "../admin/AdminFeatProvider"
+import { useAuth} from "../authentication/AuthProvider"
 
 interface DashboardProps {
   locationName: string,
@@ -21,6 +24,19 @@ export const Dashboard = (props: DashboardProps) => {
     const {open, setOpen} = useDashboard()
 
     const [favorite, setFavorite] = useState<boolean>(false)
+
+    const {isAdmin } = useAuth();
+
+    const { setOpenAdmin, setLocationId , locationId} = useAdminFeat(); 
+
+    const openEditLocation = async () => {
+      // TODO: link this with the actual location information from firebase
+      // set the location id to the dashboard location id
+      setLocationId('Hello World'); 
+      setOpen(false); 
+      setOpenAdmin(true); 
+      console.log(locationId);
+    }
 
     return (
         <Drawer 
@@ -82,6 +98,9 @@ export const Dashboard = (props: DashboardProps) => {
             <ToggleButton className="favoriteButton" value={favorite} onChange={() => setFavorite(!favorite)} >
               {favorite ? <TurnedIn /> : <TurnedInNot />}
             </ToggleButton>
+
+            {isAdmin ? <IconButton className="editButton" onClick={openEditLocation}><EditIcon /></ IconButton> : null}       
+
           </div>
         </Drawer>
     )

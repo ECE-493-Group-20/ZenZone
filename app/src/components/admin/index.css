@@ -8,54 +8,6 @@
     overflow: hidden;
 }
 
-.chart {
-    max-height: 40vh;
-    height: 50vw;
-    width: 100%;
-}
-
-.chartContainer {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    box-shadow: #DDDBF1 0 0 2px;
-    border-radius: 10px;
-}
-
-.levelCard {
-    margin: 1em;
-    box-shadow: #DDDBF1 0 0 2px;
-    padding: 1em;
-    border-radius: 10px;
-    width: 100%;
-}
-
-.levelCardTitle {
-    display: flex;
-    justify-content: space-between;
-    align-items: normal;
-}
-
-.levelCardTitle > p {
-    margin-bottom: 0;
-}
-
-.levelCardContainer {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-}
-
-.favoriteButton {
-    position: absolute !important;
-    right: 1.5em;
-    top: 1.5em;
-    background-color: var(--background) !important;
-    color: var(--text) !important;
-    box-shadow: var(--text) 0 0 10px;
-    transition: 0.5s;
-}
-
 .description {
     display: flex;
     align-items: center;
@@ -76,6 +28,9 @@
     color: var(--text) !important;
     box-shadow: var(--text) 0 0 10px;
     transition: 0.5s;
+    width: 50px;
+    height: 50px;
+    border-radius: 10% !important;
 }
 
 .saveButton {
@@ -86,4 +41,7 @@
     color: var(--text) !important;
     box-shadow: var(--text) 0 0 10px;
     transition: 0.5s;
+    width: 50px;
+    height: 50px;
+    border-radius: 10% !important;
 }

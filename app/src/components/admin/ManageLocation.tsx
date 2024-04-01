@@ -13,7 +13,6 @@ import Map from '../map/Map';
 // Button Icons
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
-import AddIcon from '@mui/icons-material/Add';
 // Firebase functions
 import { newLocation } from '../../scripts/Firebase'
 import { GeoPoint } from "firebase/firestore";
@@ -32,7 +31,7 @@ interface adminProps {
   soundLevel?: number,
 }
 
-export const CreateLocation = (props : adminProps) => {
+export const ManageLocation = (props : adminProps) => {
     const nameRef = useRef<HTMLInputElement>();
     const descriptionRef = useRef<HTMLInputElement>();
     const capacityRef = useRef<HTMLInputElement>();
@@ -40,32 +39,10 @@ export const CreateLocation = (props : adminProps) => {
     const orgRef = useRef<HTMLInputElement>();
 
     // used to get the location clicked on the map
-    const { coordinates } = useLocationPicker();
+    const { coordinates} = useLocationPicker();
 
-    // used to indicate when the admin user is picking the coordinates of a new location
-    const [locationPicker, setLocation] = useState<boolean>(false);
-  
     // used to open/close the drawer
-    const{open, setOpen} = useAdminFeat();  
-
-    //const [favorite, setFavorite] = useState<boolean>(false);
-    function openAddLocation () : void {
-      setOpen(true);
-    }
-
-    const getLocation = async () => {
-      if (locationPicker==false) {
-        // open location prompt
-        setLocation(true);
-        // get the location from the map
-        console.log("recieved coordinates");
-        console.log(coordinates.lat);
-        console.log(coordinates.long);
-      } else {
-        // close location prompt
-        setLocation(false);
-      }
-    }
+    const{open, setOpenAdmin, locationId} = useAdminFeat();  
 
     const saveLocation = async () => {
       // preform necessary checks and save to firebase
@@ -76,12 +53,12 @@ export const CreateLocation = (props : adminProps) => {
 
     const closeDrawer = async () => {
       // close the drawer
-      setOpen(false);
+      setOpenAdmin(false);
     }
 
     return (
       <>
-      {open == false ? <IconButton  onClick={openAddLocation}><AddIcon /></IconButton> : 
+      {open?
         <Drawer 
           id="createLocation"
           className="drawer" 
@@ -89,22 +66,17 @@ export const CreateLocation = (props : adminProps) => {
           open={open} 
           variant = "persistent"
           >
-            {locationPicker==true ? <p>{"Click on the map to select the location"}</p> : null}
-
           <div className="paper">
             <Box sx={{width: 1/2, p:1}}>
-            <TextField label="Location Name" inputRef = {nameRef} required={true} fullWidth={true} defaultValue={props.locationName}/>
+            <TextField label="Location Name" inputRef = {nameRef} required={true} fullWidth={true}/>
             </Box>
             <Box sx={{width: 1/2, p:1}}>
             <TextField label="Organization" inputRef = {orgRef} defaultValue={"University of Alberta"} fullWidth={true}/>
             </Box>
             <div className="description">
-              <Button
-              onClick={getLocation}>
                 <Tooltip title="Location">
                   <GpsFixed />              
                 </Tooltip>
-              </Button>
               <TextField id="Latitude" label="Laitiude" value={coordinates.lat}/>
               <TextField id="Longitude" label="Longitiude" value={coordinates.long}/>
               <Tooltip title="Capacity">
@@ -122,7 +94,8 @@ export const CreateLocation = (props : adminProps) => {
             <IconButton className = "saveButton" onClick={saveLocation}><SaveIcon/></IconButton>
             <IconButton className = "closeButton" onClick={closeDrawer}><CloseIcon/></IconButton>
           </div> 
-        </Drawer>}
+        </Drawer>
+        : null}
         </>
     )
 }

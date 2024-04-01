@@ -9,14 +9,14 @@ import { DashboardProvider, useDashboard } from './components/dashboard/dashboar
 import { Dashboard } from './components/dashboard/Dashboard';
 import { signOut } from './components/authentication/Authentication';
 import { useContext } from 'react';
-import { AuthContext } from './components/authentication/AuthContext';
+import { AuthContext } from './components/authentication/AuthProvider';
 import { Link } from "react-router-dom";
 import { auth, db } from "./components/authentication/firebaseSetup";
 import {useEffect, useState} from "react";
 import Permissions from './components/permissions/Permissions';
 import { AddLocation, Map as MapIcon } from '@mui/icons-material';
 import { AdminFeatContext, AdminFeatProvider, useAdminFeat } from './components/admin/AdminFeatProvider';
-import { CreateLocation } from './components/admin/CreateLocation';
+import { ManageLocation } from './components/admin/ManageLocation';
 import { LocationPickerProvider } from './components/map/LocationPickerProvider';
 
 // Checks if the current user is an admin. Returns true if isAdmin = true and 
@@ -35,22 +35,11 @@ async function checkIsAdmin(user : any) {
 }
 
 function App() {
-  const user =  useContext(AuthContext);
+  const {user, isAdmin, setAdmin }=  useContext(AuthContext);
   const [heatmapToggle, setHeatmapToggle] = useState<boolean>(false)
 
-  const { open, setOpen } = useContext(AdminFeatContext);
+  const { setOpenAdmin, setLocationId } = useAdminFeat();  
 
-  // Used to show/hide the "plus" button depending if the user is an admin
-  const [isAdmin, setShowAdminButton] = useState(false);
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      const isAdmin = await checkIsAdmin(user?.uid);
-      setShowAdminButton(isAdmin);
-    };
-
-    checkAdminStatus();
-  }, [user]);
- 
   /*
   Put this button back when we have a spot for it in the UI.
   <button onClick={toggleMicrophone}>Microphone</button>
@@ -59,7 +48,6 @@ function App() {
     <>
     <DashboardProvider>
       <LocationPickerProvider>
-      <h1>{open}</h1>
       <div className="App">
         <Logo className="logo" />
         <SearchBar />
@@ -68,8 +56,8 @@ function App() {
           : <Button className='signinButton' onClick = {signOut}>Sign Out</Button>}
         <div className='buttonContainer'>
 
-          {isAdmin ? <IconButton className='addButton' onClick={() => { setOpen(true)}}><AddLocation /></IconButton> : null}
-          <CreateLocation />
+          {isAdmin ? <IconButton className='addButton' onClick={() => { setOpenAdmin(true); setLocationId({locationId : null})}}><AddLocation /></IconButton> : null}
+          <ManageLocation />
 
           <ToggleButton value={heatmapToggle} onClick={() => setHeatmapToggle(!heatmapToggle)} className='addButton'><MapIcon /></ToggleButton>
         </div>
