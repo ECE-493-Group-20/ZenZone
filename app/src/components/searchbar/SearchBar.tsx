@@ -4,8 +4,11 @@ import {getAllLocs} from "../../scripts/Firebase"
 import { useState, useEffect } from "react";
 import "./index.css"
 
-const SearchBar = () => {
+interface SearchBarProps {
+  handleItemClick: (itemId: string) => Promise<void>;
+}
 
+const SearchBar = (props: SearchBarProps) => {
   const [items, setItems] = useState<{ label: string; value: number }[]>([]);
 
   useEffect(() => {
@@ -20,6 +23,15 @@ const SearchBar = () => {
 
     fetchLocations();
   }, []);
+
+  const onItemClick = async (option: string) => {
+    const locs = await getAllLocs("University of Alberta");
+    locs.forEach(async (loc) => {
+      if (option === loc.data().name)
+        // console.log(loc.data().position.latitude);
+        await props.handleItemClick(option);
+    });
+  };
   // solved border issues with: https://github.com/mui/material-ui/issues/30597
   return (
     <div className="searchBar">
@@ -27,6 +39,11 @@ const SearchBar = () => {
         id="search-bar"
         options={items}
         getOptionLabel={(option) => option.label}
+        onChange={(event, newValue) => {
+          if (newValue) {
+            onItemClick(newValue.label);
+          }
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -39,14 +56,14 @@ const SearchBar = () => {
                 </>
               ),
             }}
-            sx={{ 
-              "& .MuiOutlinedInput-notchedOutline":{ border: 'none' },
-             }}
+            sx={{
+              "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+            }}
           />
         )}
       />
     </div>
   );
-}
+};
 
 export default SearchBar;
