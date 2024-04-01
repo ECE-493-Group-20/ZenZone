@@ -115,6 +115,15 @@ const Map = (props: GoogleMapProps & MapProps) => {
         props.setMap(null);
     }, []);
 
+    const onHeatMapLoad = useCallback((heatmapLayer: google.maps.visualization.HeatmapLayer) => {
+      heatmapLayer.setMap(null)
+      setHeatMap(heatmapLayer)
+  }, [])
+
+  const onHeatMapUnmount = useCallback((heatmapLayer: google.maps.visualization.HeatmapLayer) => {
+      heatmapLayer.setMap(null)
+  }, [])
+
     // Used to send the coordinates to the create/modify drawer for admin
     const getCoordinates = async (event : any) => {
         console.log(JSON.stringify(event.latLng?.toJSON(), null, 2));
@@ -138,8 +147,15 @@ const Map = (props: GoogleMapProps & MapProps) => {
 
             onClick={getCoordinates}
         >
-            <CustomMarker position={{lat: 53.53, lng: -113.52,}} type={'default'}/>
-            <CustomMarker position={{lat: 53, lng: -113,}} type={'favorite'}/>
+            <CustomMarker position={center} type='whereami'/>
+            {
+                locations ? 
+                locations.map((location, index) => {
+                    return <CustomMarker key={index} type='default' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
+                })
+                : null
+            }
+            <HeatmapLayer onLoad={onHeatMapLoad} onUnmount={onHeatMapUnmount} data={heatmapData} />
 
         </GoogleMap>
         )
