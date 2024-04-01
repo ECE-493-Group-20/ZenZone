@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { AuthContext } from "./AuthContext";
-import { auth } from "./firebaseSetup";
+import React, { useEffect, useState, useContext } from "react";
+import { auth, db } from "./firebaseSetup";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -9,8 +8,24 @@ interface Props {
   children: React.ReactNode;
 }
 
+async function checkIsAdmin(user : any) {
+  try {
+    const userDoc = await db.collection('UserInformation').doc(user).get();
+    if (userDoc.exists && userDoc.data()?.isAdmin) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error("Error checking admin status:", error);
+    return false;
+  }
+}
+
+export const AuthContext = React.createContext<any>({});
+
 export const AuthProvider: React.FC<Props> = ({ children } ) => {
   const [user, setUser] = useState<firebase.User | null>(null);
+  const [isAdmin, setAdmin] = useState<boolean>(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
@@ -20,5 +35,18 @@ export const AuthProvider: React.FC<Props> = ({ children } ) => {
     return unsubscribe;
   }, []);
 
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const isAdmin = await checkIsAdmin(user?.uid);
+      setAdmin(isAdmin);
+    };
+
+    checkAdminStatus();
+  }, [user]);
+
+  return <AuthContext.Provider value={{user, isAdmin, setAdmin}}>{children}</AuthContext.Provider>;
 };
+
+export const useAuth= () => {
+  return useContext(AuthContext);
+}

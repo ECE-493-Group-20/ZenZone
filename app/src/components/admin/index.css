@@ -1,0 +1,47 @@
+.drawer {
+    min-height: 25vh !important;
+}
+
+.paper {
+    background: #ab9f9d;
+    padding: 2em;
+    overflow: hidden;
+}
+
+.description {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 0.5em
+}
+
+.description > * {
+    margin: 0 0 0 0.5em
+}
+
+.closeButton {
+    position: absolute !important;
+    right: 1.5em;
+    top: 1.5em;
+    background-color: var(--background) !important;
+    color: var(--text) !important;
+    box-shadow: var(--text) 0 0 10px;
+    transition: 0.5s;
+    width: 50px;
+    height: 50px;
+    border-radius: 10% !important;
+}
+
+.saveButton {
+    position: absolute !important;
+    right: 5em;
+    top: 1.5em;
+    background-color: var(--background) !important;
+    color: var(--text) !important;
+    box-shadow: var(--text) 0 0 10px;
+    transition: 0.5s;
+    width: 50px;
+    height: 50px;
+    border-radius: 10% !important;
+}

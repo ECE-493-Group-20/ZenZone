@@ -1,11 +1,18 @@
-import { useCallback, useState, memo, useMemo } from "react"
+import { useCallback, useState, memo, useMemo, useEffect } from "react"
 import {GoogleMap, GoogleMapProps, HeatmapLayer, useJsApiLoader} from "@react-google-maps/api"
 import "./index.css"
 import { LinearProgress } from "@mui/material";
 import CustomMarker from "../marker/Marker"
 import { getAllLocs } from "../../scripts/Firebase"
-import { GeoPoint } from "firebase/firestore";
-import { useEffect } from "react";
+
+import { GeoPoint } from 'firebase/firestore';
+
+import { useLocationPicker } from "./LocationPickerProvider";
+
+interface coordinates {
+    lat : number,
+    long: number
+}
 
 
 interface LocationData {
@@ -33,6 +40,9 @@ interface MapProps {
 
 
 const Map = (props: GoogleMapProps & MapProps) => {
+
+    const { setCoordinates } = useLocationPicker();
+    
     const [heatmap, setHeatMap] = useState<google.maps.visualization.HeatmapLayer | null>();
     const [locations, setLocations] = useState<LocationData[] | null>(null);
     const [heatmapData, setHeatMapData] = useState<google.maps.LatLng[]>([]);
@@ -106,15 +116,23 @@ const Map = (props: GoogleMapProps & MapProps) => {
     }, []);
 
     const onHeatMapLoad = useCallback((heatmapLayer: google.maps.visualization.HeatmapLayer) => {
-        heatmapLayer.setMap(null)
-        setHeatMap(heatmapLayer)
-    }, [])
+      heatmapLayer.setMap(null)
+      setHeatMap(heatmapLayer)
+  }, [])
 
-    const onHeatMapUnmount = useCallback((heatmapLayer: google.maps.visualization.HeatmapLayer) => {
-        heatmapLayer.setMap(null)
-    }, [])
+  const onHeatMapUnmount = useCallback((heatmapLayer: google.maps.visualization.HeatmapLayer) => {
+      heatmapLayer.setMap(null)
+  }, [])
 
-    return isLoaded && locations ? (
+    // Used to send the coordinates to the create/modify drawer for admin
+    const getCoordinates = async (event : any) => {
+        console.log(JSON.stringify(event.latLng?.toJSON(), null, 2));
+        setCoordinates({lat : event.latLng?.toJSON().lat, long : event.latLng?.toJSON().lng});
+    }
+
+
+    return isLoaded ? (
+        
         <GoogleMap
             mapContainerClassName="map"        
             onLoad={onLoad}
@@ -126,6 +144,8 @@ const Map = (props: GoogleMapProps & MapProps) => {
                 styles: require("./mapStyle.json"),
             }}
             {...props}
+
+            onClick={getCoordinates}
         >
             <CustomMarker position={center} type='whereami'/>
             {
@@ -136,12 +156,15 @@ const Map = (props: GoogleMapProps & MapProps) => {
                 : null
             }
             <HeatmapLayer onLoad={onHeatMapLoad} onUnmount={onHeatMapUnmount} data={heatmapData} />
+
         </GoogleMap>
         )
         :
         <div className="map">
             <LinearProgress />
         </div>
+        
+        
 }
 
 export default memo(Map);
