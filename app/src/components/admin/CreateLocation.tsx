@@ -18,7 +18,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { newLocation } from '../../scripts/Firebase'
 import { GeoPoint } from "firebase/firestore";
 
-import { LocationContext } from "../map/LocationContext";
+import { useLocationPicker } from "../map/LocationPickerProvider";
 import { useAdminFeat } from "./AdminFeatProvider";
 
 
@@ -40,7 +40,7 @@ export const CreateLocation = (props : adminProps) => {
     const orgRef = useRef<HTMLInputElement>();
 
     // used to get the location clicked on the map
-    const locationContext = useContext(LocationContext);
+    const { coordinates } = useLocationPicker();
 
     // used to indicate when the admin user is picking the coordinates of a new location
     const [locationPicker, setLocation] = useState<boolean>(false);
@@ -59,8 +59,8 @@ export const CreateLocation = (props : adminProps) => {
         setLocation(true);
         // get the location from the map
         console.log("recieved coordinates");
-        console.log(locationContext.lat);
-        console.log(locationContext.long);
+        console.log(coordinates.lat);
+        console.log(coordinates.long);
       } else {
         // close location prompt
         setLocation(false);
@@ -69,7 +69,7 @@ export const CreateLocation = (props : adminProps) => {
 
     const saveLocation = async () => {
       // preform necessary checks and save to firebase
-      const position = new GeoPoint(locationContext.lat, locationContext.long);
+      const position = new GeoPoint(coordinates.lat, coordinates.long);
       newLocation(nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value);
       // display error message if location already exits in map
     }
@@ -93,7 +93,7 @@ export const CreateLocation = (props : adminProps) => {
 
           <div className="paper">
             <Box sx={{width: 1/2, p:1}}>
-            <TextField label="Location Name" inputRef = {nameRef} required={true} fullWidth={true}/>
+            <TextField label="Location Name" inputRef = {nameRef} required={true} fullWidth={true} defaultValue={props.locationName}/>
             </Box>
             <Box sx={{width: 1/2, p:1}}>
             <TextField label="Organization" inputRef = {orgRef} defaultValue={"University of Alberta"} fullWidth={true}/>
@@ -105,8 +105,8 @@ export const CreateLocation = (props : adminProps) => {
                   <GpsFixed />              
                 </Tooltip>
               </Button>
-              <TextField id="Latitude" label="Laitiude" value={locationContext.lat}/>
-              <TextField id="Longitude" label="Longitiude" value={locationContext.long}/>
+              <TextField id="Latitude" label="Laitiude" value={coordinates.lat}/>
+              <TextField id="Longitude" label="Longitiude" value={coordinates.long}/>
               <Tooltip title="Capacity">
                 <AccountBox />
               </Tooltip>

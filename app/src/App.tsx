@@ -16,6 +16,8 @@ import {useEffect, useState} from "react";
 import Permissions from './components/permissions/Permissions';
 import { AddLocation, Map as MapIcon } from '@mui/icons-material';
 import { AdminFeatContext, AdminFeatProvider, useAdminFeat } from './components/admin/AdminFeatProvider';
+import { CreateLocation } from './components/admin/CreateLocation';
+import { LocationPickerProvider } from './components/map/LocationPickerProvider';
 
 // Checks if the current user is an admin. Returns true if isAdmin = true and 
 // false if isAdmin = false or user is not in table
@@ -56,6 +58,7 @@ function App() {
   return (
     <>
     <DashboardProvider>
+      <LocationPickerProvider>
       <h1>{open}</h1>
       <div className="App">
         <Logo className="logo" />
@@ -66,6 +69,7 @@ function App() {
         <div className='buttonContainer'>
 
           {isAdmin ? <IconButton className='addButton' onClick={() => { setOpen(true)}}><AddLocation /></IconButton> : null}
+          <CreateLocation />
 
           <ToggleButton value={heatmapToggle} onClick={() => setHeatmapToggle(!heatmapToggle)} className='addButton'><MapIcon /></ToggleButton>
         </div>
@@ -73,6 +77,7 @@ function App() {
         <Permissions />
         <Dashboard locationName="ELTC" location='53.527172826716836, -113.53013883407911' capacity={50} description="it's a place!" />
       </div>
+      </LocationPickerProvider>
     </DashboardProvider>
     </>
   );

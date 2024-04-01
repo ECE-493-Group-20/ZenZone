@@ -7,9 +7,7 @@ import { getAllLocs } from "../../scripts/Firebase"
 
 import { GeoPoint } from 'firebase/firestore';
 
-import { LocationContext } from "./LocationContext";
-
-import { CreateLocation } from "../admin/CreateLocation";
+import { useLocationPicker } from "./LocationPickerProvider";
 
 interface coordinates {
     lat : number,
@@ -34,7 +32,7 @@ interface MapProps {
 
 const Map = (props: GoogleMapProps & MapProps) => {
 
-    const [coordinates, clickCoordinates] = useState<coordinates>({lat: 0, long: 0})
+    const { setCoordinates } = useLocationPicker();
 
     const [map, setMap] = useState<google.maps.Map | null>();
     const [heatmap, setHeatMap] = useState<google.maps.visualization.HeatmapLayer | null>();
@@ -108,7 +106,7 @@ const Map = (props: GoogleMapProps & MapProps) => {
     // Used to send the coordinates to the create/modify drawer for admin
     const getCoordinates = async (event : any) => {
         console.log(JSON.stringify(event.latLng?.toJSON(), null, 2));
-        clickCoordinates({lat : event.latLng?.toJSON().lat, long : event.latLng?.toJSON().lng});
+        setCoordinates({lat : event.latLng?.toJSON().lat, long : event.latLng?.toJSON().lng});
     }
 
 
@@ -130,10 +128,6 @@ const Map = (props: GoogleMapProps & MapProps) => {
         >
             <CustomMarker position={{lat: 53.53, lng: -113.52,}} type={'default'}/>
             <CustomMarker position={{lat: 53, lng: -113,}} type={'favorite'}/>
-            
-            <LocationContext.Provider value={{lat : coordinates.lat, long : coordinates.long}}>
-                <CreateLocation/>
-            </LocationContext.Provider>
 
         </GoogleMap>
         )
