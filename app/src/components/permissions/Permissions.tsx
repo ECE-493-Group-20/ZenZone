@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { LocationOff, LocationOn, Mic, MicOff } from '@mui/icons-material'
 import { Alert, Slide, Snackbar, ToggleButton } from '@mui/material'
-import { getMicrophonePermissions } from '../../scripts/microphone'
-import { findCurrentLocation } from '../../scripts/Firebase'
+import { findCurrentLocation, getMicrophoneStats } from '../../scripts/Firebase'
 import './index.css'
 
 
@@ -24,7 +23,7 @@ const Permissions = () => {
             } else {
                 console.log("Geolocation is not available in your browser.");
             }
-            await getMicrophonePermissions();
+            await getMicrophoneStats();
             setEnabled(!enabled)
         } catch {
             setEnabled(false)
