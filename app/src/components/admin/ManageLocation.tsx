@@ -34,12 +34,14 @@ interface adminProps {
 export const ManageLocation = (props : adminProps) => {
     const nameRef = useRef<HTMLInputElement>();
     const descriptionRef = useRef<HTMLInputElement>();
+    const latRef = useRef<HTMLInputElement>();
+    const lonRef = useRef<HTMLInputElement>();
     const capacityRef = useRef<HTMLInputElement>();
     const sizeRef = useRef<HTMLInputElement>();
     const orgRef = useRef<HTMLInputElement>();
 
     // used to get the location clicked on the map
-    const { coordinates} = useLocationPicker();
+    const { coordinates } = useLocationPicker();
 
     // used to open/close the drawer
     const{open, setOpenAdmin, locationId} = useAdminFeat();  
@@ -47,8 +49,11 @@ export const ManageLocation = (props : adminProps) => {
     const saveLocation = async () => {
       // preform necessary checks and save to firebase
       const position = new GeoPoint(coordinates.lat, coordinates.long);
-      newLocation(nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value);
+      const result = await newLocation(nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value);
       // display error message if location already exits in map
+      if (!result) {
+        alert("This location already exists.");
+      }
     }
 
     const closeDrawer = async () => {
