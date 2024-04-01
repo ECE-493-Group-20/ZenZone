@@ -6,19 +6,20 @@ import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
 import AddIcon from '@mui/icons-material/Add';
 import SearchBar from './components/searchbar/SearchBar';
-import { DashboardProvider } from './components/dashboard/dashboardprovider/DashboardProvider';
+import { DashboardProvider, useDashboard } from './components/dashboard/dashboardprovider/DashboardProvider';
 import { Dashboard } from './components/dashboard/Dashboard';
-import {UserSignIn, UserSignUp, AdminSignUp, signOut} from './components/authentication/Authentication';
+import { signOut } from './components/authentication/Authentication';
 import { useContext } from 'react';
-import { AuthContext } from './components/authentication/AuthContext';
-import Typography from '@mui/material/Typography';
+import { AuthContext } from './components/authentication/AuthProvider';
 import { Link } from "react-router-dom";
 import { auth, db } from "./components/authentication/firebaseSetup";
-import { doc, getDoc } from "firebase/firestore";
 import {useEffect, useState} from "react";
 import Form from './components/form/Form';
 import Permissions from './components/permissions/Permissions';
 import { AddLocation, Map as MapIcon } from '@mui/icons-material';
+import { AdminFeatContext, AdminFeatProvider, useAdminFeat } from './components/admin/AdminFeatProvider';
+import { ManageLocation } from './components/admin/ManageLocation';
+import { LocationPickerProvider } from './components/map/LocationPickerProvider';
 import SearchMap from './components/searchmap/SearchMap';
 
 // Checks if the current user is an admin. Returns true if isAdmin = true and 
@@ -37,20 +38,12 @@ async function checkIsAdmin(user : any) {
 }
 
 function App() {
-  const user =  useContext(AuthContext);
+  const {user, isAdmin, setAdmin }=  useContext(AuthContext);
   const [heatmapToggle, setHeatmapToggle] = useState<boolean>(false)
 
-  // Used to show/hide the "plus" button depending if the user is an admin
-  const [isAdmin, setShowAdminButton] = useState(false);
-  const [openForm, setOpenForm] = useState(false)
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      const isAdmin = await checkIsAdmin(user?.uid);
-      setShowAdminButton(isAdmin);
-    };
+  const { setOpenAdmin, setLocationId } = useAdminFeat(); 
 
-    checkAdminStatus();
-  }, [user]);
+  const [openForm, setOpenForm] = useState(false) 
 
   /*
   Put this button back when we have a spot for it in the UI.
@@ -59,55 +52,58 @@ function App() {
   return (
     <>
       <DashboardProvider>
-        <div className="App">
-          <Logo className="logo" />
-          <SearchMap heatmap={heatmapToggle}></SearchMap>
-          <Button
-            className="microphoneButton"
-            onClick={() => {
-              tester(user?.uid);
-            }}
-          >
-            All Test
-          </Button>
-          {user == null ? (
-            <Button className="signinButton" component={Link} to={"/signin"}>
-              Sign in
-            </Button>
-          ) : (
-            <Button className="signinButton" onClick={signOut}>
-              Sign Out
-            </Button>
-          )}
-          <div className="buttonContainer">
-            {isAdmin ? (
-              <IconButton className="addButton">
-                <AddLocation />
-              </IconButton>
-            ) : null}
-            <IconButton className='addButton' onClick={() => setOpenForm(true)}><AddIcon /></IconButton>
-          <ToggleButton
-              value={heatmapToggle}
-              onClick={() => setHeatmapToggle(!heatmapToggle)}
-              className="addButton"
+        <LocationPickerProvider>
+          <div className="App">
+            <Logo className="logo" />
+            <SearchMap heatmap={heatmapToggle}></SearchMap>
+            <Button
+              className="microphoneButton"
+              onClick={() => {
+                tester(user?.uid);
+              }}
             >
-              <MapIcon />
-            </ToggleButton>
+              All Test
+            </Button>
+            {user == null ? (
+              <Button className="signinButton" component={Link} to={"/signin"}>
+                Sign in
+              </Button>
+            ) : (
+              <Button className="signinButton" onClick={signOut}>
+                Sign Out
+              </Button>
+            )}
+            <div className="buttonContainer">
+              {isAdmin ? (
+                <IconButton className="addButton" onClick={() => { setOpenAdmin(true); setLocationId({locationId : null})}}>
+                  <AddLocation />
+                </IconButton>
+              ) : null}
+              <ManageLocation/>
+              <IconButton className='addButton' onClick={() => setOpenForm(true)}><AddIcon /></IconButton>
+            <ToggleButton
+                value={heatmapToggle}
+                onClick={() => setHeatmapToggle(!heatmapToggle)}
+                className="addButton"
+              >
+                <MapIcon />
+              </ToggleButton>
+            </div>
+            <Permissions />
+            <Dashboard
+              locationName="ELTC"
+              location="53.527172826716836, -113.53013883407911"
+              capacity={50}
+              description="it's a place!"
+            />
           </div>
-          <Permissions />
-          <Dashboard
-            locationName="ELTC"
-            location="53.527172826716836, -113.53013883407911"
-            capacity={50}
-            description="it's a place!"
-          />
-        </div>
-        <Modal
-        open={openForm}
-        onClose={() => setOpenForm(false)}
-      >
-        <Form close={() => setOpenForm(false)}/>
-      </Modal>
+          <Modal
+          open={openForm}
+          onClose={() => setOpenForm(false)}
+        >
+          <Form close={() => setOpenForm(false)}/>
+        </Modal>
+      </LocationPickerProvider>
     </DashboardProvider>
     </>
   );

@@ -1,6 +1,6 @@
 // This was copied from this tutorial: https://medium.com/geekculture/firebase-auth-with-react-and-typescript-abeebcd7940a
 import React, { useContext, useRef, useEffect } from "react";
-import { AuthContext } from "./AuthContext";
+import { AuthContext } from "./AuthProvider";
 import { auth, db } from "./firebaseSetup";
 import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 import Avatar from '@mui/material/Avatar';
@@ -23,7 +23,7 @@ import {useNavigate, redirectDocument} from "react-router-dom";
 
 function UserSignIn() {
   // both admin an regular users use the same signin page
-  const user = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Email and password sign in
@@ -146,7 +146,7 @@ function UserSignIn() {
 
 function UserSignUp() {
   
-  const user = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Email and password sign in
@@ -289,7 +289,7 @@ function UserSignUp() {
 
 
 function AdminSignUp() {
-  const user = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Email and password sign in
