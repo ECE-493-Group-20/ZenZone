@@ -7,7 +7,8 @@ import { userBusyUpload, userLoudUpload } from '../../scripts/Firebase'
 type LevelType = 'sound' | 'busy'
 
 interface FormProps {
-    close: () => void
+    id: string; //id of current location
+    close: () => void;
 }
 
 const Form = (props: FormProps) => {
@@ -76,8 +77,8 @@ const Form = (props: FormProps) => {
     const submit = async () => {
         try {
             console.log("Submitting Data");
-            // await userLoudUpload(soundLevel, )
-            // await userBusyUpload(busyLevel, )
+            await userLoudUpload(soundLevel, props.id)
+            await userBusyUpload(busyLevel, props.id)
         } catch {
             //!!!TODO: add snackbar for user responses
             console.error("Failed to upload form")

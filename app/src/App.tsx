@@ -4,7 +4,6 @@ import { getMicrophoneStats, requestAverageSound, getTrendAllLocs, tester, getAl
 import {toggleMicrophone} from './scripts/microphone';
 import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
-import AddIcon from '@mui/icons-material/Add';
 import SearchBar from './components/searchbar/SearchBar';
 import { DashboardProvider, useDashboard } from './components/dashboard/dashboardprovider/DashboardProvider';
 import { Dashboard } from './components/dashboard/Dashboard';
@@ -40,10 +39,7 @@ async function checkIsAdmin(user : any) {
 function App() {
   const { user, isAdmin, setAdmin }=  useContext(AuthContext);
   const [heatmapToggle, setHeatmapToggle] = useState<boolean>(false)
-
   const { setOpenAdmin, setLocationId } = useAdminFeat(); 
-
-  const [openForm, setOpenForm] = useState(false) 
 
   /*
   Put this button back when we have a spot for it in the UI.
@@ -80,7 +76,6 @@ function App() {
                 </IconButton>
               ) : null}
               <ManageLocation/>
-              <IconButton className='addButton' onClick={() => setOpenForm(true)}><AddIcon /></IconButton>
             <ToggleButton
                 value={heatmapToggle}
                 onClick={() => setHeatmapToggle(!heatmapToggle)}
@@ -92,12 +87,6 @@ function App() {
             <Permissions />
             <Dashboard />
           </div>
-          <Modal
-          open={openForm}
-          onClose={() => setOpenForm(false)}
-        >
-          <Form close={() => setOpenForm(false)}/>
-        </Modal>
       </LocationPickerProvider>
     </DashboardProvider>
     </>

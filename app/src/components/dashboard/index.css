@@ -46,16 +46,6 @@
     justify-content: space-evenly;
 }
 
-.favoriteButton {
-    position: absolute !important;
-    right: 1.5em;
-    top: 1.5em;
-    background-color: var(--background) !important;
-    color: var(--text) !important;
-    box-shadow: var(--text) 0 0 10px;
-    transition: 0.5s;
-}
-
 .description {
     display: flex;
     align-items: center;
@@ -67,8 +57,20 @@
     margin: 0 0 0 0.5em
 }
 
-.editButton {
+.dashboardButtonContainer {
     position: absolute !important;
+    right: 1em;
+    top: 1em;
+}
+
+.favoriteButton {
+    background-color: var(--background) !important;
+    color: var(--text) !important;
+    box-shadow: var(--text) 0 0 10px;
+    transition: 0.5s;
+}
+
+.editButton {
     right: 5em;
     top: 0.9em;
     background-color: var(--background) !important;
