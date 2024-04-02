@@ -11,6 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useAdminFeat } from "../admin/AdminFeatProvider"
 import { useAuth } from "../authentication/AuthProvider"
 import { addFavourite, removeFavourite } from "../../scripts/Firebase"
+import { useLocationPicker } from "../map/LocationPickerProvider"
 
 export const Dashboard = () => {
     const {open, setOpen, currentLocation, locations} = useDashboard()
@@ -19,10 +20,11 @@ export const Dashboard = () => {
     const { setOpenAdmin, setLocationId , locationId} = useAdminFeat(); 
     const data = locations[currentLocation || ''];
 
+    const { setCoordinates }= useLocationPicker()
     const openEditLocation = async () => {
-      // TODO: link this with the actual location information from firebase
-      // set the location id to the dashboard location id
-      setLocationId('Hello World');
+      // Set up the ManageLocation drawer
+      setLocationId(currentLocation);
+      setCoordinates({lat: data.position.latitude, long: data.position.longitude})
       setOpen(false);
       setOpenAdmin(true);
       console.log(locationId);

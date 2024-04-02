@@ -19,6 +19,7 @@ import { GeoPoint } from "firebase/firestore";
 
 import { useLocationPicker } from "../map/LocationPickerProvider";
 import { useAdminFeat } from "./AdminFeatProvider";
+import { useDashboard } from "../dashboard/dashboardprovider/DashboardProvider";
 
 
 interface adminProps {
@@ -34,8 +35,6 @@ interface adminProps {
 export const ManageLocation = (props : adminProps) => {
     const nameRef = useRef<HTMLInputElement>();
     const descriptionRef = useRef<HTMLInputElement>();
-    const latRef = useRef<HTMLInputElement>();
-    const lonRef = useRef<HTMLInputElement>();
     const capacityRef = useRef<HTMLInputElement>();
     const sizeRef = useRef<HTMLInputElement>();
     const orgRef = useRef<HTMLInputElement>();
@@ -45,6 +44,10 @@ export const ManageLocation = (props : adminProps) => {
 
     // used to open/close the drawer
     const{open, setOpenAdmin, locationId} = useAdminFeat();  
+
+    // reuse location information from DashboardProvider
+    const { locations } = useDashboard();
+    const data = locations[locationId || ''];
 
     const saveLocation = async () => {
       // preform necessary checks and save to firebase
@@ -73,7 +76,7 @@ export const ManageLocation = (props : adminProps) => {
           >
           <div className="paper">
             <Box sx={{width: 1/2, p:1}}>
-            <TextField label="Location Name" inputRef = {nameRef} required={true} fullWidth={true}/>
+            <TextField label="Location Name" inputRef = {nameRef} required={true} fullWidth={true} defaultValue={data.name}/>
             </Box>
             <Box sx={{width: 1/2, p:1}}>
             <TextField label="Organization" inputRef = {orgRef} defaultValue={"University of Alberta"} fullWidth={true}/>
@@ -82,19 +85,19 @@ export const ManageLocation = (props : adminProps) => {
                 <Tooltip title="Location">
                   <GpsFixed />              
                 </Tooltip>
-              <TextField id="Latitude" label="Laitiude" value={coordinates.lat}/>
-              <TextField id="Longitude" label="Longitiude" value={coordinates.long}/>
+              <TextField id="Latitude" label="Laitiude" value={coordinates.lat} />
+              <TextField id="Longitude" label="Longitiude" value={coordinates.long} />
               <Tooltip title="Capacity">
                 <AccountBox />
               </Tooltip>
-              <TextField label="Capacity" inputRef = {capacityRef} type="number"/>
-              <TextField label="Size" inputRef = {sizeRef} type="number"/>
+              <TextField label="Capacity" inputRef = {capacityRef} type="number" defaultValue={data.capacity}/>
+              <TextField label="Size" inputRef = {sizeRef} type="number" defaultValue={data.size}/>
             </div>
             <div className="description">
               <Tooltip title="Description">
                 <Description />
               </Tooltip>
-              <TextField label="Description" inputRef = {descriptionRef} fullWidth={true} />
+              <TextField label="Description" inputRef = {descriptionRef} fullWidth={true} defaultValue={data.description}/>
             </div>
             <IconButton className = "saveButton" onClick={saveLocation}><SaveIcon/></IconButton>
             <IconButton className = "closeButton" onClick={closeDrawer}><CloseIcon/></IconButton>
