@@ -20,14 +20,16 @@ const Form = (props: FormProps) => {
         const soundLevels = [20, 40, 60, 80, 120] // in dB
         const busyLevels = [20, 40, 60, 80, 95] // in % (subject to change)
         const colors = ['#7765AC', '#4D74B2', '#659360', '#FCB955', '#E95658']
+        const soundLabels = ["FAINT", "SOFT", "MODERATE", "LOUD", "VERY LOUD"]
+        const busyLabels = ["NOT BUSY", "NOT VERY BUSY", "NORMAL", "BUSY", "VERY BUSY"]
         const chosenLevels = type == 'busy' ? busyLevels : soundLevels
-    
+        const chosenLabels = type == 'busy' ? busyLabels : soundLabels
         for (let i = 0; i < colors.length; i++) {
             if (value <= chosenLevels[i]) {
-                return colors[i]
+                return [colors[i], chosenLabels[i]]
             }
         }
-        return colors[colors.length - 1] // default return last value in colors
+        return [colors[colors.length - 1], chosenLabels[chosenLabels.length - 1]] // default return last value in colors
     }
 
     const soundColor = valueToColor(soundLevel, 'sound')
@@ -36,14 +38,14 @@ const Form = (props: FormProps) => {
     const sliderStyle: {[key: string]: SxProps} = {
         sound: {
             '& .MuiSlider-track': {
-                backgroundColor: soundColor,
+                backgroundColor: soundColor[0],
                 height: '10px',
                 borderRadius: '2px',
                 border: '1px solid #383F51',
                 transition: '1s'
             },
             '& .MuiSlider-rail': {
-                backgroundColor: soundColor,
+                backgroundColor: soundColor[0],
                 height: '10px',
                 borderRadius: '2px',
                 transition: '1s'
@@ -55,14 +57,14 @@ const Form = (props: FormProps) => {
         },
         busy: {
             '& .MuiSlider-track': {
-                backgroundColor: busyColor,
+                backgroundColor: busyColor[0],
                 height: '10px',
                 borderRadius: '2px',
                 border: '1px solid #383F51',
                 transition: '1s'
             },
             '& .MuiSlider-rail': {
-                backgroundColor: busyColor,
+                backgroundColor: busyColor[0],
                 height: '10px',
                 borderRadius: '2px',
                 transition: '1s'
@@ -90,13 +92,13 @@ const Form = (props: FormProps) => {
             <h1>Manual Input</h1>
 
             <div className="levelCardTitle">
-                <h4>Sound Level</h4>
+                <h4>Sound Level | {soundColor[1]}</h4>
                 <p>{soundLevel}dB</p>
             </div>
             <Slider value={soundLevel} onChange={(_, value) => setSoundLevel(value as number)} sx={sliderStyle['sound']}/>
             
             <div className="levelCardTitle">
-                <h4>Busy Level</h4>
+                <h4>Busy Level | {busyColor[1]}</h4>
                 <p>{busyLevel}%</p>
             </div>
             <Slider value={busyLevel} onChange={(_, value) => setBusyLevel(value as number)} sx={sliderStyle['busy']}/>
