@@ -1,4 +1,4 @@
-import { Drawer, IconButton, ToggleButton, Tooltip } from "@mui/material"
+import { Drawer, IconButton, Modal, ToggleButton, Tooltip } from "@mui/material"
 import { useDashboard } from "./dashboardprovider/DashboardProvider"
 import "./index.css"
 import { ResponsiveChartContainer } from "@mui/x-charts/ResponsiveChartContainer"
@@ -12,6 +12,8 @@ import { useAdminFeat } from "../admin/AdminFeatProvider"
 import { useAuth } from "../authentication/AuthProvider"
 import { addFavourite, removeFavourite } from "../../scripts/Firebase"
 import { useLocationPicker } from "../map/LocationPickerProvider"
+import AddIcon from '@mui/icons-material/Add';
+import Form from "../form/Form"
 
 export const Dashboard = () => {
     const {open, setOpen, currentLocation, locations} = useDashboard()
@@ -19,6 +21,8 @@ export const Dashboard = () => {
     const { user, isAdmin } = useAuth();
     const { setOpenAdmin, setLocationId , locationId} = useAdminFeat(); 
     const data = locations[currentLocation || ''];
+    const [openForm, setOpenForm] = useState(false) 
+
 
     const { setCoordinates }= useLocationPicker()
     const openEditLocation = async () => {
@@ -88,14 +92,34 @@ export const Dashboard = () => {
                 </ResponsiveChartContainer>
               </div>
             </div>
-            {user ? <ToggleButton className="favoriteButton" value={favorite}
-            onClick={() => favorite ? removeFavourite(user.uid, "test") : addFavourite(user.uid, currentLocation)} // TODO: Need these as actual location ids
-            onChange={() => setFavorite(!favorite)} > {favorite ? <TurnedIn /> : <TurnedInNot />}
-            </ToggleButton> : null}
-
-            {isAdmin ? <IconButton className="editButton" onClick={openEditLocation}><EditIcon /></ IconButton> : null}       
-
+            <div className='dashboardButtonContainer'>
+            {
+                isAdmin ? 
+                <IconButton className="addButton" onClick={openEditLocation}>
+                    <EditIcon />
+                </ IconButton> 
+                : null
+              }
+              <IconButton className='addButton' onClick={() => setOpenForm(true)}>
+                <AddIcon />
+              </IconButton>
+              {
+                user ? 
+                <ToggleButton className="favoriteButton" value={favorite}
+                  onClick={() => favorite ? removeFavourite(user.uid, currentLocation) : addFavourite(user.uid, currentLocation)} // TODO: Need these as actual location ids
+                  onChange={() => setFavorite(!favorite)} > {favorite ? <TurnedIn /> : <TurnedInNot />}
+                </ToggleButton> 
+                : null
+              }
+              
+            </div>
           </div>
+          <Modal
+            open={openForm}
+            onClose={() => setOpenForm(false)}
+          >
+            <Form id={currentLocation!} close={() => setOpenForm(false)}/>
+          </Modal>
         </Drawer> :
         null
     )
