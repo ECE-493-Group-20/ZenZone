@@ -22,6 +22,7 @@ export const Dashboard = () => {
     const { setOpenAdmin, setLocationId , locationId } = useAdminFeat(); 
     const data = locations[currentLocation || ''];
     const [openForm, setOpenForm] = useState(false);
+
     const { setCoordinates }= useLocationPicker()
     const openEditLocation = async () => {
       // Set up the ManageLocation drawer
@@ -91,6 +92,13 @@ export const Dashboard = () => {
               </div>
             </div>
             <div className='dashboardButtonContainer'>
+            {
+                isAdmin ? 
+                <IconButton className="addButton" onClick={openEditLocation}>
+                    <EditIcon />
+                </ IconButton> 
+                : null
+              }
               <IconButton className='addButton' onClick={() => setOpenForm(true)}>
                 <AddIcon />
               </IconButton>
@@ -100,13 +108,6 @@ export const Dashboard = () => {
                   onClick={() => favorite ? removeFavourite(user.uid, currentLocation) : addFavourite(user.uid, currentLocation)} // TODO: Need these as actual location ids
                   onChange={() => setFavorite(!favorite)} > {favorite ? <TurnedIn /> : <TurnedInNot />}
                 </ToggleButton> 
-                : null
-              }
-              {
-                isAdmin ? 
-                <IconButton className="editButton" onClick={openEditLocation}>
-                    <EditIcon />
-                </ IconButton> 
                 : null
               }
             </div>
