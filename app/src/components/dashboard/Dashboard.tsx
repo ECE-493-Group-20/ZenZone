@@ -11,6 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useAdminFeat } from "../admin/AdminFeatProvider"
 import { useAuth } from "../authentication/AuthProvider"
 import { addFavourite, removeFavourite } from "../../scripts/Firebase"
+import { useLocationPicker } from "../map/LocationPickerProvider"
 import AddIcon from '@mui/icons-material/Add';
 import Form from "../form/Form"
 
@@ -23,10 +24,11 @@ export const Dashboard = () => {
     const [openForm, setOpenForm] = useState(false) 
 
 
+    const { setCoordinates }= useLocationPicker()
     const openEditLocation = async () => {
-      // TODO: link this with the actual location information from firebase
-      // set the location id to the dashboard location id
-      setLocationId('Hello World');
+      // Set up the ManageLocation drawer
+      setLocationId(currentLocation);
+      setCoordinates({lat: data.position.latitude, long: data.position.longitude})
       setOpen(false);
       setOpenAdmin(true);
       console.log(locationId);
@@ -91,6 +93,13 @@ export const Dashboard = () => {
               </div>
             </div>
             <div className='dashboardButtonContainer'>
+            {
+                isAdmin ? 
+                <IconButton className="addButton" onClick={openEditLocation}>
+                    <EditIcon />
+                </ IconButton> 
+                : null
+              }
               <IconButton className='addButton' onClick={() => setOpenForm(true)}>
                 <AddIcon />
               </IconButton>
@@ -102,13 +111,7 @@ export const Dashboard = () => {
                 </ToggleButton> 
                 : null
               }
-              {
-                isAdmin ? 
-                <IconButton className="editButton" onClick={openEditLocation}>
-                    <EditIcon />
-                </ IconButton> 
-                : null
-              }
+              
             </div>
           </div>
           <Modal

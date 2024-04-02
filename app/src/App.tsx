@@ -71,7 +71,7 @@ function App() {
             )}
             <div className="buttonContainer">
               {isAdmin ? (
-                <IconButton className="addButton" onClick={() => { setOpenAdmin(true); setLocationId({locationId : null})}}>
+                <IconButton className="addButton" onClick={() => { setOpenAdmin(true); setLocationId(null)}}>
                   <AddLocation />
                 </IconButton>
               ) : null}
