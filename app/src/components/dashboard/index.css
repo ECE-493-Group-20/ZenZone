@@ -71,8 +71,7 @@
 }
 
 .editButton {
-    right: 5em;
-    top: 0.9em;
+    right: 7.5em;
     background-color: var(--background) !important;
     color: var(--text) !important;
     box-shadow: var(--text) 0 0 10px;
