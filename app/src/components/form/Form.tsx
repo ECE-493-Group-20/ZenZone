@@ -81,6 +81,7 @@ const Form = (props: FormProps) => {
             console.log("Submitting Data");
             await userLoudUpload(soundLevel, props.id)
             await userBusyUpload(busyLevel, props.id)
+            props.close()
         } catch {
             //!!!TODO: add snackbar for user responses
             console.error("Failed to upload form")
