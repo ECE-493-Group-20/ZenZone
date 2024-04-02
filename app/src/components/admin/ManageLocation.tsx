@@ -14,7 +14,7 @@ import Map from '../map/Map';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
 // Firebase functions
-import { newLocation } from '../../scripts/Firebase'
+import { newLocation, updateLocation } from '../../scripts/Firebase'
 import { GeoPoint } from "firebase/firestore";
 
 import { useLocationPicker } from "../map/LocationPickerProvider";
@@ -50,12 +50,24 @@ export const ManageLocation = (props : adminProps) => {
     const data = locations[locationId || ''];
 
     const saveLocation = async () => {
+      // Creating a new location
+      if (locationId == null) {
       // preform necessary checks and save to firebase
-      const position = new GeoPoint(coordinates.lat, coordinates.long);
-      const result = await newLocation(nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value);
-      // display error message if location already exits in map
-      if (!result) {
-        alert("This location already exists.");
+        const position = new GeoPoint(coordinates.lat, coordinates.long);
+        const result = await newLocation(nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value);
+        // display error message if location already exits in map
+        if (!result) {
+          alert("This location already exists.");
+        }
+      }
+      // modifying a location
+      else {
+        const position = new GeoPoint(coordinates.lat, coordinates.long);
+        const result = updateLocation(locationId, nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value)
+        
+        if (!result) {
+          alert("Error saving location information");
+        }
       }
     }
 
