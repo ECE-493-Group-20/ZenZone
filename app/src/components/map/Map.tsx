@@ -8,6 +8,7 @@ import { getAllLocs } from "../../scripts/Firebase"
 import { GeoPoint } from 'firebase/firestore';
 
 import { useLocationPicker } from "./LocationPickerProvider";
+import { useDashboard } from "../dashboard/dashboardprovider/DashboardProvider";
 
 interface coordinates {
     lat : number,
@@ -44,12 +45,12 @@ const Map = (props: GoogleMapProps & MapProps) => {
     const { setCoordinates } = useLocationPicker();
     
     const [heatmap, setHeatMap] = useState<google.maps.visualization.HeatmapLayer | null>();
-    const [locations, setLocations] = useState<LocationData[] | null>(null);
     const [heatmapData, setHeatMapData] = useState<google.maps.LatLng[]>([]);
     const [position, setPosition] = useState({
       latitude: null as unknown as number,
       longitude: null as unknown as number,
     });
+    const {locations, isLocations} = useDashboard();
     const map = props.map;
 
     useEffect(() => {
@@ -64,14 +65,6 @@ const Map = (props: GoogleMapProps & MapProps) => {
         console.log("Geolocation is not available in your browser.");
       }
     }, []);
-
-    useEffect(() => {
-        const getLocs = (async() => {
-            const locs = await getAllLocs("University of Alberta");
-            setLocations(locs.map((doc) => doc.data()));
-        });
-        getLocs();
-    }, [])
 
     useEffect(() => {
         if (!heatmap) {
@@ -149,9 +142,10 @@ const Map = (props: GoogleMapProps & MapProps) => {
         >
             <CustomMarker position={center} type='whereami'/>
             {
-                locations ? 
-                locations.map((location, index) => {
-                    return <CustomMarker key={index} type='default' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
+                isLocations ? 
+                Object.values(locations).map((location, index) => {
+                  console.log(locations.id)
+                    return <CustomMarker key={index} id={location.id} type='default' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
                 })
                 : null
             }

@@ -3,11 +3,12 @@ import "./index.css"
 import { useDashboard } from "../dashboard/dashboardprovider/DashboardProvider"
 
 interface CustomMarkerProps {
+  id?: string, // location id
   type: 'default' | 'favorite' | 'whereami'
 }
 
 const CustomMarker = (props: MarkerProps & CustomMarkerProps) => {
-    const { setOpen } = useDashboard()
+    const { setOpen, setCurrentLocation } = useDashboard()
 
     const icons : {[key: string]: google.maps.Symbol} = {
       default: {
@@ -48,7 +49,7 @@ const CustomMarker = (props: MarkerProps & CustomMarkerProps) => {
       }
     }
 
-    return <Marker {...props} icon={icons[props.type]} onClick={() => {if (props.type != 'whereami') setOpen(true)}}/>
+    return <Marker {...props} icon={icons[props.type]} onClick={() => {if (props.type != 'whereami') {setCurrentLocation(props.id || null); setOpen(true); }}}/>
 }
 
 export default CustomMarker;

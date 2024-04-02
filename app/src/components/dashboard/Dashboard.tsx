@@ -11,23 +11,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useAdminFeat } from "../admin/AdminFeatProvider"
 import { useAuth} from "../authentication/AuthProvider"
 
-interface DashboardProps {
-  locationName: string,
-  location: string,
-  capacity: number,
-  description: string,
-  busyLevel?: number,
-  soundLevel?: number,
-}
-
-export const Dashboard = (props: DashboardProps) => {
-    const {open, setOpen} = useDashboard()
-
+export const Dashboard = () => {
+    const {open, setOpen, currentLocation, locations} = useDashboard()
     const [favorite, setFavorite] = useState<boolean>(false)
-
     const {isAdmin } = useAuth();
-
     const { setOpenAdmin, setLocationId , locationId} = useAdminFeat(); 
+    const data = locations[currentLocation || ''];
 
     const openEditLocation = async () => {
       // TODO: link this with the actual location information from firebase
@@ -39,6 +28,7 @@ export const Dashboard = (props: DashboardProps) => {
     }
 
     return (
+      data ?
         <Drawer 
           className="drawer" 
           variant="temporary" 
@@ -46,26 +36,26 @@ export const Dashboard = (props: DashboardProps) => {
           open={open} 
           onClose={() => setOpen(false)}>
           <div className="paper">
-            <h1>{props.locationName}</h1>
+            <h1>{data.name}</h1>
             <div className="description">
               <Tooltip title="Location">
                 <GpsFixed />              
               </Tooltip>
-              <p>{props.location}</p>
+              <p>{data.position.latitude} {data.position.longitude}</p>
               <Tooltip title="Capacity">
                 <AccountBox />
               </Tooltip>
-              <p>{props.capacity}</p>
+              <p>{data.capacity}</p>
             </div>
             <div className="description">
               <Tooltip title="Description">
                 <Description />
               </Tooltip>
-              <p>{props.description}</p>
+              <p>{data.description}</p>
             </div>
             <div className="levelCardContainer">
-              <LevelCard title="Sound Level" value={props.soundLevel || 30} type="sound" />
-              <LevelCard title="Busy Level" value={props.busyLevel || 80} type="busy" />
+              <LevelCard title="Sound Level" value={data.loudtrend[(new Date()).getHours()]} type="sound" />
+              <LevelCard title="Busy Level" value={data.busytrend[(new Date()).getHours()]} type="busy" />
             </div>
             <div className="chartContainer">
               <div className="chart">
@@ -79,12 +69,12 @@ export const Dashboard = (props: DashboardProps) => {
                   ]}
                   series={[{
                       type: 'bar',
-                      data: [1,2,3,4,5],
+                      data: data.loudtrend,
                       label: 'Sound Level',
                       color: '#3C4F76',
                     }, {
                       type: 'bar',
-                      data: [5,4,3,2,1],
+                      data: data.busytrend,
                       label: 'Busy Level',
                       color: '#DDDBF1',
                     }]}
@@ -102,6 +92,7 @@ export const Dashboard = (props: DashboardProps) => {
             {isAdmin ? <IconButton className="editButton" onClick={openEditLocation}><EditIcon /></ IconButton> : null}       
 
           </div>
-        </Drawer>
+        </Drawer> :
+        null
     )
 }
