@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getAllLocs } from "../../../scripts/Firebase";
+import { getAllLocs, getLocData } from "../../../scripts/Firebase";
 import { GeoPoint } from "@firebase/firestore-types";
 
 
@@ -34,16 +34,39 @@ export const DashboardProvider = ({ children }: any) => {
     const [currentLocation, setCurrentLocation] = useState<string | null>(null);
 
     useEffect(() => {
+        console.log("Updating locations array");
         const getLocs = (async() => {
             const locs = await getAllLocs("University of Alberta");
             locs.forEach((doc) => {
                 locations[doc.id] = {id: doc.id, ...doc.data()}
+                console.log(doc.description);
             })
             setLocations(locations)
             setIsLocations(true)
         });
         getLocs();
-    }, [])
+    })
+
+    /*useEffect(() => {
+        console.log("Updating data!");
+        const updateData = (async() => {
+            if (currentLocation) {
+                await getLocData(currentLocation).then(dat => {
+                    if (dat) {
+                    locations[currentLocation] = {id: dat?.id,
+                        busytrend: dat?.busytrend,
+                        capacity: dat?.capacity,
+                        description: dat?.description,
+                        loudtrend: dat?.loudtrend,
+                        name: dat?.name,
+                        position: dat?.position,
+                        size: dat?.size,}
+                    }
+                });
+            }
+        })
+        updateData();
+    }, [currentLocation])*/
 
     const value = useMemo(() => ({
         open,

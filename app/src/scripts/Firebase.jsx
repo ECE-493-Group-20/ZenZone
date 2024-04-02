@@ -265,6 +265,14 @@ export async function getTrendLoc(loc, ind=-1) {
     });
 }
 
+// Helper function for dashboard to allow data to update on reopening.
+export async function getLocData(id) {
+    console.log(id);
+    const locDocQuery = doc(db, "Locations", id);
+    const locDoc = await getDoc(locDocQuery);
+    return locDoc.data();
+}
+
 // Upload new location to the database. Busy and loud data are prefilled.
 // pos should be a GeoPoint. Returns true if the location did not previously
 // exist and is now created. Returns false if location already existed, and the
