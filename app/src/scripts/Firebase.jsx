@@ -105,6 +105,12 @@ export function uploadLoudness() {
     // ID for now is milliseconds since epoch plus loudness measure
     let id = (Timestamp.now().toMillis() + audio[0]).toString();
     NoiseLevel.doc(id).set(data);
+    if (closest != "") {
+        const calcTrend = (async() => {
+            await getTrendLoc(closest, -1);
+        });
+        calcTrend();
+    }
 }
 
 // Upload user loudness data for a location. usrData should be loudness data in dB, location should be id of a location.
@@ -233,18 +239,16 @@ export async function getTrendAllLocs(org) {
     var locs = await getAllLocs(org);
     locs.forEach((loc) => {
         console.log(loc.id);
-        getTrendLoc(loc, ind);
+        getTrendLoc(loc.id, ind);
     });
     return locs;
 }
 
-// Similar to the above function, although only gets data for one location. Location should be a document from Firebase.
-// Ind should not be passed, unless called by getTrendAllLocs()
+// Similar to the above function, although only gets data for one location. Location should be a document id.
+// Ind should not be passed, or should be -1, unless called by getTrendAllLocs()
 export async function getTrendLoc(loc, ind=-1) {
-    if (loc.id == undefined) {
-        loc.id = loc.name.toLowerCase().replaceAll(' ', '')
-    }
     console.log("LOCATION:", loc);
+    var data = await(getLocData(loc));
     if (ind == -1) {
         // Timestamp from last hour. Function assumed to be called on the hour, to collect the data from the
         // previous hour. The hour, in military time, is used as the index in the trend array.
@@ -255,23 +259,18 @@ export async function getTrendLoc(loc, ind=-1) {
             ind += 24;
         }
     }
-    var busy;
-    var sound;
-    requestAverageSound(loc.id).then((avgSound) => {
+    requestAverageSound(loc).then((avgSound) => {
         console.log("After sound");
-        let loudData = loc.loudtrend;
+        let loudData = data.loudtrend;
         loudData[ind] = avgSound;
-        sound = avgSound;
-        Locations.doc(loc.id).update({loudtrend: loudData});
-        requestBusyMeasure(loc.id).then((busyLevel) => {
+        Locations.doc(loc).update({loudtrend: loudData});
+        requestBusyMeasure(loc).then((busyLevel) => {
             console.log("After busy");
-            let busyData = loc.busytrend;
+            let busyData = data.busytrend;
             busyData[ind] = busyLevel;
-            busy = busyLevel;
-            Locations.doc(loc.id).update({busytrend: busyData});
+            Locations.doc(loc).update({busytrend: busyData});
         });
     });
-    return {"busy": busy, "sound": sound, "ind": ind};
 }
 
 // Helper function for dashboard to allow data to update on reopening.

@@ -40,27 +40,12 @@ export const DashboardProvider = ({ children }: any) => {
 
     useEffect(() => {
         console.log("Refreshing data");
-        const getLocs = (async() => {
-            if (currentLocation != null && refreshLocations) {
-                getTrendLoc(locations[currentLocation], -1).then(async() => {         
-                    const locs = await getAllLocs("University of Alberta");
-                    locs.forEach((doc) => {
-                        if (doc.id != currentLocation) {
-                            locations[doc.id] = {id: doc.id, ...doc.data()}
-                        }
-                        console.log(doc.data());
-                    })
-                });
-            } else {
-                const locs = await getAllLocs("University of Alberta");
-                locs.forEach((doc) => {
-                    if (doc.id != currentLocation) {
-                        locations[doc.id] = {id: doc.id, ...doc.data()}
-                    }
-                    console.log(doc.data());
-                })
-                setRefreshLocations(true);
-            }
+        const getLocs = (async() => {      
+            const locs = await getAllLocs("University of Alberta");
+            locs.forEach((doc) => {
+                locations[doc.id] = {id: doc.id, ...doc.data()}
+                console.log(doc.data());
+            })
             setLocations(locations)
             setIsLocations(true)
         });
