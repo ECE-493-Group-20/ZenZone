@@ -25,7 +25,6 @@ const Permissions = () => {
                 console.log("Geolocation is not available in your browser.");
             }
             await getMicrophoneStats();
-            setTimeout(uploadLoudness, 15000);
             setEnabled(!enabled)
         } catch {
             setEnabled(false)
@@ -44,6 +43,7 @@ const Permissions = () => {
     useEffect(() => {
         if (enabled) {
             findCurrentLocation();
+            setTimeout(uploadLoudness, 15000);
             // query location, audio every 10 minutes
             setLocationInterval(setInterval(findCurrentLocation, 600000));
             setAudioInterval(setInterval(uploadLoudness, 600000));
