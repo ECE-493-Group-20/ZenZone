@@ -22,17 +22,7 @@ import { useAdminFeat } from "./AdminFeatProvider";
 import { useDashboard } from "../dashboard/dashboardprovider/DashboardProvider";
 
 
-interface adminProps {
-  locationName?: string,
-  lat?: string | null,
-  long?: string | null,
-  capacity?: number,
-  description?: string,
-  busyLevel?: number,
-  soundLevel?: number,
-}
-
-export const ManageLocation = (props : adminProps) => {
+export const ManageLocation = () => {
     const nameRef = useRef<HTMLInputElement>();
     const descriptionRef = useRef<HTMLInputElement>();
     const capacityRef = useRef<HTMLInputElement>();
@@ -46,7 +36,7 @@ export const ManageLocation = (props : adminProps) => {
     const{open, setOpenAdmin, locationId} = useAdminFeat();  
 
     // reuse location information from DashboardProvider
-    const { locations } = useDashboard();
+    const { locations, refreshLocations, setRefreshLocations } = useDashboard();
     const data = locations[locationId || ''];
 
     const saveLocation = async () => {
@@ -55,6 +45,9 @@ export const ManageLocation = (props : adminProps) => {
       // preform necessary checks and save to firebase
         const position = new GeoPoint(coordinates.lat, coordinates.long);
         const result = await newLocation(nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value);
+        // refresh location information
+        setRefreshLocations(!refreshLocations);
+
         // display error message if location already exits in map
         if (!result) {
           alert("This location already exists.");
@@ -65,6 +58,10 @@ export const ManageLocation = (props : adminProps) => {
         const position = new GeoPoint(coordinates.lat, coordinates.long);
         const result = updateLocation(locationId, nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value)
         
+        // refresh location information
+        setRefreshLocations(!refreshLocations);
+        console.log(refreshLocations);
+
         if (!result) {
           alert("Error saving location information");
         }
@@ -88,7 +85,7 @@ export const ManageLocation = (props : adminProps) => {
           >
           <div className="paper">
             <Box sx={{width: 1/2, p:1}}>
-            <TextField label="Location Name" inputRef = {nameRef} required={true} fullWidth={true} defaultValue={data.name}/>
+            <TextField label="Location Name" inputRef = {nameRef} required={true} fullWidth={true} defaultValue={data?.name}/>
             </Box>
             <Box sx={{width: 1/2, p:1}}>
             <TextField label="Organization" inputRef = {orgRef} defaultValue={"University of Alberta"} fullWidth={true}/>
@@ -102,14 +99,14 @@ export const ManageLocation = (props : adminProps) => {
               <Tooltip title="Capacity">
                 <AccountBox />
               </Tooltip>
-              <TextField label="Capacity" inputRef = {capacityRef} type="number" defaultValue={data.capacity}/>
-              <TextField label="Size" inputRef = {sizeRef} type="number" defaultValue={data.size}/>
+              <TextField label="Capacity" inputRef = {capacityRef} type="number" defaultValue={data?.capacity}/>
+              <TextField label="Size" inputRef = {sizeRef} type="number" defaultValue={data?.size}/>
             </div>
             <div className="description">
               <Tooltip title="Description">
                 <Description />
               </Tooltip>
-              <TextField label="Description" inputRef = {descriptionRef} fullWidth={true} defaultValue={data.description}/>
+              <TextField label="Description" inputRef = {descriptionRef} fullWidth={true} defaultValue={data?.description}/>
             </div>
             <IconButton className = "saveButton" onClick={saveLocation}><SaveIcon/></IconButton>
             <IconButton className = "closeButton" onClick={closeDrawer}><CloseIcon/></IconButton>
