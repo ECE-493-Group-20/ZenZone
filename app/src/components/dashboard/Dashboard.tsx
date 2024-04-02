@@ -97,7 +97,7 @@ export const Dashboard = (props: DashboardProps) => {
               </div>
             </div>
             {user ? <ToggleButton className="favoriteButton" value={favorite}
-            onClick={() => favorite ? removeFavourite(user.uid, "test") : addFavourite(user.uid, "test")}
+            onClick={() => favorite ? removeFavourite(user.uid, "test") : addFavourite(user.uid, "test")} // TODO: Need these as actual location ids
             onChange={() => setFavorite(!favorite)} > {favorite ? <TurnedIn /> : <TurnedInNot />}
             </ToggleButton> : null}
 

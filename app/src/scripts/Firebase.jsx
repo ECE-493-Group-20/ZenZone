@@ -60,7 +60,7 @@ export async function getMicrophoneStats() {
         await toggleMicrophone();
         //findCurrentLocation();
         recording = true;
-        setTimeout(uploadLoudness, 15000);  // Upload microphone data after 15 seconds
+        //setTimeout(uploadLoudness, 15000);  // Upload microphone data after 15 seconds
     } else {
         await toggleMicrophone();
         recording = false;
