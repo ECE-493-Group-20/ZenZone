@@ -2,7 +2,7 @@ import { Button, Slider, SxProps } from '@mui/material'
 import './index.css'
 import { useState } from 'react'
 import { Check, Close } from '@mui/icons-material'
-import { userBusyUpload, userLoudUpload } from '../../scripts/Firebase'
+import { userBusyUpload, userLoudUpload, getTrendLoc } from '../../scripts/Firebase'
 
 type LevelType = 'sound' | 'busy'
 
@@ -81,6 +81,7 @@ const Form = (props: FormProps) => {
             console.log("Submitting Data");
             await userLoudUpload(soundLevel, props.id)
             await userBusyUpload(busyLevel, props.id)
+            await getTrendLoc(props.id, -1)
             props.close()
         } catch {
             //!!!TODO: add snackbar for user responses

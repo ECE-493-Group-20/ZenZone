@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getAllLocs } from "../../../scripts/Firebase";
+import { getAllLocs, getLocData, getTrendLoc } from "../../../scripts/Firebase";
 import { GeoPoint } from "@firebase/firestore-types";
 
 
@@ -40,17 +40,39 @@ export const DashboardProvider = ({ children }: any) => {
 
     useEffect(() => {
         console.log("Refreshing data");
-        const getLocs = (async() => {
+        const getLocs = (async() => {      
             const locs = await getAllLocs("University of Alberta");
             locs.forEach((doc) => {
                 locations[doc.id] = {id: doc.id, ...doc.data()}
+                console.log(doc.data());
             })
             setLocations(locations)
             setIsLocations(true)
         });
         getLocs();
         console.log("Done data");
-    }, [refreshLocations])
+    })
+
+    /*useEffect(() => {
+        console.log("Updating data!");
+        const updateData = (async() => {
+            if (currentLocation) {
+                console.log("CURRENT LOCATION UPDATE: ", currentLocation);
+                await getTrendLoc(locations[currentLocation], -1);
+                await getLocData(currentLocation).then(dat => {
+                    locations[currentLocation] = {id: dat?.id,
+                        busytrend: dat?.busytrend,
+                        capacity: dat?.capacity,
+                        description: dat?.description,
+                        loudtrend: dat?.loudtrend,
+                        name: dat?.name,
+                        position: dat?.position,
+                        size: dat?.size,}
+                });
+            }
+        })
+        updateData();
+    }, [currentLocation])*/
 
     const value = useMemo(() => ({
         open,

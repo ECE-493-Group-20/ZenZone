@@ -10,7 +10,7 @@ import { BarPlot, ChartsLegend } from "@mui/x-charts"
 import EditIcon from '@mui/icons-material/Edit';
 import { useAdminFeat } from "../admin/AdminFeatProvider"
 import { useAuth } from "../authentication/AuthProvider"
-import { addFavourite, removeFavourite } from "../../scripts/Firebase"
+import { addFavourite, getLocData, removeFavourite } from "../../scripts/Firebase"
 import { useLocationPicker } from "../map/LocationPickerProvider"
 import AddIcon from '@mui/icons-material/Add';
 import Form from "../form/Form"
@@ -19,10 +19,9 @@ export const Dashboard = () => {
     const {open, setOpen, currentLocation, locations} = useDashboard()
     const [favorite, setFavorite] = useState<boolean>(false)
     const { user, isAdmin } = useAuth();
-    const { setOpenAdmin, setLocationId , locationId} = useAdminFeat(); 
+    const { setOpenAdmin, setLocationId , locationId } = useAdminFeat(); 
     const data = locations[currentLocation || ''];
-    const [openForm, setOpenForm] = useState(false) 
-
+    const [openForm, setOpenForm] = useState(false);
 
     const { setCoordinates }= useLocationPicker()
     const openEditLocation = async () => {
@@ -111,7 +110,6 @@ export const Dashboard = () => {
                 </ToggleButton> 
                 : null
               }
-              
             </div>
           </div>
           <Modal

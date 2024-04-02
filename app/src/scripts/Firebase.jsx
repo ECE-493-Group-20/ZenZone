@@ -105,6 +105,12 @@ export function uploadLoudness() {
     // ID for now is milliseconds since epoch plus loudness measure
     let id = (Timestamp.now().toMillis() + audio[0]).toString();
     NoiseLevel.doc(id).set(data);
+    if (closest != "") {
+        const calcTrend = (async() => {
+            await getTrendLoc(closest, -1);
+        });
+        calcTrend();
+    }
 }
 
 // Upload user loudness data for a location. usrData should be loudness data in dB, location should be id of a location.
@@ -153,7 +159,7 @@ export async function requestAverageSound(location) {
         numDocsSound++;
         averageSound += doc.data().loudnessmeasure;
     });
-    console.log(numDocsSound);
+    console.log("Num docs sound: ", numDocsSound);
     if (numDocsSound > 0) {
         averageSound /= numDocsSound;
     }
@@ -167,7 +173,7 @@ export async function requestBusyMeasure(location) {
     Intuition is that people using the application will make their own reports on sound level and busy measures
     which can be used to estimate current number of individuals in a given location.
 
-    Assumes 20% of people use the application, so multiplies number of reports by 5.
+    Assumes 20% of people use the application, each submit two reports (busy / loud), so multiplies number of reports by 2.5.
 
     Does not independently upload data.
     */
@@ -175,9 +181,6 @@ export async function requestBusyMeasure(location) {
     var loc = locString.concat(location);
     var busyLevel = 0;  // Percentage, stored from 0-100 internally
     numDocsBusy = 0;
-    if (numDocsSound == 0) {
-        await requestAverageSound(location);
-    }
 
     // Only check reports at the given location from the last hour
     const q = query(collection(db, "BusyLevel"), where("timestamp", ">", compareTimestamp), where("location", "==", loc), where("submitted", "==", "user"));
@@ -186,7 +189,7 @@ export async function requestBusyMeasure(location) {
         numDocsBusy++;
         busyLevel += doc.data().busymeasure;
     });
-    console.log(numDocsBusy);
+    console.log("Number of docs for busy: ", numDocsBusy);
 
     if (numDocsBusy > 0) {
         busyLevel /= numDocsBusy;
@@ -194,7 +197,7 @@ export async function requestBusyMeasure(location) {
     console.log("Computed busy level: ", busyLevel);
 
     // Total user reports. Multiplier explained above.
-    var reports = (numDocsSound + numDocsBusy) * 5;
+    var reports = (numDocsSound + numDocsBusy) * 2.5;
     console.log("Estimated number of users: ", reports);
     const locDocQuery = doc(db, "Locations", location);
     const locDoc = await getDoc(locDocQuery);
@@ -202,6 +205,9 @@ export async function requestBusyMeasure(location) {
         var busyComp = (reports / locDoc.data().capacity) * 100;
         // For now, just average user and system levels.
         busyLevel = (busyLevel + busyComp) / 2;
+    }
+    if (busyLevel > 100) {
+        busyLevel = 100
     }
     console.log("The busy level at " + loc + " is: ", busyLevel, " percent.");
     return busyLevel;
@@ -220,7 +226,7 @@ export async function getAllLocs(org) {
 }
 
 // Example function for measuring data trends over time.
-export async function getTrendAllLocs() {
+export async function getTrendAllLocs(org) {
     // Timestamp from last hour. Function assumed to be called on the hour, to collect the data from the
     // previous hour. The hour, in military time, is used as the index in the trend array.
     const timestamp = Timestamp.now().toMillis();
@@ -233,16 +239,19 @@ export async function getTrendAllLocs() {
     console.log(ind);
     
     // Compute average sound and busy levels for all locations in a given organization.
-    var locs = await getAllLocs("University of Alberta");
+    var locs = await getAllLocs(org);
     locs.forEach((loc) => {
         console.log(loc.id);
-        getTrendLoc(loc, ind);
+        getTrendLoc(loc.id, ind);
     });
+    return locs;
 }
 
-// Similar to the above function, although only gets data for one location. Location should be a document from Firebase.
-// Ind should not be passed, unless called by getTrendAllLocs()
+// Similar to the above function, although only gets data for one location. Location should be a document id.
+// Ind should not be passed, or should be -1, unless called by getTrendAllLocs()
 export async function getTrendLoc(loc, ind=-1) {
+    console.log("LOCATION:", loc);
+    var data = await(getLocData(loc));
     if (ind == -1) {
         // Timestamp from last hour. Function assumed to be called on the hour, to collect the data from the
         // previous hour. The hour, in military time, is used as the index in the trend array.
@@ -253,16 +262,25 @@ export async function getTrendLoc(loc, ind=-1) {
             ind += 24;
         }
     }
-    requestAverageSound(loc.id).then((avgSound) => {
-        let loudData = loc.data().loudtrend;
+    requestAverageSound(loc).then((avgSound) => {
+        console.log("After sound");
+        let loudData = data.loudtrend;
         loudData[ind] = avgSound;
-        Locations.doc(loc.id).update({loudtrend: loudData});
-        requestBusyMeasure(loc.id).then((busyLevel) => {
-            let busyData = loc.data().busytrend;
+        Locations.doc(loc).update({loudtrend: loudData});
+        requestBusyMeasure(loc).then((busyLevel) => {
+            console.log("After busy");
+            let busyData = data.busytrend;
             busyData[ind] = busyLevel;
-            Locations.doc(loc.id).update({busytrend: busyData});
+            Locations.doc(loc).update({busytrend: busyData});
         });
     });
+}
+
+// Helper function for dashboard to allow data to update on reopening.
+export async function getLocData(id) {
+    const locDocQuery = doc(db, "Locations", id);
+    const locDoc = await getDoc(locDocQuery);
+    return locDoc.data();
 }
 
 // Upload new location to the database. Busy and loud data are prefilled.
