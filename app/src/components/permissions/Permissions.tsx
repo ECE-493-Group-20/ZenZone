@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { LocationOff, LocationOn, Mic, MicOff } from '@mui/icons-material'
 import { Alert, Slide, Snackbar, ToggleButton } from '@mui/material'
-import { getMicrophonePermissions } from '../../scripts/microphone'
-import { findCurrentLocation } from '../../scripts/Firebase'
+import { findCurrentLocation, getMicrophoneStats, uploadLoudness } from '../../scripts/Firebase'
 import './index.css'
 
 
 const Permissions = () => {
     const [enabled, setEnabled] = useState<boolean>(false)
     const [locationInterval, setLocationInterval] = useState<NodeJS.Timeout>();
+    const [audioInterval, setAudioInterval] = useState<NodeJS.Timeout>();
     const [open, setOpen] = useState<boolean>(false)
 
     const close = () => {
@@ -24,7 +24,7 @@ const Permissions = () => {
             } else {
                 console.log("Geolocation is not available in your browser.");
             }
-            await getMicrophonePermissions();
+            await getMicrophoneStats();
             setEnabled(!enabled)
         } catch {
             setEnabled(false)
@@ -43,10 +43,13 @@ const Permissions = () => {
     useEffect(() => {
         if (enabled) {
             findCurrentLocation();
-            // query location every 10 minutes
-            setLocationInterval(setInterval(findCurrentLocation, 600000))
+            setTimeout(uploadLoudness, 15000);
+            // query location, audio every 10 minutes
+            setLocationInterval(setInterval(findCurrentLocation, 600000));
+            setAudioInterval(setInterval(uploadLoudness, 600000));
         } else {
             clearInterval(locationInterval);
+            clearInterval(audioInterval);
         }
     }, [enabled])
 

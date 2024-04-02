@@ -9,7 +9,8 @@ import { useContext, useState } from "react"
 import { BarPlot, ChartsLegend } from "@mui/x-charts"
 import EditIcon from '@mui/icons-material/Edit';
 import { useAdminFeat } from "../admin/AdminFeatProvider"
-import { useAuth} from "../authentication/AuthProvider"
+import { useAuth } from "../authentication/AuthProvider"
+import { addFavourite, removeFavourite } from "../../scripts/Firebase"
 
 interface DashboardProps {
   locationName: string,
@@ -25,16 +26,16 @@ export const Dashboard = (props: DashboardProps) => {
 
     const [favorite, setFavorite] = useState<boolean>(false)
 
-    const {isAdmin } = useAuth();
+    const { user, isAdmin } = useAuth();
 
-    const { setOpenAdmin, setLocationId , locationId} = useAdminFeat(); 
+    const { setOpenAdmin, setLocationId , locationId } = useAdminFeat(); 
 
     const openEditLocation = async () => {
       // TODO: link this with the actual location information from firebase
       // set the location id to the dashboard location id
-      setLocationId('Hello World'); 
-      setOpen(false); 
-      setOpenAdmin(true); 
+      setLocationId('Hello World');
+      setOpen(false);
+      setOpenAdmin(true);
       console.log(locationId);
     }
 
@@ -95,9 +96,10 @@ export const Dashboard = (props: DashboardProps) => {
                 </ResponsiveChartContainer>
               </div>
             </div>
-            <ToggleButton className="favoriteButton" value={favorite} onChange={() => setFavorite(!favorite)} >
-              {favorite ? <TurnedIn /> : <TurnedInNot />}
-            </ToggleButton>
+            {user ? <ToggleButton className="favoriteButton" value={favorite}
+            onClick={() => favorite ? removeFavourite(user.uid, "test") : addFavourite(user.uid, "test")} // TODO: Need these as actual location ids
+            onChange={() => setFavorite(!favorite)} > {favorite ? <TurnedIn /> : <TurnedInNot />}
+            </ToggleButton> : null}
 
             {isAdmin ? <IconButton className="editButton" onClick={openEditLocation}><EditIcon /></ IconButton> : null}       
 
