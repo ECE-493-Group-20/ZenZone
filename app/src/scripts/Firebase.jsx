@@ -173,7 +173,7 @@ export async function requestBusyMeasure(location) {
     Intuition is that people using the application will make their own reports on sound level and busy measures
     which can be used to estimate current number of individuals in a given location.
 
-    Assumes 20% of people use the application, so multiplies number of reports by 5.
+    Assumes 20% of people use the application, each submit two reports (busy / loud), so multiplies number of reports by 2.5.
 
     Does not independently upload data.
     */
@@ -197,7 +197,7 @@ export async function requestBusyMeasure(location) {
     console.log("Computed busy level: ", busyLevel);
 
     // Total user reports. Multiplier explained above.
-    var reports = (numDocsSound + numDocsBusy) * 5;
+    var reports = (numDocsSound + numDocsBusy) * 2.5;
     console.log("Estimated number of users: ", reports);
     const locDocQuery = doc(db, "Locations", location);
     const locDoc = await getDoc(locDocQuery);
@@ -205,6 +205,9 @@ export async function requestBusyMeasure(location) {
         var busyComp = (reports / locDoc.data().capacity) * 100;
         // For now, just average user and system levels.
         busyLevel = (busyLevel + busyComp) / 2;
+    }
+    if (busyLevel > 100) {
+        busyLevel = 100
     }
     console.log("The busy level at " + loc + " is: ", busyLevel, " percent.");
     return busyLevel;
