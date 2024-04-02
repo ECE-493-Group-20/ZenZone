@@ -58,9 +58,9 @@ export async function getMicrophoneStats() {
     if (!recording) {
         // Await microphone to ensure permissions are requested separately
         await toggleMicrophone();
-        findCurrentLocation();
+        //findCurrentLocation();
         recording = true;
-        setTimeout(uploadLoudness, 15000);  // Upload microphone data after 15 seconds
+        //setTimeout(uploadLoudness, 15000);  // Upload microphone data after 15 seconds
     } else {
         await toggleMicrophone();
         recording = false;

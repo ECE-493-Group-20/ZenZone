@@ -38,7 +38,7 @@ async function checkIsAdmin(user : any) {
 }
 
 function App() {
-  const {user, isAdmin, setAdmin } = useContext(AuthContext);
+  const { user, isAdmin, setAdmin }=  useContext(AuthContext);
   const [heatmapToggle, setHeatmapToggle] = useState<boolean>(false)
 
   const { setOpenAdmin, setLocationId } = useAdminFeat(); 
