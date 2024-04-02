@@ -153,7 +153,7 @@ export async function requestAverageSound(location) {
         numDocsSound++;
         averageSound += doc.data().loudnessmeasure;
     });
-    console.log(numDocsSound);
+    console.log("Num docs sound: ", numDocsSound);
     if (numDocsSound > 0) {
         averageSound /= numDocsSound;
     }
@@ -175,9 +175,6 @@ export async function requestBusyMeasure(location) {
     var loc = locString.concat(location);
     var busyLevel = 0;  // Percentage, stored from 0-100 internally
     numDocsBusy = 0;
-    if (numDocsSound == 0) {
-        await requestAverageSound(location);
-    }
 
     // Only check reports at the given location from the last hour
     const q = query(collection(db, "BusyLevel"), where("timestamp", ">", compareTimestamp), where("location", "==", loc), where("submitted", "==", "user"));
@@ -186,7 +183,7 @@ export async function requestBusyMeasure(location) {
         numDocsBusy++;
         busyLevel += doc.data().busymeasure;
     });
-    console.log(numDocsBusy);
+    console.log("Number of docs for busy: ", numDocsBusy);
 
     if (numDocsBusy > 0) {
         busyLevel /= numDocsBusy;
@@ -220,7 +217,7 @@ export async function getAllLocs(org) {
 }
 
 // Example function for measuring data trends over time.
-export async function getTrendAllLocs() {
+export async function getTrendAllLocs(org) {
     // Timestamp from last hour. Function assumed to be called on the hour, to collect the data from the
     // previous hour. The hour, in military time, is used as the index in the trend array.
     const timestamp = Timestamp.now().toMillis();
@@ -233,16 +230,21 @@ export async function getTrendAllLocs() {
     console.log(ind);
     
     // Compute average sound and busy levels for all locations in a given organization.
-    var locs = await getAllLocs("University of Alberta");
+    var locs = await getAllLocs(org);
     locs.forEach((loc) => {
         console.log(loc.id);
         getTrendLoc(loc, ind);
     });
+    return locs;
 }
 
 // Similar to the above function, although only gets data for one location. Location should be a document from Firebase.
 // Ind should not be passed, unless called by getTrendAllLocs()
 export async function getTrendLoc(loc, ind=-1) {
+    if (loc.id == undefined) {
+        loc.id = loc.name.toLowerCase().replaceAll(' ', '')
+    }
+    console.log("LOCATION:", loc);
     if (ind == -1) {
         // Timestamp from last hour. Function assumed to be called on the hour, to collect the data from the
         // previous hour. The hour, in military time, is used as the index in the trend array.
@@ -253,21 +255,27 @@ export async function getTrendLoc(loc, ind=-1) {
             ind += 24;
         }
     }
+    var busy;
+    var sound;
     requestAverageSound(loc.id).then((avgSound) => {
-        let loudData = loc.data().loudtrend;
+        console.log("After sound");
+        let loudData = loc.loudtrend;
         loudData[ind] = avgSound;
+        sound = avgSound;
         Locations.doc(loc.id).update({loudtrend: loudData});
         requestBusyMeasure(loc.id).then((busyLevel) => {
-            let busyData = loc.data().busytrend;
+            console.log("After busy");
+            let busyData = loc.busytrend;
             busyData[ind] = busyLevel;
+            busy = busyLevel;
             Locations.doc(loc.id).update({busytrend: busyData});
         });
     });
+    return {"busy": busy, "sound": sound, "ind": ind};
 }
 
 // Helper function for dashboard to allow data to update on reopening.
 export async function getLocData(id) {
-    console.log(id);
     const locDocQuery = doc(db, "Locations", id);
     const locDoc = await getDoc(locDocQuery);
     return locDoc.data();

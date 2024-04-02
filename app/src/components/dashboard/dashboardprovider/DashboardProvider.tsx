@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getAllLocs, getLocData } from "../../../scripts/Firebase";
+import { getAllLocs, getLocData, getTrendLoc } from "../../../scripts/Firebase";
 import { GeoPoint } from "@firebase/firestore-types";
 
 
@@ -22,7 +22,9 @@ interface DashboardProviderProps {
     isLocations: boolean;
     currentLocation: string | null;
     setCurrentLocation: React.Dispatch<React.SetStateAction<string | null>>;
-    setOpen: React.Dispatch<React.SetStateAction<boolean | null>>
+    setOpen: React.Dispatch<React.SetStateAction<boolean | null>>;
+    refreshLocations : boolean;
+    setRefreshLocations: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const DashboardContext = createContext<any>({})
@@ -32,27 +34,47 @@ export const DashboardProvider = ({ children }: any) => {
     const [isLocations, setIsLocations] = useState<boolean>(false)
     const [locations, setLocations] = useState<{[id: string]: LocationData}>({});
     const [currentLocation, setCurrentLocation] = useState<string | null>(null);
+    // Used to trigger refreshing the location information after modifying/creating locations
+    const [refreshLocations, setRefreshLocations] = useState<boolean>(false);
+    
 
     useEffect(() => {
-        console.log("Updating locations array");
+        console.log("Refreshing data");
         const getLocs = (async() => {
-            const locs = await getAllLocs("University of Alberta");
-            locs.forEach((doc) => {
-                locations[doc.id] = {id: doc.id, ...doc.data()}
-                console.log(doc.description);
-            })
+            if (currentLocation != null && refreshLocations) {
+                getTrendLoc(locations[currentLocation], -1).then(async() => {         
+                    const locs = await getAllLocs("University of Alberta");
+                    locs.forEach((doc) => {
+                        if (doc.id != currentLocation) {
+                            locations[doc.id] = {id: doc.id, ...doc.data()}
+                        }
+                        console.log(doc.data());
+                    })
+                });
+            } else {
+                const locs = await getAllLocs("University of Alberta");
+                locs.forEach((doc) => {
+                    if (doc.id != currentLocation) {
+                        locations[doc.id] = {id: doc.id, ...doc.data()}
+                    }
+                    console.log(doc.data());
+                })
+                setRefreshLocations(true);
+            }
             setLocations(locations)
             setIsLocations(true)
         });
         getLocs();
+        console.log("Done data");
     })
 
     /*useEffect(() => {
         console.log("Updating data!");
         const updateData = (async() => {
             if (currentLocation) {
+                console.log("CURRENT LOCATION UPDATE: ", currentLocation);
+                await getTrendLoc(locations[currentLocation], -1);
                 await getLocData(currentLocation).then(dat => {
-                    if (dat) {
                     locations[currentLocation] = {id: dat?.id,
                         busytrend: dat?.busytrend,
                         capacity: dat?.capacity,
@@ -61,7 +83,6 @@ export const DashboardProvider = ({ children }: any) => {
                         name: dat?.name,
                         position: dat?.position,
                         size: dat?.size,}
-                    }
                 });
             }
         })
@@ -75,7 +96,9 @@ export const DashboardProvider = ({ children }: any) => {
         isLocations,
         setCurrentLocation,
         setOpen,
-    }), [open, locations, isLocations, currentLocation])
+        refreshLocations,
+        setRefreshLocations,
+    }), [open, locations, isLocations, currentLocation, refreshLocations, setRefreshLocations])
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>
 }
 
