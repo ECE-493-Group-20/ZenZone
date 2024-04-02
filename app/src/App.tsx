@@ -1,6 +1,6 @@
 import { Button, IconButton, Modal, ToggleButton } from '@mui/material';
 import './App.css';
-import { getMicrophoneStats, requestAverageSound, getTrendAllLocs, tester } from './scripts/Firebase';
+import { getMicrophoneStats, requestAverageSound, getTrendAllLocs, tester, getAllLocs } from './scripts/Firebase';
 import {toggleMicrophone} from './scripts/microphone';
 import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
@@ -90,12 +90,7 @@ function App() {
               </ToggleButton>
             </div>
             <Permissions />
-            <Dashboard
-              locationName="ELTC"
-              location="53.527172826716836, -113.53013883407911"
-              capacity={50}
-              description="it's a place!"
-            />
+            <Dashboard />
           </div>
           <Modal
           open={openForm}
