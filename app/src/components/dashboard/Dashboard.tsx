@@ -19,7 +19,7 @@ import { useEffect } from "react"
 
 export const Dashboard = () => {
     const {open, setOpen, currentLocation, locations} = useDashboard()
-    const { user, isAdmin, favouriteLocations } = useAuth();
+    const { user, isAdmin, favouriteLocations, refreshFavouriteLocations, setRefreshFavouriteLocations } = useAuth();
     const [favorite, setFavorite] = useState<boolean>(false)
     const { setOpenAdmin, setLocationId , locationId } = useAdminFeat(); 
     const data = locations[currentLocation || ''];
@@ -114,8 +114,8 @@ export const Dashboard = () => {
               {
                 user ? 
                 <ToggleButton className="favoriteButton" value={favorite}
-                  onClick={() => favorite ? removeFavourite(user.uid, currentLocation) : addFavourite(user.uid, currentLocation)} // TODO: Need these as actual location ids
-                  onChange={() => setFavorite(!favorite)} > {favorite ? <TurnedIn /> : <TurnedInNot />}
+                  onClick={() => {setRefreshFavouriteLocations(!refreshFavouriteLocations); favorite ? removeFavourite(user.uid, currentLocation) : addFavourite(user.uid, currentLocation)}} // TODO: Need these as actual location ids
+                  onChange={() => {setRefreshFavouriteLocations(!refreshFavouriteLocations); setFavorite(!favorite);}} > {favorite ? <TurnedIn /> : <TurnedInNot />}
                 </ToggleButton> 
                 : null
               }

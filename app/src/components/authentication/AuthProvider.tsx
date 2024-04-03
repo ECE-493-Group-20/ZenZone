@@ -30,6 +30,8 @@ export const AuthProvider: React.FC<Props> = ({ children } ) => {
 
   const [favouriteLocations, setFavouriteLocations] = useState<string[] | null>(null);
 
+  const [refreshFavouriteLocations, setRefreshFavouriteLocations] = useState<boolean>(false);
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
       setUser(firebaseUser);
@@ -42,19 +44,24 @@ export const AuthProvider: React.FC<Props> = ({ children } ) => {
     const checkAdminStatus = async () => {
       const isAdmin = await checkIsAdmin(user?.uid);
       setAdmin(isAdmin);
+      setRefreshFavouriteLocations(!refreshFavouriteLocations);
     };
 
+    checkAdminStatus();
+  }, [user]);
+
+  useEffect(() => {
     const getFavouriteLocations = async () => {
       const favourites = await getUserFavourites(user?.uid);
       setFavouriteLocations(favourites);
     }
 
-    
-    checkAdminStatus();
     getFavouriteLocations();
-  }, [user]);
+  }, [refreshFavouriteLocations]);
 
-  return <AuthContext.Provider value={{user, isAdmin, setAdmin, favouriteLocations}}>{children}</AuthContext.Provider>;
+
+
+  return <AuthContext.Provider value={{user, isAdmin, setAdmin, favouriteLocations, refreshFavouriteLocations, setRefreshFavouriteLocations}}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth= () => {
