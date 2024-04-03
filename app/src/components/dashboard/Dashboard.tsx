@@ -33,92 +33,132 @@ export const Dashboard = () => {
       console.log(locationId);
     }
 
-    return (
-      data ?
-        <Drawer 
-          className="drawer" 
-          variant="temporary" 
-          anchor='bottom' 
-          open={open} 
-          onClose={() => setOpen(false)}>
-          <div className="paper">
-            <h1>{data.name}</h1>
-            <div className="description">
-              <Tooltip title="Location">
-                <GpsFixed />              
-              </Tooltip>
-              <p>{data.position.latitude.toFixed(3)} {data.position.longitude.toFixed(3)}</p>
-              <Tooltip title="Capacity">
-                <AccountBox />
-              </Tooltip>
-              <p>{data.capacity}</p>
-            </div>
-            <div className="description">
-              <Tooltip title="Description">
-                <Description />
-              </Tooltip>
-              <p>{data.description}</p>
-            </div>
-            <div className="levelCardContainer">
-              <LevelCard title="Noise Level" value={data.loudtrend[(new Date()).getHours()]} type="sound" />
-              <LevelCard title="Busy Level" value={data.busytrend[(new Date()).getHours()]} type="busy" />
-            </div>
-            <div className="chartContainer">
-              <div className="chart">
-                <ResponsiveChartContainer 
-                  xAxis={[
-                    {
-                      data: ['12am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm'],
-                      scaleType: 'band',
-                      id: 'x-axis-id',
-                    },
-                  ]}
-                  series={[{
-                      type: 'bar',
-                      data: data.loudtrend,
-                      label: 'Sound Level',
-                      color: '#3C4F76',
-                    }, {
-                      type: 'bar',
-                      data: data.busytrend,
-                      label: 'Busy Level',
-                      color: '#DDDBF1',
-                    }]}
-                  title="PLOT"> 
-                      <ChartsLegend />
-                      <BarPlot/>
-                      <ChartsXAxis position="bottom" />
-                </ResponsiveChartContainer>
-              </div>
-            </div>
-            <div className='dashboardButtonContainer'>
-            {
-                isAdmin ? 
-                <IconButton className="addButton" onClick={openEditLocation}>
-                    <EditIcon />
-                </ IconButton> 
-                : null
-              }
-              <IconButton className='addButton' onClick={() => setOpenForm(true)}>
-                <AddIcon />
-              </IconButton>
-              {
-                user ? 
-                <ToggleButton className="favoriteButton" value={favorite}
-                  onClick={() => favorite ? removeFavourite(user.uid, currentLocation) : addFavourite(user.uid, currentLocation)} // TODO: Need these as actual location ids
-                  onChange={() => setFavorite(!favorite)} > {favorite ? <TurnedIn /> : <TurnedInNot />}
-                </ToggleButton> 
-                : null
-              }
+    return data ? (
+      <Drawer
+        className="drawer"
+        variant="temporary"
+        anchor="bottom"
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        <div className="paper">
+          <h1>{data.name}</h1>
+          <div className="description">
+            <Tooltip title="Location">
+              <GpsFixed />
+            </Tooltip>
+            <p>{`${data.position.latitude.toFixed(
+              3
+            )}° N, ${data.position.longitude.toFixed(3)}° W`}</p>
+            <Tooltip title="Capacity">
+              <AccountBox />
+            </Tooltip>
+            <p>{data.capacity}</p>
+          </div>
+          <div className="description">
+            <Tooltip title="Description">
+              <Description />
+            </Tooltip>
+            <p>{data.description}</p>
+          </div>
+          <div className="levelCardContainer">
+            <LevelCard
+              title="Noise Level"
+              value={data.loudtrend[new Date().getHours()]}
+              type="sound"
+            />
+            <LevelCard
+              title="Busy Level"
+              value={data.busytrend[new Date().getHours()]}
+              type="busy"
+            />
+          </div>
+          <div className="chartContainer">
+            <div className="chart">
+              <ResponsiveChartContainer
+                xAxis={[
+                  {
+                    data: [
+                      "12am",
+                      "1am",
+                      "2am",
+                      "3am",
+                      "4am",
+                      "5am",
+                      "6am",
+                      "7am",
+                      "8am",
+                      "9am",
+                      "10am",
+                      "11am",
+                      "12pm",
+                      "1pm",
+                      "2pm",
+                      "3pm",
+                      "4pm",
+                      "5pm",
+                      "6pm",
+                      "7pm",
+                      "8pm",
+                      "9pm",
+                      "10pm",
+                      "11pm",
+                    ],
+                    scaleType: "band",
+                    id: "x-axis-id",
+                  },
+                ]}
+                series={[
+                  {
+                    type: "bar",
+                    data: data.loudtrend,
+                    label: "Sound Level",
+                    color: "#3C4F76",
+                  },
+                  {
+                    type: "bar",
+                    data: data.busytrend,
+                    label: "Busy Level",
+                    color: "#DDDBF1",
+                  },
+                ]}
+                title="PLOT"
+              >
+                <ChartsLegend />
+                <BarPlot />
+                <ChartsXAxis position="bottom" />
+              </ResponsiveChartContainer>
             </div>
           </div>
-          <Modal
-            open={openForm}
-            onClose={() => setOpenForm(false)}
-          >
-            <Form id={currentLocation!} close={() => setOpenForm(false)}/>
-          </Modal>
-        </Drawer> :
-        null
-    )
+          <div className="dashboardButtonContainer">
+            {isAdmin ? (
+              <IconButton className="addButton" onClick={openEditLocation}>
+                <EditIcon />
+              </IconButton>
+            ) : null}
+            <IconButton className="addButton" onClick={() => setOpenForm(true)}>
+              <AddIcon />
+            </IconButton>
+            {user ? (
+              <ToggleButton
+                className="favoriteButton"
+                value={favorite}
+                onClick={() =>
+                  favorite
+                    ? removeFavourite(user.uid, currentLocation)
+                    : addFavourite(user.uid, currentLocation)
+                } // TODO: Need these as actual location ids
+                onChange={() => setFavorite(!favorite)}
+              >
+                {" "}
+                {favorite ? <TurnedIn /> : <TurnedInNot />}
+              </ToggleButton>
+            ) : null}
+          </div>
+        </div>
+        <Modal open={openForm} onClose={() => setOpenForm(false)}>
+          <Form id={currentLocation!} close={() => setOpenForm(false)} />
+        </Modal>
+      </Drawer>
+    ) : null;
 }

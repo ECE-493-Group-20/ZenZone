@@ -118,10 +118,6 @@ function UserSignIn() {
             Sign In
           </Button>
 
-          <Typography component="h3" variant="h5" align="center">
-            or
-          </Typography>
-
           <Button
             type="submit"
             fullWidth
@@ -132,13 +128,9 @@ function UserSignIn() {
             Continue with Google
           </Button>
 
-          <Grid container>
-            <Grid item>
-              <Link component={RouteLink} to="/register">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
+          <Link component={RouteLink} to="/register">
+            {"Don't have an account? Sign Up"}
+          </Link>
         </Box>
       </Container>
     </div>
