@@ -61,6 +61,11 @@ const SearchBar = (props: SearchBarProps) => {
             onItemClick(newValue.label);
           }
         }}
+        renderOption={(props: object, option: any, state: object) => (
+          <div className="suggestionCard" {...props}>
+            {option.label}
+          </div>
+        )}
         renderInput={(params) => (
           <TextField
             {...params}
