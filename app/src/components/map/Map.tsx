@@ -150,7 +150,7 @@ const Map = (props: GoogleMapProps & MapProps) => {
                 isLocations ? 
                 Object.values(locations).map((location, index) => {
                   console.log(locations.id);
-                  if (favouriteLocations.includes(location.id)) {
+                  if (favouriteLocations != null && favouriteLocations.includes(location.id)) {
                     return <CustomMarker key={index} id={location.id} type='favorite' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
                   } else {
                     return <CustomMarker key={index} id={location.id} type='default' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
