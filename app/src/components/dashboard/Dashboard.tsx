@@ -60,7 +60,7 @@ export const Dashboard = () => {
               <p>{data.description}</p>
             </div>
             <div className="levelCardContainer">
-              <LevelCard title="Sound Level" value={data.loudtrend[(new Date()).getHours()]} type="sound" />
+              <LevelCard title="Noise Level" value={data.loudtrend[(new Date()).getHours()]} type="sound" />
               <LevelCard title="Busy Level" value={data.busytrend[(new Date()).getHours()]} type="busy" />
             </div>
             <div className="chartContainer">

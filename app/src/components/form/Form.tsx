@@ -137,7 +137,7 @@ const Form = (props: FormProps) => {
             <h1>Manual Input</h1>
 
             <div className="levelCardTitle">
-                <h4>Sound Level {soundChip}</h4>
+                <h4>Noise Level {soundChip}</h4>
                 <p>{soundLevel}dB</p>
             </div>
             <Slider value={soundLevel} onChange={(_, value) => setSoundLevel(value as number)} sx={sliderStyle['sound']}/>
