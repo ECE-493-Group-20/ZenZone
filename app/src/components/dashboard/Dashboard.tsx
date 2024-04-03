@@ -89,18 +89,10 @@ export const Dashboard = () => {
           <p>{data.capacity}</p>
         </div>
         <div className="description">
-          <Tooltip title="Location">
-            <GpsFixed />
+          <Tooltip title="Description">
+            <Description />
           </Tooltip>
-          <p>{`${data.position.latitude.toFixed(6)}° ${
-            data.position.latitude > 0 ? "N" : "S"
-          }, ${data.position.longitude.toFixed(6)}° ${
-            data.position.longitude > 0 ? "E" : "W"
-          }`}</p>
-          <Tooltip title="Capacity">
-            <AccountBox />
-          </Tooltip>
-          <p>{data.capacity}</p>
+          <p>{data.description}</p>
         </div>
         <div className="levelCardContainer">
           <LevelCard
