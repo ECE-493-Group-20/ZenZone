@@ -47,7 +47,7 @@ export const Dashboard = () => {
               <Tooltip title="Location">
                 <GpsFixed />              
               </Tooltip>
-              <p>{data.position.latitude} {data.position.longitude}</p>
+              <p>{data.position.latitude.toFixed(3)} {data.position.longitude.toFixed(3)}</p>
               <Tooltip title="Capacity">
                 <AccountBox />
               </Tooltip>
