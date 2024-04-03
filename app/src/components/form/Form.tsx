@@ -22,8 +22,8 @@ const Form = (props: FormProps) => {
         const colors = ['#7765AC', '#4D74B2', '#659360', '#FCB955', '#E95658']
         const soundLabels = ["FAINT", "SOFT", "MODERATE", "LOUD", "VERY LOUD"]
         const busyLabels = ["NOT BUSY", "NOT VERY BUSY", "NORMAL", "BUSY", "VERY BUSY"]
-        const chosenLevels = type == 'busy' ? busyLevels : soundLevels
-        const chosenLabels = type == 'busy' ? busyLabels : soundLabels
+        const chosenLevels = type === 'busy' ? busyLevels : soundLevels
+        const chosenLabels = type === 'busy' ? busyLabels : soundLabels
         for (let i = 0; i < colors.length; i++) {
             if (value <= chosenLevels[i]) {
                 return [colors[i], chosenLabels[i]]
