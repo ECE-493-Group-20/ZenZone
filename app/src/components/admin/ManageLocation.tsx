@@ -94,7 +94,7 @@ export const ManageLocation = () => {
                 <Tooltip title="Location">
                   <GpsFixed />              
                 </Tooltip>
-              <TextField id="Latitude" label="Laitiude" value={coordinates.lat} />
+              <TextField id="Latitude" label="Latitude" value={coordinates.lat} />
               <TextField id="Longitude" label="Longitiude" value={coordinates.long} />
               <Tooltip title="Capacity">
                 <AccountBox />
