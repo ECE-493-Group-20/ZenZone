@@ -10,6 +10,8 @@ import { GeoPoint } from 'firebase/firestore';
 import { useLocationPicker } from "./LocationPickerProvider";
 import { useDashboard } from "../dashboard/dashboardprovider/DashboardProvider";
 
+import { useAuth } from "../authentication/AuthProvider";
+
 interface coordinates {
     lat : number,
     long: number
@@ -52,6 +54,9 @@ const Map = (props: GoogleMapProps & MapProps) => {
     });
     const {locations, isLocations} = useDashboard();
     const map = props.map;
+
+    // Favourite locations
+    const { favouriteLocations } = useAuth();
 
     useEffect(() => {
       if ("geolocation" in navigator) {
@@ -144,8 +149,12 @@ const Map = (props: GoogleMapProps & MapProps) => {
             {
                 isLocations ? 
                 Object.values(locations).map((location, index) => {
-                  console.log(locations.id)
+                  console.log(locations.id);
+                  if (favouriteLocations != null && favouriteLocations.includes(location.id)) {
+                    return <CustomMarker key={index} id={location.id} type='favorite' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
+                  } else {
                     return <CustomMarker key={index} id={location.id} type='default' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
+                  }
                 })
                 : null
             }
