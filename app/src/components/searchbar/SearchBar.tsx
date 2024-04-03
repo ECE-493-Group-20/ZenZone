@@ -9,16 +9,21 @@ interface SearchBarProps {
 }
 
 const SearchBar = (props: SearchBarProps) => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [items, setItems] = useState<{ label: string; value: number }[]>([]);
+  const [filteredItems, setFilteredItems] = useState<
+    { label: string; value: number }[]
+  >([]);
 
   useEffect(() => {
     const fetchLocations = async () => {
-      const locations: any[] = await getAllLocs("University of Alberta");
+      const locations = await getAllLocs("University of Alberta");
       const updatedItems = locations.map((location, index) => ({
-        label: `${location.data().name}`,
+        label: location.data().name,
         value: index + 1,
       }));
       setItems(updatedItems);
+      setFilteredItems(updatedItems.slice(0, 3));
     };
 
     fetchLocations();
@@ -28,16 +33,28 @@ const SearchBar = (props: SearchBarProps) => {
     const locs = await getAllLocs("University of Alberta");
     locs.forEach(async (loc) => {
       if (option === loc.data().name)
-        // console.log(loc.data().position.latitude);
         await props.handleItemClick(option);
     });
   };
-  // solved border issues with: https://github.com/mui/material-ui/issues/30597
+
+  const handleSearch = (e: any) => {
+    const searchTerm = e.target.value;
+    setSearchTerm(searchTerm);
+    if (searchTerm === "") {
+      setFilteredItems(items.slice(0, 3));
+    } else {
+      const filtered = items.filter((item) =>
+        item.label.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredItems(filtered);
+    }
+  };
+
   return (
     <div className="searchBar">
       <Autocomplete
         id="search-bar"
-        options={items}
+        options={filteredItems}
         getOptionLabel={(option) => option.label}
         onChange={(event, newValue) => {
           if (newValue) {
@@ -47,6 +64,7 @@ const SearchBar = (props: SearchBarProps) => {
         renderInput={(params) => (
           <TextField
             {...params}
+            onChange={handleSearch}
             InputProps={{
               ...params.InputProps,
               startAdornment: (
@@ -64,6 +82,6 @@ const SearchBar = (props: SearchBarProps) => {
       />
     </div>
   );
-};
+}
 
 export default SearchBar;
