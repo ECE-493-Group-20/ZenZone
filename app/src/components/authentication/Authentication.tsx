@@ -19,6 +19,7 @@ import Container from '@mui/material/Container';
 import { Link as RouteLink } from "react-router-dom";
 import "../../App.css";
 import {useNavigate, redirectDocument} from "react-router-dom";
+import Logo from "../logo/Logo";
 
 
 function UserSignIn() {
@@ -66,81 +67,73 @@ function UserSignIn() {
   };
 
   return (
-    <>
-    <Button component={RouteLink} to={"/"}>Home</Button>
+    <div style={{ height: "100vh" }}>
+      <Button component={RouteLink} to={"/"}>
+        Home
+      </Button>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
+          <Link href="/">
+            <Logo className="logo" style={{ margin: 1 }} />
+          </Link>
           <Typography component="h1" variant="h5">
             Sign in {user?.email}
           </Typography>
-          
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              inputRef={emailRef}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              inputRef={passwordRef}
-            />
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={signIn}
-            >
-              Sign In
-            </Button>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            inputRef={emailRef}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            inputRef={passwordRef}
+          />
 
-            <Typography component="h1" variant="h5" align='center'>
-            Or
-            </Typography>
+          <Button type="submit" fullWidth variant="contained" onClick={signIn}>
+            Sign In
+          </Button>
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={googleSignIn}
-            >
-              Continue with Google
-            </Button>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={googleSignIn}
+          >
+            Continue with Google
+          </Button>
 
-            <Grid container>
-              <Grid item>
-                <Link component={RouteLink} to="/register">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
+          <Link component={RouteLink} to="/register">
+            {"Don't have an account? Sign Up"}
+          </Link>
+        </Box>
       </Container>
-    </>
+    </div>
   );
 }
 
