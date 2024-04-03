@@ -4,7 +4,9 @@ import "./index.css"
 import { LinearProgress } from "@mui/material";
 import CustomMarker from "../marker/Marker"
 import { getAllLocs } from "../../scripts/Firebase"
-
+import {
+  Tooltip,
+} from "@mui/material";
 import { GeoPoint } from 'firebase/firestore';
 
 import { useLocationPicker } from "./LocationPickerProvider";
@@ -130,42 +132,64 @@ const Map = (props: GoogleMapProps & MapProps) => {
 
 
     return isLoaded ? (
-        
-        <GoogleMap
-            mapContainerClassName="map"        
-            onLoad={onLoad}
-            onUnmount={onUnmount}   
-            zoom={18}
-            id="gmap"
-            options={{
-                disableDefaultUI: true,                
-                styles: require("./mapStyle.json"),
-            }}
-            {...props}
-
-            onClick={getCoordinates}
-        >
-            <CustomMarker position={center} type='whereami'/>
-            {
-                isLocations ? 
-                Object.values(locations).map((location, index) => {
-                  console.log(locations.id);
-                  if (favouriteLocations != null && favouriteLocations.includes(location.id)) {
-                    return <CustomMarker key={index} id={location.id} type='favorite' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
-                  } else {
-                    return <CustomMarker key={index} id={location.id} type='default' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
-                  }
-                })
-                : null
-            }
-            <HeatmapLayer onLoad={onHeatMapLoad} onUnmount={onHeatMapUnmount} data={heatmapData} />
-
-        </GoogleMap>
-        )
-        :
-        <div className="map">
-            <LinearProgress />
-        </div>
+      <GoogleMap
+        mapContainerClassName="map"
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        zoom={18}
+        id="gmap"
+        options={{
+          disableDefaultUI: true,
+          styles: require("./mapStyle.json"),
+        }}
+        {...props}
+        onClick={getCoordinates}
+      >
+        <CustomMarker position={center} type="whereami" />
+        {isLocations
+          ? Object.values(locations).map((location, index) => {
+              console.log(locations.id);
+              if (
+                favouriteLocations != null &&
+                favouriteLocations.includes(location.id)
+              ) {
+                return (
+                  <CustomMarker
+                    key={index}
+                    id={location.id}
+                    type="favorite"
+                    position={{
+                      lat: location.position.latitude,
+                      lng: location.position.longitude,
+                    }}
+                  />
+                );
+              } else {
+                return (
+                  <CustomMarker
+                    key={index}
+                    id={location.id}
+                    type="default"
+                    position={{
+                      lat: location.position.latitude,
+                      lng: location.position.longitude,
+                    }}
+                  />
+                );
+              }
+            })
+          : null}
+        <HeatmapLayer
+          onLoad={onHeatMapLoad}
+          onUnmount={onHeatMapUnmount}
+          data={heatmapData}
+        />
+      </GoogleMap>
+    ) : (
+      <div className="map">
+        <LinearProgress />
+      </div>
+    );
         
         
 }

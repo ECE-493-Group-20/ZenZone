@@ -80,18 +80,6 @@ export const Dashboard = () => {
           <Tooltip title="Location">
             <GpsFixed />
           </Tooltip>
-          <p>
-            {data.position.latitude} {data.position.longitude}
-          </p>
-          <Tooltip title="Capacity">
-            <AccountBox />
-          </Tooltip>
-          <p>{data.capacity}</p>
-        </div>
-        <div className="description">
-          <Tooltip title="Location">
-            <GpsFixed />
-          </Tooltip>
           <p>{`${data.position.latitude.toFixed(6)}° ${
             data.position.latitude > 0 ? "N" : "S"
           }, ${data.position.longitude.toFixed(6)}° ${
@@ -101,6 +89,12 @@ export const Dashboard = () => {
             <AccountBox />
           </Tooltip>
           <p>{data.capacity}</p>
+        </div>
+        <div className="description">
+          <Tooltip title="Description">
+            <Description />
+          </Tooltip>
+          <p>{data.description}</p>
         </div>
         <div className="levelCardContainer">
           <LevelCard
@@ -169,7 +163,7 @@ export const Dashboard = () => {
               <BarPlot />
               <ChartsXAxis position="bottom" />
             </ResponsiveChartContainer>
-          </div>
+        </div>
         </div>
         <div className="dashboardButtonContainer">
           {isAdmin ? (
