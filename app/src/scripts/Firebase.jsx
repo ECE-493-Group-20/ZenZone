@@ -393,3 +393,16 @@ export async function tester(usr) {
     console.log(usr);
     addFavourite(usr, 'test');
 }
+
+export async function getUserFavourites(user) {
+    try {
+      const userDoc = await db.collection('UserInformation').doc(user).get();
+      if (userDoc.exists) {
+        return userDoc.data()?.favourites;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error checking admin status:", error);
+      return null;
+    }
+  }

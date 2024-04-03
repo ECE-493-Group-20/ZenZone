@@ -3,6 +3,7 @@ import { auth, db } from "./firebaseSetup";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+import { getUserFavourites } from '../../scripts/Firebase';
 
 interface Props {
   children: React.ReactNode;
@@ -27,6 +28,10 @@ export const AuthProvider: React.FC<Props> = ({ children } ) => {
   const [user, setUser] = useState<firebase.User | null>(null);
   const [isAdmin, setAdmin] = useState<boolean>(false);
 
+  const [favouriteLocations, setFavouriteLocations] = useState<string[] | null>(null);
+
+  const [refreshFavouriteLocations, setRefreshFavouriteLocations] = useState<boolean>(false);
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
       setUser(firebaseUser);
@@ -39,12 +44,24 @@ export const AuthProvider: React.FC<Props> = ({ children } ) => {
     const checkAdminStatus = async () => {
       const isAdmin = await checkIsAdmin(user?.uid);
       setAdmin(isAdmin);
+      setRefreshFavouriteLocations(!refreshFavouriteLocations);
     };
 
     checkAdminStatus();
   }, [user]);
 
-  return <AuthContext.Provider value={{user, isAdmin, setAdmin}}>{children}</AuthContext.Provider>;
+  useEffect(() => {
+    const getFavouriteLocations = async () => {
+      const favourites = await getUserFavourites(user?.uid);
+      setFavouriteLocations(favourites);
+    }
+
+    getFavouriteLocations();
+  }, [refreshFavouriteLocations]);
+
+
+
+  return <AuthContext.Provider value={{user, isAdmin, setAdmin, favouriteLocations, refreshFavouriteLocations, setRefreshFavouriteLocations}}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth= () => {
