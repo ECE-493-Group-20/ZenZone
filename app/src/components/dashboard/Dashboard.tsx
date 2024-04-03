@@ -14,19 +14,27 @@ import { addFavourite, getLocData, removeFavourite } from "../../scripts/Firebas
 import { useLocationPicker } from "../map/LocationPickerProvider"
 import AddIcon from '@mui/icons-material/Add';
 import Form from "../form/Form"
+import { useEffect } from "react"
+
 
 export const Dashboard = () => {
     const {open, setOpen, currentLocation, locations} = useDashboard()
-    const [favorite, setFavorite] = useState<boolean>(false)
     const { user, isAdmin, favouriteLocations } = useAuth();
+    const [favorite, setFavorite] = useState<boolean>(false)
     const { setOpenAdmin, setLocationId , locationId } = useAdminFeat(); 
     const data = locations[currentLocation || ''];
     const [openForm, setOpenForm] = useState(false);
 
+    // Check if location is a favourite
+    useEffect(() => {
+      if (currentLocation != null) {
+        setFavorite(favouriteLocations.includes(currentLocation!))
+      }
+    }, [currentLocation]);
+
     const { setCoordinates }= useLocationPicker()
     const openEditLocation = async () => {
       // Set up the ManageLocation drawer
-      console.log("Favourite locations: ", favouriteLocations);
       setLocationId(currentLocation);
       setCoordinates({lat: data.position.latitude, long: data.position.longitude})
       setOpen(false);
