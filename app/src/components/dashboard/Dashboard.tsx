@@ -18,7 +18,7 @@ import Form from "../form/Form"
 export const Dashboard = () => {
     const {open, setOpen, currentLocation, locations} = useDashboard()
     const [favorite, setFavorite] = useState<boolean>(false)
-    const { user, isAdmin } = useAuth();
+    const { user, isAdmin, favouriteLocations } = useAuth();
     const { setOpenAdmin, setLocationId , locationId } = useAdminFeat(); 
     const data = locations[currentLocation || ''];
     const [openForm, setOpenForm] = useState(false);
@@ -26,6 +26,7 @@ export const Dashboard = () => {
     const { setCoordinates }= useLocationPicker()
     const openEditLocation = async () => {
       // Set up the ManageLocation drawer
+      console.log("Favourite locations: ", favouriteLocations);
       setLocationId(currentLocation);
       setCoordinates({lat: data.position.latitude, long: data.position.longitude})
       setOpen(false);
