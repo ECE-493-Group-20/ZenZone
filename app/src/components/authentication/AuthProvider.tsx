@@ -3,6 +3,7 @@ import { auth, db } from "./firebaseSetup";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+import { getUserFavourites } from '../../scripts/Firebase';
 
 interface Props {
   children: React.ReactNode;
@@ -18,19 +19,6 @@ async function checkIsAdmin(user : any) {
   } catch (error) {
     console.error("Error checking admin status:", error);
     return false;
-  }
-}
-
-async function getLocationData(user : any) {
-  try {
-    const userDoc = await db.collection('UserInformation').doc(user).get();
-    if (userDoc.exists) {
-      return userDoc.data()?.favourites;
-    }
-    return null;
-  } catch (error) {
-    console.error("Error checking admin status:", error);
-    return null;
   }
 }
 
@@ -57,7 +45,7 @@ export const AuthProvider: React.FC<Props> = ({ children } ) => {
     };
 
     const getFavouriteLocations = async () => {
-      const favourites = await getLocationData(user?.uid);
+      const favourites = await getUserFavourites(user?.uid);
       setFavouriteLocations(favourites);
     }
 
