@@ -52,6 +52,14 @@ function App() {
           <div className="App">
             <Logo className="logo" />
             <SearchMap heatmap={heatmapToggle}></SearchMap>
+            <Button
+              className="microphoneButton"
+              onClick={() => {
+                tester(user?.uid);
+              }}
+            >
+              All Test
+            </Button>
             {user == null ? (
               <Button className="signinButton" component={Link} to={"/signin"}>
                 Sign in
