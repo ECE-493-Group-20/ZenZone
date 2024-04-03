@@ -67,7 +67,7 @@ function UserSignIn() {
   };
 
   return (
-    <div style={{ backgroundColor: "#c5d9fa", height: "100vh" }}>
+    <div style={{ height: "100vh" }}>
       <Button component={RouteLink} to={"/"}>
         Home
       </Button>
