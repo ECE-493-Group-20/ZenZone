@@ -1,8 +1,6 @@
 import {Marker, MarkerProps} from "@react-google-maps/api"
-import "./index.css"
 import { useDashboard } from "../dashboard/dashboardprovider/DashboardProvider"
-import { useAuth } from "../authentication/AuthProvider";
-import { useEffect, useState } from "react";
+import "./index.css"
 
 interface CustomMarkerProps {
   id?: string, // location id
@@ -11,22 +9,6 @@ interface CustomMarkerProps {
 
 const CustomMarker = (props: MarkerProps & CustomMarkerProps) => {
     const { setOpen, setCurrentLocation } = useDashboard()
-    const { favouriteLocations } = useAuth();
-
-    const [markerType, setMarkerType ] = useState<'default' | 'favorite' | 'whereami'>(props.type);
-
-    useEffect(() => {
-      if (props.id != null && favouriteLocations != null) {
-        if (favouriteLocations.includes(props.id!)) {
-          setMarkerType('favorite')
-          console.log(markerType);
-        }
-        else {
-          setMarkerType('default');
-          console.log(markerType);
-        }
-      }
-    }, [favouriteLocations])
 
     const icons : {[key: string]: google.maps.Symbol} = {
       default: {
@@ -66,8 +48,7 @@ const CustomMarker = (props: MarkerProps & CustomMarkerProps) => {
         scale: 0.075,
       }
     }
-
-    return <Marker {...props} icon={icons[markerType]} onClick={() => {if (props.type != 'whereami') {setCurrentLocation(props.id || null); setOpen(true); }}}/>
+    return <Marker {...props} icon={icons[props.type]} onClick={() => {if (props.type != 'whereami') {setCurrentLocation(props.id || null); setOpen(true); }}}/>
 }
 
 export default CustomMarker;

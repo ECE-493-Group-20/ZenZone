@@ -3,6 +3,7 @@ import { LocationOff, LocationOn, Mic, MicOff } from '@mui/icons-material'
 import { Alert, Slide, Snackbar, ToggleButton } from '@mui/material'
 import { findCurrentLocation, getMicrophoneStats, uploadLoudness } from '../../scripts/Firebase'
 import './index.css'
+import { useDashboard } from '../dashboard/dashboardprovider/DashboardProvider'
 
 
 const Permissions = () => {
@@ -10,6 +11,7 @@ const Permissions = () => {
     const [locationInterval, setLocationInterval] = useState<NodeJS.Timeout>();
     const [audioInterval, setAudioInterval] = useState<NodeJS.Timeout>();
     const [open, setOpen] = useState<boolean>(false)
+    const {locations} = useDashboard()
 
     const close = () => {
         setOpen(false)
@@ -41,11 +43,11 @@ const Permissions = () => {
 
     
     useEffect(() => {
-        if (enabled) {
-            findCurrentLocation();
+        if (enabled && locations) {
+            findCurrentLocation(Object.values(locations));
             setTimeout(uploadLoudness, 15000);
             // query location, audio every 10 minutes
-            setLocationInterval(setInterval(findCurrentLocation, 600000));
+            setLocationInterval(setInterval(findCurrentLocation, 600000, Object.values(locations)));
             setAudioInterval(setInterval(uploadLoudness, 600000));
         } else {
             clearInterval(locationInterval);

@@ -1,18 +1,5 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getAllLocs, getLocData, getTrendLoc } from "../../../scripts/Firebase";
-import { GeoPoint } from "@firebase/firestore-types";
-
-
-interface LocationData {
-    id: string,
-    busytrend: number[],
-    capacity: number,
-    description: string,
-    loudtrend: number[],
-    name: string,
-    position: GeoPoint,
-    size: string,
-}
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { LocationData, getAllLocs, getLocData, getTrendLoc } from "../../../scripts/Firebase";
 
 interface DashboardProviderProps {
     open: boolean;
@@ -36,22 +23,27 @@ export const DashboardProvider = ({ children }: any) => {
     const [currentLocation, setCurrentLocation] = useState<string | null>(null);
     // Used to trigger refreshing the location information after modifying/creating locations
     const [refreshLocations, setRefreshLocations] = useState<boolean>(false);
-    
 
     useEffect(() => {
-        console.log("Refreshing data");
         const getLocs = (async() => {      
-            const locs = await getAllLocs("University of Alberta");
-            locs.forEach((doc) => {
-                locations[doc.id] = {id: doc.id, ...doc.data()}
-                console.log(doc.data());
-            })
-            setLocations(locations)
-            setIsLocations(true)
+            await getAllLocs("University of Alberta",
+            (location) => {
+                locations[location.id] = location;
+                setLocations({...locations}) //create new object to change ref to cause refresh
+                setIsLocations(true)
+            },
+            (location) => {
+                locations[location.id] = location;
+                setLocations({...locations})
+            },
+            (location) => {
+                delete locations[location.id]
+                setLocations({...locations})
+            });
         });
         getLocs();
         console.log("Done data");
-    })
+    }, [])
 
     /*useEffect(() => {
         console.log("Updating data!");
@@ -73,6 +65,7 @@ export const DashboardProvider = ({ children }: any) => {
         })
         updateData();
     }, [currentLocation])*/
+
 
     const value = useMemo(() => ({
         open,

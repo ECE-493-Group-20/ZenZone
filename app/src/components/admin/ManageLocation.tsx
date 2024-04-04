@@ -1,15 +1,9 @@
-import { Drawer, ToggleButton, Tooltip, Button, IconButton, Box} from "@mui/material"
-import { useRef, useEffect, useContext } from "react";
+import { Drawer, Tooltip, IconButton, Box} from "@mui/material"
+import { useRef } from "react";
 
 import "./index.css"
-import { ResponsiveChartContainer } from "@mui/x-charts/ResponsiveChartContainer"
-import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis'
-//import LevelCard from "./LevelCard"
 import { AccountBox, Description, GpsFixed, TurnedIn, TurnedInNot, WidthFull } from "@mui/icons-material"
-import { useState } from "react"
-import { BarPlot, ChartsLegend } from "@mui/x-charts"
 import TextField from '@mui/material/TextField';
-import Map from '../map/Map';
 // Button Icons
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
@@ -36,7 +30,7 @@ export const ManageLocation = () => {
     const{open, setOpenAdmin, locationId} = useAdminFeat();  
 
     // reuse location information from DashboardProvider
-    const { locations, refreshLocations, setRefreshLocations } = useDashboard();
+    const { locations } = useDashboard();
     const data = locations[locationId || ''];
 
     const saveLocation = async () => {
@@ -44,9 +38,7 @@ export const ManageLocation = () => {
       if (locationId == null) {
       // preform necessary checks and save to firebase
         const position = new GeoPoint(coordinates.lat, coordinates.long);
-        const result = await newLocation(nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value);
-        // refresh location information
-        setRefreshLocations(!refreshLocations);
+        const result = await newLocation(nameRef.current!.value, orgRef.current!.value, position, Number.parseInt(sizeRef.current!.value), Number.parseInt(capacityRef.current!.value), descriptionRef.current!.value);
 
         // display error message if location already exits in map
         if (!result) {
@@ -56,12 +48,8 @@ export const ManageLocation = () => {
       // modifying a location
       else {
         const position = new GeoPoint(coordinates.lat, coordinates.long);
-        const result = updateLocation(locationId, nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value)
+        const result = updateLocation(locationId, nameRef.current!.value, orgRef.current!.value, position, Number.parseInt(sizeRef.current!.value), Number.parseInt(capacityRef.current!.value), descriptionRef.current!.value)
         
-        // refresh location information
-        setRefreshLocations(!refreshLocations);
-        console.log(refreshLocations);
-
         if (!result) {
           alert("Error saving location information");
         }

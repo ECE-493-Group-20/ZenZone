@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SearchBar from "../searchbar/SearchBar"
 import Map from "../map/Map";
-import { getAllLocs } from "../../scripts/Firebase";
+import { useDashboard } from "../dashboard/dashboardprovider/DashboardProvider";
 
 interface SearchMapProps {
   heatmap: boolean;
@@ -10,14 +10,14 @@ interface SearchMapProps {
 const SearchMap = (props: SearchMapProps) => {
   const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
   const [map, setMap] = useState<google.maps.Map | null>();
+  const {locations} = useDashboard()
 
   const handleItemClick = async (itemId: string) => {
-    const locs = await getAllLocs("University of Alberta");
-    locs.forEach((loc) => {
-      if (itemId === loc.data().name)
+    Object.values(locations).forEach((loc) => {
+      if (itemId === loc.name)
         map?.setCenter({
-          lat: loc.data().position.latitude,
-          lng: loc.data().position.longitude,
+          lat: loc.position.latitude,
+          lng: loc.position.longitude,
         });
         map?.setZoom(30);
     });

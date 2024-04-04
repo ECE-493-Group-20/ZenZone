@@ -6,9 +6,47 @@ getting all location data for FR17, FR18 and FR19.
 
 import {getAverage, toggleMicrophone} from './microphone';
 import firebase from 'firebase/compat/app';
+import { Timestamp, getDocs, doc, getDoc, collection, where, query, deleteDoc, GeoPoint, onSnapshot} from 'firebase/firestore';
 import 'firebase/compat/firestore';
-import { Timestamp, getDocs, doc, getDoc, collection, where, query, deleteDoc, GeoPoint, arrayUnion, arrayRemove, updateDoc } from 'firebase/firestore';
-import { getLocation } from '../pages/Location';
+
+
+/* -------- INTERFACES ----------------- */
+
+
+export interface BusyLevelData {
+    id: string;
+    busymeasure: number;
+    location: string;
+    submitted: string;
+    timestamp: EpochTimeStamp;
+}
+
+export interface NoiseLevelData {
+    id: string;
+    location: string;
+    loudnessmeasure: string;
+    timestamp: EpochTimeStamp;
+}
+
+export interface LocationData {
+    id: string;
+    busytrend: number[];
+    capacity: number;
+    description: string;
+    loudtrend: number[];
+    name: string;
+    organization: string;
+    position: GeoPoint;
+    size: number;
+}
+
+export interface UserInformationData {
+    id: string;
+    favourites: string[];
+    isAdmin: boolean;
+}
+
+/* ------------------------------------- */
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIRESTORE_KEY,
@@ -39,13 +77,13 @@ var numDocsSound = 0;
 var numDocsBusy = 0;
 
 // Helper function to reduce code copying
-function degToRad(deg) {
+function degToRad(deg: number) {
     return deg * (Math.PI / 180);
 }
 
 // Calculates distance between two (lat, lon) points
 // https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
-function distanceLatLon(lat1, lon1, lat2, lon2) {
+function distanceLatLon(lat1: number, lon1: number, lat2: number, lon2: number) {
     let earthRad = 6371000;  // radius of earth in m
     let diffLat = degToRad(lat1-lat2);
     let diffLon = degToRad(lon1-lon2);
@@ -67,30 +105,51 @@ export async function getMicrophoneStats() {
     }
 }
 
-export function findCurrentLocation() {
-    getLocation(findLoc);
+export const getLocation = (getLoc: (loc: GeoPoint) => void) => {
+    if ("geolocation" in navigator) {
+      var loc = null;
+      navigator.geolocation.getCurrentPosition(function (position) {
+        getLoc(new GeoPoint(position.coords.latitude, position.coords.longitude));
+      }, null, {enableHighAccuracy: true} );
+    } else {
+      console.log("Geolocation is not available in your browser.");
+    }
+  }
+
+export function findCurrentLocation(locations: LocationData[]) {
+    getLocation((point) => {
+        findLoc(point, locations)
+    });
 }
 
-const findLoc = (loc) => {
-    console.log(loc);
+const findLoc = (userLocation: GeoPoint, locations: LocationData[]) => {
+    console.log(userLocation);
     // Loc is an array of [lat, lon]. Values below for testing purposes
     var minDist = 1000000000;
     var dist = 0;
     // Check user position against each location, here we specify University of Alberta locations only.
+    locations.forEach((location) => {
+        dist = distanceLatLon(userLocation.latitude, userLocation.longitude, location.position.latitude, location.position.longitude)
+        if (dist < minDist && dist < location.size) {
+            closest = location.id
+            minDist = dist
+        }
+    })
+
     // https://stackoverflow.com/questions/47227550/using-await-inside-non-async-function
-    const getClosest = (async() => { 
-        const locs = await getAllLocs("University of Alberta");
-        locs.forEach((doc) => {
-            dist = distanceLatLon(loc[0], loc[1], doc.data().position.latitude, doc.data().position.longitude);
-            console.log(dist);
-            console.log(doc.data().name);
-            if (dist < minDist && dist < doc.data().size) {
-                closest = doc.id;
-                minDist = dist;
-            }
-        });
-    });
-    getClosest();
+    // const getClosest = (async() => { 
+        // const locs = await getAllLocs("University of Alberta");
+        // locs.forEach((doc) => {
+        //     dist = distanceLatLon(loc[0], loc[1], doc.data().position.latitude, doc.data().position.longitude);
+        //     console.log(dist);
+        //     console.log(doc.data().name);
+        //     if (dist < minDist && dist < doc.data().size) {
+        //         closest = doc.id;
+        //         minDist = dist;
+        //     }
+        // });
+    // });
+    // getClosest();
 }
 
 // Send last 15s of microphone data to the database.
@@ -114,7 +173,7 @@ export function uploadLoudness() {
 }
 
 // Upload user loudness data for a location. usrData should be loudness data in dB, location should be id of a location.
-export async function userLoudUpload(usrData, location) {
+export async function userLoudUpload(usrData: number, location: string) {
     if (typeof usrData == "string") {
         usrData = parseFloat(usrData);
     }
@@ -130,7 +189,7 @@ export async function userLoudUpload(usrData, location) {
 
 // Upload user busy data for a location. usrData should be busy level, a value in [0, 100], and location should
 // be the id of a location.
-export async function userBusyUpload(usrData, location) {
+export async function userBusyUpload(usrData: number, location: string) {
     if (typeof usrData == "string") {
         usrData = parseFloat(usrData);
     }
@@ -146,7 +205,7 @@ export async function userBusyUpload(usrData, location) {
 }
 
 // Computes the average sound at a given location
-export async function requestAverageSound(location) {
+export async function requestAverageSound(location: string) {
     const compareTimestamp = Timestamp.now().toMillis() - 3600000;  // Timestamp from one hour ago.
     var averageSound = 0;
     numDocsSound = 0;
@@ -167,7 +226,7 @@ export async function requestAverageSound(location) {
     return averageSound;
 }
 
-export async function requestBusyMeasure(location) {
+export async function requestBusyMeasure(location: string) {
     /* Checks number of submitted sound requests, and busy requests for a given location.
     Averages the user submitted busy measures, then adds estimate based on total number of submitted requests.
     Intuition is that people using the application will make their own reports on sound level and busy measures
@@ -214,19 +273,62 @@ export async function requestBusyMeasure(location) {
 }
 
 // Get every location for a given organization
-export async function getAllLocs(org) {
-    console.log(org);
+export async function getAllLocs(org: string, add: (location: LocationData) => void, modify: (location: LocationData) => void, remove: (location: LocationData) => void) {
     const q = query(collection(db, "Locations"), where("organization", "==", org));
-    const locs = []
-    const queryColl = await getDocs(q);
-    queryColl.forEach((doc) => {
-        locs.push(doc);
-    })
-    return locs;
+    onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+            const data = change.doc.data()
+          if (change.type === "added") {
+            add({
+                id: change.doc.id,
+                busytrend: data.busytrend,
+                capacity: data.capacity,
+                description: data.description,
+                loudtrend: data.loudtrend,
+                name: data.name,
+                organization: data.organization,
+                position: data.position,
+                size: data.size
+            })
+          }
+          if (change.type === "modified") {
+            modify({
+                id: change.doc.id,
+                busytrend: data.busytrend,
+                capacity: data.capacity,
+                description: data.description,
+                loudtrend: data.loudtrend,
+                name: data.name,
+                organization: data.organization,
+                position: data.position,
+                size: data.size
+            })
+          }
+          if (change.type === "removed") {
+            remove({
+                id: change.doc.id,
+                busytrend: data.busytrend,
+                capacity: data.capacity,
+                description: data.description,
+                loudtrend: data.loudtrend,
+                name: data.name,
+                organization: data.organization,
+                position: data.position,
+                size: data.size
+            })
+          }
+        });
+      })
+    // const locs = []
+    // const queryColl = await getDocs(q);
+    // queryColl.forEach((doc) => {
+    //     locs.push(doc);
+    // })
+    // return locs;
 }
 
 // Example function for measuring data trends over time.
-export async function getTrendAllLocs(org) {
+export async function getTrendAllLocs(org: string) {
     // Timestamp from last hour. Function assumed to be called on the hour, to collect the data from the
     // previous hour. The hour, in military time, is used as the index in the trend array.
     const timestamp = Timestamp.now().toMillis();
@@ -239,17 +341,17 @@ export async function getTrendAllLocs(org) {
     console.log(ind);
     
     // Compute average sound and busy levels for all locations in a given organization.
-    var locs = await getAllLocs(org);
-    locs.forEach((loc) => {
-        console.log(loc.id);
-        getTrendLoc(loc.id, ind);
-    });
-    return locs;
+    // var locs = await getAllLocs(org);
+    // locs.forEach((loc) => {
+    //     console.log(loc.id);
+    //     getTrendLoc(loc.id, ind);
+    // });
+    // return locs;
 }
 
 // Similar to the above function, although only gets data for one location. Location should be a document id.
 // Ind should not be passed, or should be -1, unless called by getTrendAllLocs()
-export async function getTrendLoc(loc, ind=-1) {
+export async function getTrendLoc(loc: string, ind=-1) {
     console.log("LOCATION:", loc);
     var data = await(getLocData(loc));
     if (ind == -1) {
@@ -264,12 +366,12 @@ export async function getTrendLoc(loc, ind=-1) {
     }
     requestAverageSound(loc).then((avgSound) => {
         console.log("After sound");
-        let loudData = data.loudtrend;
+        let loudData = data?.loudtrend;
         loudData[ind] = avgSound;
         Locations.doc(loc).update({loudtrend: loudData});
         requestBusyMeasure(loc).then((busyLevel) => {
             console.log("After busy");
-            let busyData = data.busytrend;
+            let busyData = data?.busytrend;
             busyData[ind] = busyLevel;
             Locations.doc(loc).update({busytrend: busyData});
         });
@@ -277,7 +379,7 @@ export async function getTrendLoc(loc, ind=-1) {
 }
 
 // Helper function for dashboard to allow data to update on reopening.
-export async function getLocData(id) {
+export async function getLocData(id: string) {
     const locDocQuery = doc(db, "Locations", id);
     const locDoc = await getDoc(locDocQuery);
     return locDoc.data();
@@ -287,7 +389,7 @@ export async function getLocData(id) {
 // pos should be a GeoPoint. Returns true if the location did not previously
 // exist and is now created. Returns false if location already existed, and the
 // location will not be recreated.
-export async function newLocation(name, org, pos, size, cap, desc) {
+export async function newLocation(name: string, org: string, pos: GeoPoint, size: number, cap: number, desc: string) {
     var busy = Array(24).fill(0);
     var loud = Array(24).fill(10);
     if (typeof cap == "string") {
@@ -318,7 +420,7 @@ export async function newLocation(name, org, pos, size, cap, desc) {
 
 // Function to update a location at the given document id. Any default values will remain unchanged.
 // Returns false if location doesn't exist, true otherwise
-export async function updateLocation(id, name, org, pos, size, cap, desc) {
+export async function updateLocation(id: string, name: string, org: string, pos: GeoPoint, size: number, cap: number, desc: string) {
     // Get individual location
     const locDocQuery = doc(db, "Locations", id);
     const locDoc = await getDoc(locDocQuery);
@@ -347,13 +449,13 @@ export async function updateLocation(id, name, org, pos, size, cap, desc) {
 }
 
 // Allow admins to delete a location from the database
-export async function deleteLoc(id) {
+export async function deleteLoc(id: string) {
     deleteDoc(doc(db, "Locations", id));
 }
 
 // Adds favourite location for the user (usr). Pass location id to be added.
 // usr should be the uid of the signed in user.
-export async function addFavourite(usr, id) {
+export async function addFavourite(usr: string, id: string) {
     const usrDocQuery = doc(db, "UserInformation", usr);
     const usrDoc = await getDoc(usrDocQuery);
     if (usrDoc.exists()) {
@@ -363,7 +465,7 @@ export async function addFavourite(usr, id) {
 
 // Removes favourite location from a user (usr) with the provided location id
 // usr should be the uid of the signed in user.
-export async function removeFavourite(usr, id) {
+export async function removeFavourite(usr: string, id: string) {
     const usrDocQuery = doc(db, "UserInformation", usr);
     const usrDoc = await getDoc(usrDocQuery);
     if (usrDoc.exists()) {
@@ -373,34 +475,41 @@ export async function removeFavourite(usr, id) {
 
 // TS: For debugging purposes for all functions that don't have corresponding frontend implementations.
 // User it tests with: 4EyDNDXRXFfggZEQrlUwfFYZfJi1 (testuser@email.com)
-export async function tester(usr) {
-    console.log("New loc");
-    deleteLoc("test");
-    removeFavourite(usr, "test");
-    await newLocation("Test", "University of Alberta", new GeoPoint(53.53,-113.53), 100, 10, "Hello!");
-    console.log("Loc doesn't exist");
-    updateLocation("fake");
-    console.log("Actual update");
-    await updateLocation("test", "Test!", "University of Alberta", new GeoPoint(53.53,-113.53), 200, 2, "Bye!");
-    const locDocQuery = doc(db, "Locations", "test");
-    const locDoc = await getDoc(locDocQuery);
-    if (locDoc.exists()) {
-        console.log("Trend single location");
-        getTrendLoc(locDoc);
-    }
-    userLoudUpload(63.432432, "test");
-    userBusyUpload(45, "test");
-    console.log(usr);
-    addFavourite(usr, 'test');
-}
+// export async function tester(usr: string) {
+//     console.log("New loc");
+//     deleteLoc("test");
+//     removeFavourite(usr, "test");
+//     await newLocation("Test", "University of Alberta", new GeoPoint(53.53,-113.53), 100, 10, "Hello!");
+//     console.log("Loc doesn't exist");
+//     updateLocation("fake", );
+//     console.log("Actual update");
+//     await updateLocation("test", "Test!", "University of Alberta", new GeoPoint(53.53,-113.53), 200, 2, "Bye!");
+//     const locDocQuery = doc(db, "Locations", "test");
+//     const locDoc = await getDoc(locDocQuery);
+//     if (locDoc.exists()) {
+//         console.log("Trend single location");
+//         getTrendLoc(locDoc);
+//     }
+//     userLoudUpload(63.432432, "test");
+//     userBusyUpload(45, "test");
+//     console.log(usr);
+//     addFavourite(usr, 'test');
+// }
 
-export async function getUserFavourites(user) {
+export function getUserInformation(user: string, callback: (user: UserInformationData) => void) {
     try {
-      const userDoc = await db.collection('UserInformation').doc(user).get();
-      if (userDoc.exists) {
-        return userDoc.data()?.favourites;
-      }
-      return null;
+        const userDoc = db.collection('UserInformation').doc(user);
+        onSnapshot(userDoc, (snapshot) => {
+            const data = snapshot.data()
+            if (!data) {
+                return
+            }
+            callback({
+                id: snapshot.id,
+                favourites: data.favourites,
+                isAdmin: data.isAdmin
+            })
+        })
     } catch (error) {
       console.error("Error checking admin status:", error);
       return null;
