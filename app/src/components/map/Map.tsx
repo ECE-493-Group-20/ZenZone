@@ -1,4 +1,4 @@
-import { useCallback, useState, memo, useMemo, useEffect } from "react"
+import { createContext, useContext, useCallback, useState, memo, useMemo, useEffect } from "react"
 import {GoogleMap, GoogleMapProps, HeatmapLayer, useJsApiLoader} from "@react-google-maps/api"
 import "./index.css"
 import { LinearProgress } from "@mui/material";
@@ -28,6 +28,13 @@ interface LocationData {
     size: string,
 }
 
+interface HeatmapProps {
+  refreshHeatmap: boolean
+  setRefreshHeatmap: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const HeatmapContext = createContext<any>({})
+
 interface MapProps {
   heatmap: boolean;
   handleItemClick: (itemId: string) => Promise<void>;
@@ -47,12 +54,14 @@ const Map = (props: GoogleMapProps & MapProps) => {
     const { setCoordinates } = useLocationPicker();
     
     const [heatmap, setHeatMap] = useState<google.maps.visualization.HeatmapLayer | null>();
-    const [heatmapData, setHeatMapData] = useState<google.maps.LatLng[]>([]);
+    const [heatmapData, setHeatMapData] = useState<google.maps.visualization.WeightedLocation[]>([]);
+    const [heatmapOps, setHeatMapOps] = useState<google.maps.visualization.HeatmapLayerOptions>();
+    const [refreshHeatmap, setRefreshHeatmap] = useState<boolean>(true);
     const [position, setPosition] = useState({
       latitude: null as unknown as number,
       longitude: null as unknown as number,
     });
-    const {locations, isLocations} = useDashboard();
+    const {locations, currentLocation, isLocations} = useDashboard();
     const map = props.map;
 
     // Favourite locations
@@ -99,15 +108,36 @@ const Map = (props: GoogleMapProps & MapProps) => {
     const onLoad = useCallback((map: google.maps.Map) => {
         map.setZoom(15)
         map.setCenter(center)
-        // TODO: FETCH DATA
-        setHeatMapData([
-            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.5302139343207}),
-            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.530213907}),
-            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.53034307}),
-            new window.google.maps.LatLng({lat: 53.52716644287327, lng: -113.5302143207}),
-        ]);
+        // Weight of > 1 doesn't seem to affect anything. Lower than 0.3 does not proivde noticiable differences.
+        // So, weight of a point is just the busyness level divided by one hundred.
+        var data = []
+        for (let id in locations) {
+          let weight = locations[id].busytrend[(new Date()).getHours()] / 100;
+          data.push({location: new window.google.maps.LatLng({lat: locations[id].position.latitude, lng: locations[id].position.longitude}), weight: weight})
+        }
+        setHeatMapData(data);
+        setHeatMapOps({radius: 50});
         props.setMap(map);
     }, [center]);
+
+    useEffect(() => {
+      // Weight of > 1 doesn't seem to affect anything. Lower than 0.3 does not proivde noticiable differences.
+      // Weight of 0 is the same as a weight of greater than one, so these are clamped at 0.1.
+      // So, weight of a point is just the busyness level divided by one hundred.
+      var data = []
+      for (let id in locations) {
+        let weight = locations[id].busytrend[(new Date()).getHours()] / 100.0;
+        if (weight == 0) { weight = 0.1; }
+        data.push({location: new window.google.maps.LatLng({lat: locations[id].position.latitude, lng: locations[id].position.longitude}), weight: weight})
+      }
+      setHeatMapData(data);
+      setHeatMapOps({radius: 50});
+      setTimeout(heatmapCallback, 3000);
+    }, [refreshHeatmap])
+
+    function heatmapCallback() {
+      setRefreshHeatmap(!refreshHeatmap);
+    }
 
     const onUnmount = useCallback(() => {
         props.setMap(null);
@@ -116,7 +146,7 @@ const Map = (props: GoogleMapProps & MapProps) => {
     const onHeatMapLoad = useCallback((heatmapLayer: google.maps.visualization.HeatmapLayer) => {
       heatmapLayer.setMap(null)
       setHeatMap(heatmapLayer)
-  }, [])
+  }, [heatmapData])
 
   const onHeatMapUnmount = useCallback((heatmapLayer: google.maps.visualization.HeatmapLayer) => {
       heatmapLayer.setMap(null)
@@ -158,7 +188,7 @@ const Map = (props: GoogleMapProps & MapProps) => {
                 })
                 : null
             }
-            <HeatmapLayer onLoad={onHeatMapLoad} onUnmount={onHeatMapUnmount} data={heatmapData} />
+            <HeatmapLayer onLoad={onHeatMapLoad} onUnmount={onHeatMapUnmount} data={heatmapData} options={heatmapOps}/>
 
         </GoogleMap>
         )
@@ -172,3 +202,6 @@ const Map = (props: GoogleMapProps & MapProps) => {
 
 export default memo(Map);
 
+export const useHeatmap = () => {
+  return useContext<HeatmapProps>(HeatmapContext);
+}
