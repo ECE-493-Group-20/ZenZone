@@ -18,7 +18,7 @@ import {
   TurnedInNot,
 } from "@mui/icons-material";
 import { useContext, useState } from "react";
-import { BarPlot, ChartsLegend } from "@mui/x-charts";
+import { BarPlot, ChartsLegend, ChartsYAxis } from "@mui/x-charts";
 import EditIcon from "@mui/icons-material/Edit";
 import { useAdminFeat } from "../admin/AdminFeatProvider";
 import { useAuth } from "../authentication/AuthProvider";
@@ -141,6 +141,13 @@ export const Dashboard = () => {
                   id: "x-axis-id",
                 },
               ]}
+                  yAxis={[
+                    {
+                      data: [0, 20, 40, 60, 80, 100],
+                      scaleType: 'linear',
+                      id: 'y-axis-id',
+                    }
+                  ]}
               series={[
                 {
                   type: "bar",
@@ -160,6 +167,7 @@ export const Dashboard = () => {
               <ChartsLegend />
               <BarPlot />
               <ChartsXAxis position="bottom" />
+                      <ChartsYAxis position="left" />
             </ResponsiveChartContainer>
           </div>
         </div>
