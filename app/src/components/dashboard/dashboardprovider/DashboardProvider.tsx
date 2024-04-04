@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { LocationData, getAllLocs, getLocData, getTrendLoc } from "../../../scripts/Firebase";
-import { GeoPoint } from "@firebase/firestore-types";
 
 interface DashboardProviderProps {
     open: boolean;

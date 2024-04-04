@@ -25,7 +25,7 @@ const SearchBar = (props: SearchBarProps) => {
 
   const onItemClick = async (option: string) => {
     Object.values(locations).forEach(async (location) => {
-      location.name === option ? await props.handleItemClick(option) : null
+      if (location.name === option) await props.handleItemClick(option)
     })
   }
 

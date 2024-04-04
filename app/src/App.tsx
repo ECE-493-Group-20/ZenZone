@@ -1,7 +1,5 @@
 import { Button, IconButton, Modal, ToggleButton } from '@mui/material';
 import './App.css';
-import { getMicrophoneStats, requestAverageSound, getTrendAllLocs, tester, getAllLocs } from './scripts/Firebase';
-import {toggleMicrophone} from './scripts/microphone';
 import Logo from './components/logo/Logo';
 import Map from './components/map/Map';
 import SearchBar from './components/searchbar/SearchBar';

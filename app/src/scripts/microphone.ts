@@ -12,15 +12,15 @@ https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
 This file covers FR10, allowing the user to upload microphone data.
 */
 
-let state = null;
+let state: any = null;
 
-let audioContext;
-let micStreamAudioSourceNode;
-let analyserNode;
-let dataArray;
-let bufferLen;
-let updates;
-let avg;
+let audioContext: any;
+let micStreamAudioSourceNode: any;
+let analyserNode: any;
+let dataArray: any;
+let bufferLen: any
+let updates: any;
+let avg: any;
 
 async function getMicrophonePermissions() {
     if (!window.AudioContext || !window.MediaStreamAudioSourceNode || !window.AudioWorkletNode) {
@@ -59,7 +59,7 @@ async function getMicrophonePermissions() {
 async function stopRecording() {
   micStreamAudioSourceNode.disconnect();
   audioContext.close();
-  state?.getTracks().forEach(track => track.stop());
+  state?.getTracks().forEach((track: any) => track.stop());
   state = null;
 }
 

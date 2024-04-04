@@ -44,7 +44,7 @@ export const ManageLocation = () => {
       if (locationId == null) {
       // preform necessary checks and save to firebase
         const position = new GeoPoint(coordinates.lat, coordinates.long);
-        const result = await newLocation(nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value);
+        const result = await newLocation(nameRef.current!.value, orgRef.current!.value, position, Number.parseInt(sizeRef.current!.value), Number.parseInt(capacityRef.current!.value), descriptionRef.current!.value);
         // refresh location information
         setRefreshLocations(!refreshLocations);
 
@@ -56,7 +56,7 @@ export const ManageLocation = () => {
       // modifying a location
       else {
         const position = new GeoPoint(coordinates.lat, coordinates.long);
-        const result = updateLocation(locationId, nameRef.current!.value, orgRef.current!.value, position, sizeRef.current!.value, capacityRef.current!.value, descriptionRef.current!.value)
+        const result = updateLocation(locationId, nameRef.current!.value, orgRef.current!.value, position, Number.parseInt(sizeRef.current!.value), Number.parseInt(capacityRef.current!.value), descriptionRef.current!.value)
         
         // refresh location information
         setRefreshLocations(!refreshLocations);

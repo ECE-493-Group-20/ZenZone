@@ -187,8 +187,8 @@ export const Dashboard = () => {
               onClick={() => {
                 setRefreshFavouriteLocations(!refreshFavouriteLocations);
                 favorite
-                  ? removeFavourite(user.uid, currentLocation)
-                  : addFavourite(user.uid, currentLocation);
+                  ? removeFavourite(user.uid, currentLocation!)
+                  : addFavourite(user.uid, currentLocation!);
               }} // TODO: Need these as actual location ids
               onChange={() => {
                 setRefreshFavouriteLocations(!refreshFavouriteLocations);
