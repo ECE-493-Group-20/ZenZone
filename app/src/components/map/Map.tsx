@@ -158,11 +158,7 @@ const Map = (props: GoogleMapProps & MapProps) => {
         setCoordinates({lat : event.latLng?.toJSON().lat, long : event.latLng?.toJSON().lng});
     }
 
-    const markers = () => {
-      
-    }
-
-    return isLoaded && isLocations && userInfo ? (
+    return isLoaded && isLocations ? (
         
         <GoogleMap
             mapContainerClassName="map"        
@@ -180,7 +176,7 @@ const Map = (props: GoogleMapProps & MapProps) => {
         >
             <CustomMarker position={center} type='whereami'/>
             {
-                isLocations && userInfo ? 
+                isLocations ? 
                 Object.values(locations).map((location) => {
                   return <CustomMarker key={location.id} id={location.id} type={userInfo && userInfo.favourites.includes(location.id) ? 'favorite' : 'default'} position={{lat: location.position.latitude, lng: location.position.longitude}}/>
                 })
