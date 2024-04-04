@@ -23,42 +23,20 @@ export const DashboardProvider = ({ children }: any) => {
     const [currentLocation, setCurrentLocation] = useState<string | null>(null);
     // Used to trigger refreshing the location information after modifying/creating locations
     const [refreshLocations, setRefreshLocations] = useState<boolean>(false);
-    
-
-    // getAllLocs("University of Alberta",
-    //     (location) => {
-    //         console.log("ADDED LOCATION")
-    //         locations[location.id] = location;
-    //         setLocations(locations)
-    //     },
-    //     (location) => {
-    //         locations[location.id] = location;
-    //         console.log("MODIFIED LOCATION")
-    //         console.log(location)
-    //         setLocations(locations)
-    //     },
-    //     (location) => {
-    //         delete locations[location.id]
-    //     }
-    // );
 
     useEffect(() => {
         const getLocs = (async() => {      
             await getAllLocs("University of Alberta",
             (location) => {
-                console.log("ADDED LOCATION")
                 locations[location.id] = location;
                 setLocations({...locations}) //create new object to change ref to cause refresh
                 setIsLocations(true)
             },
             (location) => {
                 locations[location.id] = location;
-                console.log("MODIFIED LOCATION")
-                console.log(location)
                 setLocations({...locations})
             },
             (location) => {
-                console.log("DELETE LOCATION")
                 delete locations[location.id]
                 setLocations({...locations})
             });

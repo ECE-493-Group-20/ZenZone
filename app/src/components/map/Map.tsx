@@ -1,16 +1,12 @@
 import { createContext, useContext, useCallback, useState, memo, useMemo, useEffect } from "react"
 import {GoogleMap, GoogleMapProps, HeatmapLayer, Libraries, useJsApiLoader} from "@react-google-maps/api"
-import "./index.css"
 import { LinearProgress } from "@mui/material";
-import CustomMarker from "../marker/Marker"
-import { getAllLocs } from "../../scripts/Firebase"
-
 import { GeoPoint } from 'firebase/firestore';
-
 import { useLocationPicker } from "./LocationPickerProvider";
 import { useDashboard } from "../dashboard/dashboardprovider/DashboardProvider";
-
 import { useAuth } from "../authentication/AuthProvider";
+import CustomMarker from "../marker/Marker"
+import "./index.css"
 
 interface coordinates {
     lat : number,
@@ -61,11 +57,11 @@ const Map = (props: GoogleMapProps & MapProps) => {
       latitude: null as unknown as number,
       longitude: null as unknown as number,
     });
-    const {locations, currentLocation, isLocations} = useDashboard();
+    const {locations, isLocations} = useDashboard();
     const map = props.map;
 
     // Favourite locations
-    const { favouriteLocations } = useAuth();
+    const { userInfo } = useAuth();
 
     useEffect(() => {
       if ("geolocation" in navigator) {
@@ -162,8 +158,11 @@ const Map = (props: GoogleMapProps & MapProps) => {
         setCoordinates({lat : event.latLng?.toJSON().lat, long : event.latLng?.toJSON().lng});
     }
 
+    const markers = () => {
+      
+    }
 
-    return isLoaded ? (
+    return isLoaded && isLocations && userInfo ? (
         
         <GoogleMap
             mapContainerClassName="map"        
@@ -181,15 +180,9 @@ const Map = (props: GoogleMapProps & MapProps) => {
         >
             <CustomMarker position={center} type='whereami'/>
             {
-                isLocations ? 
-                Object.values(locations).map((location, index) => {
-                  // console.log(location)
-                  // console.log(location.id);
-                  if (favouriteLocations != null && favouriteLocations.includes(location.id)) {
-                    return <CustomMarker key={index} id={location.id} type='favorite' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
-                  } else {
-                    return <CustomMarker key={index} id={location.id} type='default' position={{lat: location.position.latitude, lng: location.position.longitude}}/>
-                  }
+                isLocations && userInfo ? 
+                Object.values(locations).map((location) => {
+                  return <CustomMarker key={location.id} id={location.id} type={userInfo && userInfo.favourites.includes(location.id) ? 'favorite' : 'default'} position={{lat: location.position.latitude, lng: location.position.longitude}}/>
                 })
                 : null
             }

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import SearchBar from "../searchbar/SearchBar"
 import Map from "../map/Map";
-import { getAllLocs } from "../../scripts/Firebase";
 import { useDashboard } from "../dashboard/dashboardprovider/DashboardProvider";
 
 interface SearchMapProps {

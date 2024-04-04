@@ -42,7 +42,7 @@ export interface LocationData {
 
 export interface UserInformationData {
     id: string;
-    favorites: string[];
+    favourites: string[];
     isAdmin: boolean;
 }
 
@@ -105,29 +105,39 @@ export async function getMicrophoneStats() {
     }
 }
 
-export const getLocation = (getLoc: (loc: any) => any) => {
+export const getLocation = (getLoc: (loc: GeoPoint) => void) => {
     if ("geolocation" in navigator) {
       var loc = null;
       navigator.geolocation.getCurrentPosition(function (position) {
-        getLoc([position.coords.latitude, position.coords.longitude]);
+        getLoc(new GeoPoint(position.coords.latitude, position.coords.longitude));
       }, null, {enableHighAccuracy: true} );
     } else {
       console.log("Geolocation is not available in your browser.");
     }
   }
 
-export function findCurrentLocation() {
-    getLocation(findLoc);
+export function findCurrentLocation(locations: LocationData[]) {
+    getLocation((point) => {
+        findLoc(point, locations)
+    });
 }
 
-const findLoc = (loc) => {
-    console.log(loc);
+const findLoc = (userLocation: GeoPoint, locations: LocationData[]) => {
+    console.log(userLocation);
     // Loc is an array of [lat, lon]. Values below for testing purposes
     var minDist = 1000000000;
     var dist = 0;
     // Check user position against each location, here we specify University of Alberta locations only.
+    locations.forEach((location) => {
+        dist = distanceLatLon(userLocation.latitude, userLocation.longitude, location.position.latitude, location.position.longitude)
+        if (dist < minDist && dist < location.size) {
+            closest = location.id
+            minDist = dist
+        }
+    })
+
     // https://stackoverflow.com/questions/47227550/using-await-inside-non-async-function
-    const getClosest = (async() => { 
+    // const getClosest = (async() => { 
         // const locs = await getAllLocs("University of Alberta");
         // locs.forEach((doc) => {
         //     dist = distanceLatLon(loc[0], loc[1], doc.data().position.latitude, doc.data().position.longitude);
@@ -138,8 +148,8 @@ const findLoc = (loc) => {
         //         minDist = dist;
         //     }
         // });
-    });
-    getClosest();
+    // });
+    // getClosest();
 }
 
 // Send last 15s of microphone data to the database.
@@ -496,7 +506,7 @@ export function getUserInformation(user: string, callback: (user: UserInformatio
             }
             callback({
                 id: snapshot.id,
-                favorites: data.favorites,
+                favourites: data.favourites,
                 isAdmin: data.isAdmin
             })
         })

@@ -14,7 +14,6 @@ export const AuthContext = React.createContext<any>({});
 export const AuthProvider: React.FC<Props> = ({ children } ) => {
   const [user, setUser] = useState<firebase.User | null>(null);
   const [userInfo, setUserInfo] = useState<UserInformationData>();
-  const [isAdmin, setAdmin] = useState<boolean>(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
@@ -35,21 +34,17 @@ export const AuthProvider: React.FC<Props> = ({ children } ) => {
   // }, [user]);
 
   useEffect(() => {
-    const getFavouriteLocations = async () => {
-      if (!user) {
-        return
-      }
-      getUserInformation(user.uid, (userInfo) => {
-        setUserInfo({...userInfo});
-      });
+    if (!user) {
+      return
     }
-
-    getFavouriteLocations();
+    getUserInformation(user.uid, (userInfo) => {
+      setUserInfo({...userInfo});
+    });
   }, [user]);
 
 
 
-  return <AuthContext.Provider value={{user, isAdmin, setAdmin, userInfo}}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{user, userInfo}}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth= () => {

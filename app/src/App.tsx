@@ -19,23 +19,9 @@ import { ManageLocation } from './components/admin/ManageLocation';
 import { LocationPickerProvider } from './components/map/LocationPickerProvider';
 import SearchMap from './components/searchmap/SearchMap';
 
-// Checks if the current user is an admin. Returns true if isAdmin = true and 
-// false if isAdmin = false or user is not in table
-async function checkIsAdmin(user : any) {
-  try {
-    const userDoc = await db.collection('UserInformation').doc(user).get();
-    if (userDoc.exists && userDoc.data()?.isAdmin) {
-      return true;
-    }
-    return false;
-  } catch (error) {
-    console.error("Error checking admin status:", error);
-    return false;
-  }
-}
 
 function App() {
-  const { user, isAdmin, setAdmin }=  useContext(AuthContext);
+  const { user, userInfo }=  useContext(AuthContext);
   const [heatmapToggle, setHeatmapToggle] = useState<boolean>(false)
   const { setOpenAdmin, setLocationId } = useAdminFeat(); 
 
@@ -49,7 +35,7 @@ function App() {
         <LocationPickerProvider>
           <div className="App">
             <Logo className="logo" />
-            <SearchMap heatmap={heatmapToggle}></SearchMap>
+            <SearchMap heatmap={heatmapToggle} />
             {user == null ? (
               <Button className="signinButton" component={Link} to={"/signin"}>
                 Sign in
@@ -60,7 +46,7 @@ function App() {
               </Button>
             )}
             <div className="buttonContainer">
-              {isAdmin ? (
+              {userInfo && userInfo.isAdmin ? (
                 <IconButton className="addButton" onClick={() => { setOpenAdmin(true); setLocationId(null)}}>
                   <AddLocation />
                 </IconButton>

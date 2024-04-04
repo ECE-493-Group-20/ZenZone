@@ -36,10 +36,7 @@ export const Dashboard = () => {
   const { open, setOpen, currentLocation, locations } = useDashboard();
   const {
     user,
-    isAdmin,
-    favouriteLocations,
-    refreshFavouriteLocations,
-    setRefreshFavouriteLocations,
+    userInfo,
   } = useAuth();
   const [favorite, setFavorite] = useState<boolean>(false);
   const { setOpenAdmin, setLocationId, locationId } = useAdminFeat();
@@ -48,8 +45,8 @@ export const Dashboard = () => {
 
   // Check if location is a favourite
   useEffect(() => {
-    if (currentLocation !== null && favouriteLocations !== null) {
-      setFavorite(favouriteLocations.includes(currentLocation!));
+    if (currentLocation && userInfo) {
+      setFavorite(userInfo.favourites.includes(currentLocation!));
     }
   }, [currentLocation]);
 
@@ -172,7 +169,7 @@ export const Dashboard = () => {
           </div>
         </div>
         <div className="dashboardButtonContainer">
-          {isAdmin ? (
+          {userInfo && userInfo.isAdmin ? (
             <IconButton className="addButton" onClick={openEditLocation}>
               <EditIcon />
             </IconButton>
@@ -185,13 +182,11 @@ export const Dashboard = () => {
               className="favoriteButton"
               value={favorite}
               onClick={() => {
-                setRefreshFavouriteLocations(!refreshFavouriteLocations);
                 favorite
                   ? removeFavourite(user.uid, currentLocation!)
                   : addFavourite(user.uid, currentLocation!);
               }} // TODO: Need these as actual location ids
               onChange={() => {
-                setRefreshFavouriteLocations(!refreshFavouriteLocations);
                 setFavorite(!favorite);
               }}
             >
