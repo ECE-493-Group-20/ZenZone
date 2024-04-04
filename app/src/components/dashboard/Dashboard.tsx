@@ -18,13 +18,16 @@ import { useEffect } from "react"
 
 
 export const Dashboard = () => {
-    const {open, setOpen, currentLocation, locations} = useDashboard()
+    const {open, setOpen, currentLocation, locations, refreshLocations} = useDashboard()
     const { user, isAdmin, favouriteLocations, refreshFavouriteLocations, setRefreshFavouriteLocations } = useAuth();
     const [favorite, setFavorite] = useState<boolean>(false)
     const { setOpenAdmin, setLocationId , locationId } = useAdminFeat(); 
     const data = locations[currentLocation || ''];
     const [openForm, setOpenForm] = useState(false);
-
+    console.log("RE-RENDER DASHBOARD")
+    console.log(currentLocation)
+    console.log(data)
+    console.log(refreshLocations)
     // Check if location is a favourite
     useEffect(() => {
       if (currentLocation != null) {

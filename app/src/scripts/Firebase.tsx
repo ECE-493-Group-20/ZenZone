@@ -7,8 +7,47 @@ getting all location data for FR17, FR18 and FR19.
 import {getAverage, toggleMicrophone} from './microphone';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
-import { Timestamp, getDocs, doc, getDoc, collection, where, query, deleteDoc, GeoPoint, arrayUnion, arrayRemove, updateDoc } from 'firebase/firestore';
+import { Timestamp, getDocs, doc, getDoc, collection, where, query, deleteDoc, GeoPoint, arrayUnion, arrayRemove, updateDoc, onSnapshot, DocumentChange, DocumentData } from 'firebase/firestore';
 import { getLocation } from '../pages/Location';
+
+
+/* -------- INTERFACES ----------------- */
+
+
+export interface BusyLevelData {
+    id: string;
+    busymeasure: number;
+    location: string;
+    submitted: string;
+    timestamp: EpochTimeStamp;
+}
+
+export interface NoiseLevelData {
+    id: string;
+    location: string;
+    loudnessmeasure: string;
+    timestamp: EpochTimeStamp;
+}
+
+export interface LocationData {
+    id: string;
+    busytrend: number[];
+    capacity: number;
+    description: string;
+    loudtrend: number[];
+    name: string;
+    organization: string;
+    position: GeoPoint;
+    size: number;
+}
+
+export interface UserInformationData {
+    id: string;
+    favorites: string[];
+    isAdmin: boolean;
+}
+
+/* ------------------------------------- */
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIRESTORE_KEY,
@@ -79,16 +118,16 @@ const findLoc = (loc) => {
     // Check user position against each location, here we specify University of Alberta locations only.
     // https://stackoverflow.com/questions/47227550/using-await-inside-non-async-function
     const getClosest = (async() => { 
-        const locs = await getAllLocs("University of Alberta");
-        locs.forEach((doc) => {
-            dist = distanceLatLon(loc[0], loc[1], doc.data().position.latitude, doc.data().position.longitude);
-            console.log(dist);
-            console.log(doc.data().name);
-            if (dist < minDist && dist < doc.data().size) {
-                closest = doc.id;
-                minDist = dist;
-            }
-        });
+        // const locs = await getAllLocs("University of Alberta");
+        // locs.forEach((doc) => {
+        //     dist = distanceLatLon(loc[0], loc[1], doc.data().position.latitude, doc.data().position.longitude);
+        //     console.log(dist);
+        //     console.log(doc.data().name);
+        //     if (dist < minDist && dist < doc.data().size) {
+        //         closest = doc.id;
+        //         minDist = dist;
+        //     }
+        // });
     });
     getClosest();
 }
@@ -214,15 +253,61 @@ export async function requestBusyMeasure(location) {
 }
 
 // Get every location for a given organization
-export async function getAllLocs(org) {
-    console.log(org);
+export async function getAllLocs(org: string, added: (location: LocationData) => void, modified: (location: LocationData) => void, removed: (location: LocationData) => void) {
     const q = query(collection(db, "Locations"), where("organization", "==", org));
-    const locs = []
-    const queryColl = await getDocs(q);
-    queryColl.forEach((doc) => {
-        locs.push(doc);
-    })
-    return locs;
+    onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+            const data = change.doc.data()
+          if (change.type === "added") {
+            // console.log("New: ", change.doc.data());
+            added({
+                id: change.doc.id,
+                busytrend: data.busytrend,
+                capacity: data.capacity,
+                description: data.description,
+                loudtrend: data.loudtrend,
+                name: data.name,
+                organization: data.organization,
+                position: data.position,
+                size: data.size
+            })
+          }
+          if (change.type === "modified") {
+            console.log("Modified: ", change.doc.data());
+            modified({
+                id: change.doc.id,
+                busytrend: data.busytrend,
+                capacity: data.capacity,
+                description: data.description,
+                loudtrend: data.loudtrend,
+                name: data.name,
+                organization: data.organization,
+                position: data.position,
+                size: data.size
+            })
+          }
+        //   if (change.type === "removed") {
+        //     // console.log("Removed: ", change.doc.data());
+        //     removed({
+        //         id: change.doc.id,
+        //         busytrend: data.busytrend,
+        //         capacity: data.capacity,
+        //         description: data.description,
+        //         loudtrend: data.loudtrend,
+        //         name: data.name,
+        //         organization: data.organization,
+        //         position: data.position,
+        //         size: data.size
+        //     })
+        //   }
+        });
+      })
+    // const locs = []
+    // const queryColl = await getDocs(q);
+    // queryColl.forEach((doc) => {
+    //     locs.push(doc);
+    // })
+    // return locs;
 }
 
 // Example function for measuring data trends over time.
@@ -239,12 +324,12 @@ export async function getTrendAllLocs(org) {
     console.log(ind);
     
     // Compute average sound and busy levels for all locations in a given organization.
-    var locs = await getAllLocs(org);
-    locs.forEach((loc) => {
-        console.log(loc.id);
-        getTrendLoc(loc.id, ind);
-    });
-    return locs;
+    // var locs = await getAllLocs(org);
+    // locs.forEach((loc) => {
+    //     console.log(loc.id);
+    //     getTrendLoc(loc.id, ind);
+    // });
+    // return locs;
 }
 
 // Similar to the above function, although only gets data for one location. Location should be a document id.
