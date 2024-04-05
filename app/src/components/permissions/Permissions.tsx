@@ -44,10 +44,11 @@ const Permissions = () => {
     
     useEffect(() => {
         if (enabled && locations) {
-            findCurrentLocation(Object.values(locations));
+            findCurrentLocation(locations);
+            setTimeout(findCurrentLocation, 10000, locations);
             setTimeout(uploadLoudness, 15000);
             // query location, audio every 10 minutes
-            setLocationInterval(setInterval(findCurrentLocation, 600000, Object.values(locations)));
+            setLocationInterval(setInterval(findCurrentLocation, 600000, locations));
             setAudioInterval(setInterval(uploadLoudness, 600000));
         } else {
             clearInterval(locationInterval);

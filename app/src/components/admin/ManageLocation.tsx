@@ -22,6 +22,7 @@ export const ManageLocation = () => {
     const capacityRef = useRef<HTMLInputElement>();
     const sizeRef = useRef<HTMLInputElement>();
     const orgRef = useRef<HTMLInputElement>();
+    const floorRef = useRef<HTMLInputElement>();
 
     // used to get the location clicked on the map
     const { coordinates } = useLocationPicker();
@@ -38,7 +39,7 @@ export const ManageLocation = () => {
       if (locationId == null) {
       // preform necessary checks and save to firebase
         const position = new GeoPoint(coordinates.lat, coordinates.long);
-        const result = await newLocation(nameRef.current!.value, orgRef.current!.value, position, Number.parseInt(sizeRef.current!.value), Number.parseInt(capacityRef.current!.value), descriptionRef.current!.value);
+        const result = await newLocation(nameRef.current!.value, orgRef.current!.value, position, Number.parseInt(sizeRef.current!.value), Number.parseInt(capacityRef.current!.value), descriptionRef.current!.value, floorRef.current!.value);
 
         // display error message if location already exits in map
         if (!result) {
@@ -48,7 +49,7 @@ export const ManageLocation = () => {
       // modifying a location
       else {
         const position = new GeoPoint(coordinates.lat, coordinates.long);
-        const result = updateLocation(locationId, nameRef.current!.value, orgRef.current!.value, position, Number.parseInt(sizeRef.current!.value), Number.parseInt(capacityRef.current!.value), descriptionRef.current!.value)
+        const result = updateLocation(locationId, nameRef.current!.value, orgRef.current!.value, position, Number.parseInt(sizeRef.current!.value), Number.parseInt(capacityRef.current!.value), descriptionRef.current!.value, floorRef.current!.value);
         
         if (!result) {
           alert("Error saving location information");
@@ -95,6 +96,12 @@ export const ManageLocation = () => {
                 <Description />
               </Tooltip>
               <TextField label="Description" inputRef = {descriptionRef} fullWidth={true} defaultValue={data?.description}/>
+            </div>
+            <div className="description">
+              <Tooltip title="Floors">
+                <Description />
+              </Tooltip>
+              <TextField label="Floors" inputRef = {floorRef} fullWidth={true} defaultValue={data?.floors}/>
             </div>
             <IconButton className = "saveButton" onClick={saveLocation}><SaveIcon/></IconButton>
             <IconButton className = "closeButton" onClick={closeDrawer}><CloseIcon/></IconButton>

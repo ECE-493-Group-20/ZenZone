@@ -91,6 +91,12 @@ export const Dashboard = () => {
           </Tooltip>
           <p>{data.description}</p>
         </div>
+        <div className="description">
+          <Tooltip title="Floors">
+            <Description />
+          </Tooltip>
+          <p>{data.floors}</p>
+        </div>
         <div className="levelCardContainer">
           <LevelCard
             title="Sound Level"
