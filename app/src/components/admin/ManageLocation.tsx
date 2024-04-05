@@ -41,6 +41,7 @@ export const ManageLocation = () => {
         const position = new GeoPoint(coordinates.lat, coordinates.long);
         const result = await newLocation(nameRef.current!.value, orgRef.current!.value, position, Number.parseInt(sizeRef.current!.value), Number.parseInt(capacityRef.current!.value), descriptionRef.current!.value, floorRef.current!.value);
 
+
         // display error message if location already exits in map
         if (!result) {
           alert("This location already exists.");
@@ -50,6 +51,7 @@ export const ManageLocation = () => {
       else {
         const position = new GeoPoint(coordinates.lat, coordinates.long);
         const result = updateLocation(locationId, nameRef.current!.value, orgRef.current!.value, position, Number.parseInt(sizeRef.current!.value), Number.parseInt(capacityRef.current!.value), descriptionRef.current!.value, floorRef.current!.value);
+
         
         if (!result) {
           alert("Error saving location information");
