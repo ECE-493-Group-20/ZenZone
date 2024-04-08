@@ -38,6 +38,7 @@ export interface LocationData {
     organization: string;
     position: GeoPoint;
     size: number;
+    floors: string;
 }
 
 export interface UserInformationData {
@@ -116,25 +117,28 @@ export const getLocation = (getLoc: (loc: GeoPoint) => void) => {
     }
   }
 
-export function findCurrentLocation(locations: LocationData[]) {
+export function findCurrentLocation(locations: {[id:string]:LocationData}) {
     getLocation((point) => {
         findLoc(point, locations)
     });
 }
 
-const findLoc = (userLocation: GeoPoint, locations: LocationData[]) => {
-    console.log(userLocation);
+const findLoc = (userLocation: GeoPoint, locations: {[id:string]:LocationData}) => {
+    console.log(userLocation, locations);
     // Loc is an array of [lat, lon]. Values below for testing purposes
     var minDist = 1000000000;
     var dist = 0;
     // Check user position against each location, here we specify University of Alberta locations only.
-    locations.forEach((location) => {
-        dist = distanceLatLon(userLocation.latitude, userLocation.longitude, location.position.latitude, location.position.longitude)
+    for (let id in locations) {
+        var location = locations[id];
+        dist = distanceLatLon(userLocation.latitude, userLocation.longitude, location.position.latitude, location.position.longitude);
+        console.log("Dist: ", id, dist);
         if (dist < minDist && dist < location.size) {
-            closest = location.id
+            closest = id
             minDist = dist
         }
-    })
+    }
+    console.log("Closest: ", closest);
 
     // https://stackoverflow.com/questions/47227550/using-await-inside-non-async-function
     // const getClosest = (async() => { 
@@ -161,6 +165,7 @@ export function uploadLoudness() {
         timestamp: Timestamp.now().toMillis(),
         submitted: "server",
     }
+    console.log("Uploading sound data at: ", closest);
     // ID for now is milliseconds since epoch plus loudness measure
     let id = (Timestamp.now().toMillis() + audio[0]).toString();
     NoiseLevel.doc(id).set(data);
@@ -288,7 +293,8 @@ export async function getAllLocs(org: string, add: (location: LocationData) => v
                 name: data.name,
                 organization: data.organization,
                 position: data.position,
-                size: data.size
+                size: data.size,
+                floors: data.floors,
             })
           }
           if (change.type === "modified") {
@@ -301,7 +307,8 @@ export async function getAllLocs(org: string, add: (location: LocationData) => v
                 name: data.name,
                 organization: data.organization,
                 position: data.position,
-                size: data.size
+                size: data.size,
+                floors: data.floors,
             })
           }
           if (change.type === "removed") {
@@ -314,7 +321,8 @@ export async function getAllLocs(org: string, add: (location: LocationData) => v
                 name: data.name,
                 organization: data.organization,
                 position: data.position,
-                size: data.size
+                size: data.size,
+                floors: data.floors,
             })
           }
         });
@@ -389,7 +397,7 @@ export async function getLocData(id: string) {
 // pos should be a GeoPoint. Returns true if the location did not previously
 // exist and is now created. Returns false if location already existed, and the
 // location will not be recreated.
-export async function newLocation(name: string, org: string, pos: GeoPoint, size: number, cap: number, desc: string) {
+export async function newLocation(name: string, org: string, pos: GeoPoint, size: number, cap: number, desc: string, floors: string) {
     var busy = Array(24).fill(0);
     var loud = Array(24).fill(10);
     if (typeof cap == "string") {
@@ -406,7 +414,8 @@ export async function newLocation(name: string, org: string, pos: GeoPoint, size
         description: desc,
         capacity: cap,
         busytrend: busy,
-        loudtrend: loud
+        loudtrend: loud,
+        floors: floors
     }
     var id = name.toLowerCase().replaceAll(' ', '');
     const locDocQuery = doc(db, "Locations", id);
@@ -420,7 +429,7 @@ export async function newLocation(name: string, org: string, pos: GeoPoint, size
 
 // Function to update a location at the given document id. Any default values will remain unchanged.
 // Returns false if location doesn't exist, true otherwise
-export async function updateLocation(id: string, name: string, org: string, pos: GeoPoint, size: number, cap: number, desc: string) {
+export async function updateLocation(id: string, name: string, org: string, pos: GeoPoint, size: number, cap: number, desc: string, floors: string) {
     // Get individual location
     const locDocQuery = doc(db, "Locations", id);
     const locDoc = await getDoc(locDocQuery);
@@ -438,7 +447,8 @@ export async function updateLocation(id: string, name: string, org: string, pos:
             position: pos,
             size: size,
             description: desc,
-            capacity: cap
+            capacity: cap,
+            floors: floors
         }
         await Locations.doc(id).update(data);
     } else {

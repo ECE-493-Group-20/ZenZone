@@ -108,11 +108,12 @@ const Map = (props: GoogleMapProps & MapProps) => {
     const onLoad = useCallback((map: google.maps.Map) => {
         map.setZoom(15)
         map.setCenter(center)
-        // Weight of > 1 doesn't seem to affect anything. Lower than 0.3 does not proivde noticiable differences.
+        // Weight of > 1 doesn't seem to affect anything. Lower than 0.1 is not visible.
         // So, weight of a point is just the busyness level divided by one hundred.
         var data = []
         for (let id in locations) {
           let weight = locations[id].busytrend[(new Date()).getHours()] / 100;
+          if (weight < 0.1) { weight = 0.1; }
           data.push({location: new window.google.maps.LatLng({lat: locations[id].position.latitude, lng: locations[id].position.longitude}), weight: weight})
         }
         setHeatMapData(data);
@@ -121,13 +122,13 @@ const Map = (props: GoogleMapProps & MapProps) => {
     }, [center]);
 
     useEffect(() => {
-      // Weight of > 1 doesn't seem to affect anything. Lower than 0.3 does not proivde noticiable differences.
+      // Weight of > 1 doesn't seem to affect anything. Lower than 0.1 is not visible.
       // Weight of 0 is the same as a weight of greater than one, so these are clamped at 0.1.
       // So, weight of a point is just the busyness level divided by one hundred.
       var data = []
       for (let id in locations) {
         let weight = locations[id].busytrend[(new Date()).getHours()] / 100.0;
-        if (weight == 0) { weight = 0.1; }
+        if (weight < 0.1) { weight = 0.1; }
         data.push({location: new window.google.maps.LatLng({lat: locations[id].position.latitude, lng: locations[id].position.longitude}), weight: weight})
       }
       setHeatMapData(data);
