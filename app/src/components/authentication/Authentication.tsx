@@ -304,7 +304,6 @@ function AdminSignUp() {
     }
   }, [user]); 
 
-  // TODO: IMPLEMENT MAKING ADMIN
   const googleSignIn = async () => {
     // Code from Firebase documentation
     const auth = getAuth();

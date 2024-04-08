@@ -502,6 +502,9 @@ export function getUserInformation(user: string, callback: (user: UserInformatio
         onSnapshot(userDoc, (snapshot) => {
             const data = snapshot.data()
             if (!data) {
+                // missing document
+                const userInfo = db.collection("UserInformation");
+                userInfo.doc(user).set({isAdmin : false, favourites : []});
                 return
             }
             callback({
