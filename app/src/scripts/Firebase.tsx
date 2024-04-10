@@ -84,7 +84,7 @@ function degToRad(deg: number) {
 
 // Calculates distance between two (lat, lon) points
 // https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
-function distanceLatLon(lat1: number, lon1: number, lat2: number, lon2: number) {
+export function distanceLatLon(lat1: number, lon1: number, lat2: number, lon2: number) {
     let earthRad = 6371000;  // radius of earth in m
     let diffLat = degToRad(lat1-lat2);
     let diffLon = degToRad(lon1-lon2);
