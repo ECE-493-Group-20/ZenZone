@@ -1,3 +1,7 @@
+/**
+ * FR7 - User.ViewDashboard
+ * FR8 - User.AddFavoriteLocation
+ */
 import {
   Drawer,
   IconButton,

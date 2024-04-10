@@ -1,3 +1,8 @@
+/**
+ * FR10 - User.Microphone
+ * FR11 - User.Location
+ */
+
 import { useEffect, useState } from 'react'
 import { LocationOff, LocationOn, Mic, MicOff } from '@mui/icons-material'
 import { Alert, Slide, Snackbar, ToggleButton } from '@mui/material'

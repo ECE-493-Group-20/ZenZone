@@ -1,3 +1,9 @@
+/**
+ * FR6 - User.ViewMap
+ * FR16 - Display.Map
+ * FR19 - Display.StudySpot.Profile
+ */
+
 import { createContext, useContext, useCallback, useState, memo, useMemo, useEffect } from "react"
 import {GoogleMap, GoogleMapProps, HeatmapLayer, Libraries, useJsApiLoader} from "@react-google-maps/api"
 import { LinearProgress } from "@mui/material";
@@ -169,7 +175,7 @@ const Map = (props: GoogleMapProps & MapProps) => {
             id="gmap"
             options={{
                 disableDefaultUI: true,                
-                styles: require("./mapStyle.json"),
+                styles: require("./mapStyle.json"), //styles provided by https://snazzymaps.com/style/287720/modest
             }}
             {...props}
 
