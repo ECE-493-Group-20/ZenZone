@@ -67,7 +67,7 @@ if (!firebase.apps.length) {
 }
 const db = firebase.firestore(app);
 const Locations = db.collection('Locations');
-const NoiseLevel = db.collection('NoiseLevel'); 
+export const NoiseLevel = db.collection('NoiseLevel'); 
 const BusyLevel = db.collection('BusyLevel');
 const Users = db.collection('UserInformation');
 

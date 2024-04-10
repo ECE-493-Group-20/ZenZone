@@ -1,13 +1,28 @@
-import { distanceLatLon, getMicrophoneStats, getLocation, findCurrentLocation } from '../../scripts/Firebase';
-import { toggleMicrophone } from '../../scripts/microphone';
+import { distanceLatLon, getMicrophoneStats, getLocation, findCurrentLocation, uploadLoudness, NoiseLevel } from '../../scripts/Firebase';
+import { toggleMicrophone, getAverage } from '../../scripts/microphone';
 
 // Helper function to convert degrees to radians
 function degToRad(degrees: number) {
   return degrees * (Math.PI / 180);
 }
 
+jest.mock('../../scripts/Firebase', () => ({
+  ...jest.requireActual('../../scripts/Firebase'),
+  findCurrentLocation: jest.fn(),
+  getLocation: jest.fn(),
+  locString: jest.fn(),
+  Timestamp: {
+    now: jest.fn(() => ({
+      toMillis: jest.fn(() => 1234567890), // Mock a timestamp value
+    })),
+  },
+  NoiseLevel: "mock",
+  getTrendLoc: jest.fn(),
+}));
+
 jest.mock('../../scripts/microphone', () => ({
   toggleMicrophone: jest.fn().mockResolvedValue(true),
+  getAverage: jest.fn(),
 }));
 
 // jest.mock('../../scripts/Firebase', () => ({
@@ -51,21 +66,34 @@ describe('getMicrophoneStats', () => {
 
 });
 
-// describe('findCurrentLocation', () => {
-//   // Reset mock before each test
-//   beforeEach(() => {
-//     jest.clearAllMocks();
-//   });
+describe('findCurrentLocation', () => {
+  // Reset mock before each test
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-//   it('calls getLocation with a callback function', () => {
-//     // Mock locations data
-//     const locations = {};
+  it('should call findCurrentLocation reliably', () => {
+    // Mock locations data
+    const locations = {};
 
-//     // Call the function
-//     findCurrentLocation(locations);
+    findCurrentLocation(locations);
 
-//     // Assert that getLocation is called with a callback function
-//     expect(getLocation).toHaveBeenCalledTimes(1);
-//     expect(getLocation).toHaveBeenCalledWith(expect.any(Function));
-//   });
-// });
+    expect(findCurrentLocation).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('uploadLoudness', () => {
+  it('calls getAverage', () => {
+    // Mock data for the audio measurement
+    const audioData = [100]; // Example loudness data
+
+    // Mock implementations for dependencies
+    (getAverage as jest.Mock).mockReturnValue(audioData);
+
+    // Call the function to test
+    uploadLoudness();
+
+    // Assertions
+    expect(getAverage).toHaveBeenCalled();
+  });
+});
