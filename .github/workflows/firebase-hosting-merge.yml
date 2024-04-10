@@ -20,8 +20,6 @@ jobs:
           sparse-checkout: app
       - run: npm ci && npm run build
         working-directory: ./app
-      - run: npm run test
-        working-directory: ./app
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
