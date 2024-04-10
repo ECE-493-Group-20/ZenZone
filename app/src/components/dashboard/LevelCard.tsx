@@ -1,3 +1,7 @@
+/**
+ * FR7 - User.ViewDashboard
+ */
+
 import { Chip, LinearProgress } from '@mui/material'
 import './index.css'
 import Card from "@mui/material/Card";

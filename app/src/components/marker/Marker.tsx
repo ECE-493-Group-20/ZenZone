@@ -1,3 +1,7 @@
+/**
+  FR6 - User.ViewMap
+  FR7 - User.ViewDashboard
+*/
 import {Marker, MarkerProps} from "@react-google-maps/api"
 import { useDashboard } from "../dashboard/dashboardprovider/DashboardProvider"
 import "./index.css"

@@ -1,3 +1,7 @@
+/**
+ * FR6 - User.ViewMap
+ */
+
 import { createContext, useContext, useMemo, useState } from "react";
 
 interface coordinates {

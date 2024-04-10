@@ -1,3 +1,10 @@
+/**
+ * FR7 - User.ViewDashboard
+ * FR16 - Display.Map
+ * FR17 - Display.Historical Trend
+ * FR18 - Display.CurrentData
+ */
+
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { LocationData, getAllLocs, getLocData, getTrendLoc } from "../../../scripts/Firebase";
 
