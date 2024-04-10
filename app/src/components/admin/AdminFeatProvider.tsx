@@ -1,16 +1,14 @@
-import { createContext, useContext, useMemo, useState } from "react";
+/*
+Functional Requirements Comments:
 
-interface locationAttr {
-    locationName?: string,
-    location?: string,
-    capacity?: number,
-    description?: string,
-    busyLevel?: number,
-    soundLevel?: number,
-    locationId: string | null,
-    size?: string
-    organization?: string
-  }
+FR14 - Admin.CreateLocation
+FR14 - Admin.UpdateLocation
+
+This file creates a context for creating and editing locations. It is used to
+open the ModifyLocation drawer and to pass information on which location is 
+being modified.
+*/
+import { createContext, useContext, useState } from "react";
 
 export const AdminFeatContext = createContext<any>(false)
 

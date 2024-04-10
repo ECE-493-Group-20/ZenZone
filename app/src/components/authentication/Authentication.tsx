@@ -1,5 +1,14 @@
+/*
+Functional Requirements Comments:
+
+FR1 - User.Register
+FR2 - User.Authenticate
+FR12 - Admin.Register
+FR13 - Admin.Authenticate
+*/
+
 // This was copied from this tutorial: https://medium.com/geekculture/firebase-auth-with-react-and-typescript-abeebcd7940a
-import React, { useContext, useRef, useEffect } from "react";
+import { useContext, useRef, useEffect } from "react";
 import { AuthContext } from "./AuthProvider";
 import { auth, db } from "./firebaseSetup";
 import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
@@ -8,7 +17,6 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useFormControl } from "@mui/material";
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
@@ -18,10 +26,16 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Link as RouteLink } from "react-router-dom";
 import "../../App.css";
-import {useNavigate, redirectDocument} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Logo from "../logo/Logo";
 
+/*
+Functional Requirements Comments:
 
+This component is used to satisfy FR2 - User.Authenticate and FR13 - Admin.Authenticate
+With this component, both users and admin users can sign into the app using email
+and password or Google sign in.
+*/
 function UserSignIn() {
   // both admin an regular users use the same signin page
   const {user} = useContext(AuthContext);
@@ -137,6 +151,12 @@ function UserSignIn() {
   );
 }
 
+/*
+Functional Requirements Comments:
+
+This component is used to satisfy FR1 - User.Resgister. With this component, users
+can create an account using an email and password or using Google sign in.
+*/
 function UserSignUp() {
   
   const {user} = useContext(AuthContext);
@@ -279,8 +299,12 @@ function UserSignUp() {
   )
 }
 
+/*
+Functional Requirements Comments:
 
-
+This component is used to satisfy FR12 - Admin.Resgister. With this component,
+admin users can create an account using an email and password or using Google sign in.
+*/
 function AdminSignUp() {
   const {user} = useContext(AuthContext);
   const navigate = useNavigate();

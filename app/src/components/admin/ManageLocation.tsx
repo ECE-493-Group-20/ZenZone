@@ -1,3 +1,12 @@
+/*
+Functional Requirements Comments:
+
+FR14 - Admin.CreateLocation
+FR14 - Admin.UpdateLocation
+
+This component is used to for admin users to create and modify locations.
+*/
+
 import { Drawer, Tooltip, IconButton, Box} from "@mui/material"
 import { useRef } from "react";
 

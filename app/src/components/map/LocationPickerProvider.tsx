@@ -1,8 +1,12 @@
 /**
- * FR6 - User.ViewMap
+ * FR14 - Admin.CreateLocation
+ * FR15 - Admin.UpdateLocation
+ * 
+ * This is used to get the point selected on the map when admin users are creating
+ * and modifying locations.
  */
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 interface coordinates {
     lat: number,
