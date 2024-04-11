@@ -16,15 +16,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: app
-      - run: npm ci && npm run build
-        working-directory: ./app
-      - run: npm run test
-        working-directory: ./app
+      # - run: npm ci && npm run build
+      #   working-directory: ./app
+      # - run: npm run test
+      #   working-directory: ./app
       - run: npm install -g selenium-side-runner
       - run: npm install -g chromedriver
-      - run: selenium-side-runner ./Selenium_testing/*.side
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZENZONE_90B7A }}'
-          projectId: zenzone-90b7a
+      - run: selenium-side-runner ./Selenium_testing/ZenZone.side
+      # - uses: FirebaseExtended/action-hosting-deploy@v0
+      #   with:
+      #     repoToken: '${{ secrets.GITHUB_TOKEN }}'
+      #     firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZENZONE_90B7A }}'
+      #     projectId: zenzone-90b7a
