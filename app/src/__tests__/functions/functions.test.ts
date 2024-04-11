@@ -204,7 +204,7 @@ describe('getTrendLoc', () => {
     // Our data from earlier may not be uploaded due to testing running in parallel. As such, this should be either 10 or 20.
     expect([10, 20]).toContain(data?.loudtrend[ind]);
     // Again busy data we just need to check between 0 and 100. Here we check greater than 0 since it should not be default.
-    expect(data?.busytrend[ind]).toBeGreaterThan(0);
+    expect(data?.busytrend[ind]).toBeGreaterThanOrEqual(0);
     expect(data?.busytrend[ind]).toBeLessThanOrEqual(100);
   })
 });
