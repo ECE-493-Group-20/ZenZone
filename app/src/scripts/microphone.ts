@@ -116,10 +116,8 @@ export function calcRMSandDB(data: number[]) {
     sum += data[i] * data[i];
   }
   sum = Math.sqrt(sum);
-  console.log("RMS:", sum);
   // 10dB used as a "clip" value as this is the about the sound level of breathing.
   // https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
   let db = Math.max(10, 20 * Math.log10(sum / (20 * Math.pow(10, -6))));
-  console.log("dB:", db);
   return db;
 }
