@@ -1,3 +1,6 @@
+/**
+ * FR3 - User.SearchLocation
+ */
 import { Autocomplete, TextField } from "@mui/material"
 import { Search } from "@mui/icons-material";
 import { useState, useEffect } from "react";

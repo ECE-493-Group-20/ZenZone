@@ -1,3 +1,6 @@
+/**
+* Used for the overall design of our app
+*/
 import { DetailedHTMLProps, ImgHTMLAttributes } from "react"
 import logo from "./logo.png"
 import './index.css'

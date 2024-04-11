@@ -1,3 +1,10 @@
+/**
+ * FR1 - User.Register
+ * FR2 - User.Authenticate
+ * FR12 - Admin.Register
+ * FR13 - Admin.Authenticate
+ */
+
 // This was copied from this tutorial: https://medium.com/geekculture/firebase-auth-with-react-and-typescript-abeebcd7940a
 import React, { useContext, useRef, useEffect } from "react";
 import { AuthContext } from "./AuthProvider";
