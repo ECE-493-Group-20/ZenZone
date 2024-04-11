@@ -1,0 +1,718 @@
+{
+  "id": "f0bd0362-5065-457c-9e0e-1177c0af4217",
+  "version": "2.0",
+  "name": "ZenZone",
+  "url": "https://zenzone-90b7a.web.app/",
+  "tests": [{
+    "id": "a97f5fd4-f1f5-423e-a5c6-254575370ac6",
+    "name": "AuthenticationNavigation",
+    "commands": [{
+      "id": "6365579a-5bdd-481a-984c-c4f5eb1eb12c",
+      "comment": "",
+      "command": "open",
+      "target": "https://zenzone-90b7a.web.app/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ba86d532-9fcf-4b9e-8c55-21695983ecd1",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1936x1048",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e4904cce-b7f5-4779-81fc-d0dc48f9c1ef",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//a[contains(text(),'Sign in')]", "xpath:link"],
+        ["xpath=//div[@id='root']/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
+        ["xpath=//body/div/div/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7dfeebab-3958-4970-84ce-35aea3bd6433",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//a[contains(text(),'Sign in')]", "xpath:link"],
+        ["xpath=//div[@id='root']/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
+        ["xpath=//body/div/div/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d46e7d6f-2594-421d-87aa-9e2d9b8c880f",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Don't have an account? Sign Up",
+      "targets": [
+        ["linkText=Don't have an account? Sign Up", "linkText"],
+        ["css=.MuiTypography-root:nth-child(8)", "css:finder"],
+        ["xpath=//div[@id='root']/div/main/div/a[2]", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/register')]", "xpath:href"],
+        ["xpath=//a[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ce8a8e73-e2f8-495c-a870-1521dac0de45",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Already Have an account? Sign in here",
+      "targets": [
+        ["linkText=Already Have an account? Sign in here", "linkText"],
+        ["css=.MuiGrid-root:nth-child(8) .MuiTypography-root", "css:finder"],
+        ["xpath=//a[contains(text(),'Already Have an account? Sign in here')]", "xpath:link"],
+        ["xpath=//div[@id='root']/main/div/div[4]/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
+        ["xpath=//div[4]/div/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Already Have an account? Sign in here')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "2d1931ea-1717-4978-9828-2845ef6bf0b1",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Don't have an account? Sign Up",
+      "targets": [
+        ["linkText=Don't have an account? Sign Up", "linkText"],
+        ["css=.MuiTypography-root:nth-child(8)", "css:finder"],
+        ["xpath=//div[@id='root']/div/main/div/a[2]", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/register')]", "xpath:href"],
+        ["xpath=//a[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5673ac8d-935a-47e3-8ffd-1e94dd7e4107",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Click here to register as a system admin.",
+      "targets": [
+        ["linkText=Click here to register as a system admin.", "linkText"],
+        ["css=.MuiGrid-root:nth-child(9) .MuiTypography-root", "css:finder"],
+        ["xpath=//a[contains(text(),'Click here to register as a system admin.')]", "xpath:link"],
+        ["xpath=//div[@id='root']/main/div/div[5]/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/adminregister')]", "xpath:href"],
+        ["xpath=//div[5]/div/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Click here to register as a system admin.')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "2bfb3425-d62b-4205-ba2a-5d9705b0514b",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Already have an account? Sign in here",
+      "targets": [
+        ["linkText=Already have an account? Sign in here", "linkText"],
+        ["css=.MuiTypography-inherit", "css:finder"],
+        ["xpath=//a[contains(text(),'Already have an account? Sign in here')]", "xpath:link"],
+        ["xpath=//div[@id='root']/main/div/div[4]/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
+        ["xpath=//div[4]/div/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Already have an account? Sign in here')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "83474211-d662-4024-ad63-c940f31b444c",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Don't have an account? Sign Up",
+      "targets": [
+        ["linkText=Don't have an account? Sign Up", "linkText"],
+        ["css=.MuiTypography-root:nth-child(8)", "css:finder"],
+        ["xpath=//div[@id='root']/div/main/div/a[2]", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/register')]", "xpath:href"],
+        ["xpath=//a[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5febf2af-b4cd-4b07-b002-d9329b01b4a4",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-text",
+      "targets": [
+        ["css=.MuiButton-text", "css:finder"],
+        ["xpath=//a[contains(text(),'Home')]", "xpath:link"],
+        ["xpath=//div[@id='root']/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ce1b4e58-dc1c-4ad3-b2e4-92c82096c70d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//a[contains(text(),'Sign in')]", "xpath:link"],
+        ["xpath=//div[@id='root']/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
+        ["xpath=//body/div/div/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "aa7589fb-8ed1-4a77-afe1-003e83ab8264",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Don't have an account? Sign Up",
+      "targets": [
+        ["linkText=Don't have an account? Sign Up", "linkText"],
+        ["css=.MuiTypography-root:nth-child(8)", "css:finder"],
+        ["xpath=//div[@id='root']/div/main/div/a[2]", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/register')]", "xpath:href"],
+        ["xpath=//a[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "03637368-dd0b-42a4-a8a4-e810b7434568",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Click here to register as a system admin.",
+      "targets": [
+        ["linkText=Click here to register as a system admin.", "linkText"],
+        ["css=.MuiGrid-root:nth-child(9) .MuiTypography-root", "css:finder"],
+        ["xpath=//a[contains(text(),'Click here to register as a system admin.')]", "xpath:link"],
+        ["xpath=//div[@id='root']/main/div/div[5]/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/adminregister')]", "xpath:href"],
+        ["xpath=//div[5]/div/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Click here to register as a system admin.')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "ccec0e8f-53df-444e-a6ca-ac91ac131f84",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//a[contains(text(),'Sign in')]", "xpath:link"],
+        ["xpath=//div[@id='root']/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
+        ["xpath=//body/div/div/a", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "979d971e-b749-417b-9aa4-a890b408a8c1",
+    "name": "AdminSignIn",
+    "commands": [{
+      "id": "329f5d02-60f6-430f-8790-c429c0ac7f7d",
+      "comment": "",
+      "command": "open",
+      "target": "https://zenzone-90b7a.web.app/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "924bb6ba-49af-4966-af0a-1239dbd517e8",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1936x1048",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b638a65b-a5a5-43c1-868c-77e1bd1bef5d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//a[contains(text(),'Sign in')]", "xpath:link"],
+        ["xpath=//div[@id='root']/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
+        ["xpath=//body/div/div/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "90dcbe38-da09-48b5-935b-6529f1c5d7cc",
+      "comment": "",
+      "command": "type",
+      "target": "id=email",
+      "targets": [
+        ["id=email", "id"],
+        ["name=email", "name"],
+        ["css=#email", "css:finder"],
+        ["xpath=//input[@id='email']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/main/div/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "testadmin@ualberta.ca"
+    }, {
+      "id": "b29ff790-35c1-48a8-86db-b163994867d0",
+      "comment": "",
+      "command": "type",
+      "target": "id=password",
+      "targets": [
+        ["id=password", "id"],
+        ["name=password", "name"],
+        ["css=#password", "css:finder"],
+        ["xpath=//input[@id='password']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/main/div/div[3]/div/input", "xpath:idRelative"],
+        ["xpath=//div[3]/div/input", "xpath:position"]
+      ],
+      "value": "password"
+    }, {
+      "id": "eece8e6e-66e7-46b7-bb63-5ebb08a8a181",
+      "comment": "",
+      "command": "click",
+      "target": "css=.css-1qelgoy",
+      "targets": [
+        ["css=.css-1qelgoy", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/main/div/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8cbb91cd-91f3-4279-85f8-4ced56bd27d9",
+      "comment": "",
+      "command": "click",
+      "target": "css=.css-1yxmbwk path",
+      "targets": [
+        ["css=.css-1yxmbwk path", "css:finder"]
+      ],
+      "value": ""
+    }, {
+      "id": "446386a2-294c-44a7-8c84-16c02f05f876",
+      "comment": "This is the modify location drawer at the bottom of the screen",
+      "command": "assertElementPresent",
+      "target": "css=.paper",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "221e91e9-5b3d-42c3-9cef-49aefac87dde",
+      "comment": "",
+      "command": "click",
+      "target": "css=.closeButton path",
+      "targets": [
+        ["css=.closeButton path", "css:finder"]
+      ],
+      "value": ""
+    }, {
+      "id": "611a3f18-3a40-424c-9b28-4a8e72e2fafe",
+      "comment": "Drawer is closed",
+      "command": "assertElementNotPresent",
+      "target": "css=.paper",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7ee3cbdf-5c4a-4c5e-a324-861b49342a8f",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(3) > div:nth-child(10) > img",
+      "targets": [
+        ["css=div:nth-child(3) > div:nth-child(10) > img", "css:finder"],
+        ["xpath=(//img[contains(@src,'https://maps.gstatic.com/mapfiles/transparent.png')])[9]", "xpath:img"],
+        ["xpath=//div[@id='gmap']/div/div[3]/div/div[2]/div/div[3]/div[9]/img", "xpath:idRelative"],
+        ["xpath=//div[3]/div[9]/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c9d234d6-1f1b-4a67-a854-106b3498306b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.description:nth-child(2)",
+      "targets": [
+        ["css=.description:nth-child(2)", "css:finder"],
+        ["xpath=//div[2]/div[3]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "05b6fcf2-3480-4759-979c-a1ae2b3128b0",
+      "comment": "Location drawer profile is open",
+      "command": "assertElementPresent",
+      "target": "css=.description:nth-child(2)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "09b9e860-eec5-4edb-a3c2-ca310dc21a56",
+      "comment": "Modify location button",
+      "command": "assertElementPresent",
+      "target": "css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) > .MuiSvgIcon-root",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "081b3a07-ca0c-46ab-9422-4dec474583e2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) > .MuiSvgIcon-root",
+      "targets": [
+        ["css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) > .MuiSvgIcon-root", "css:finder"]
+      ],
+      "value": ""
+    }, {
+      "id": "f7ecec80-f1d6-4141-b1b1-fe13df3865bb",
+      "comment": "Navigates to the modify location drawer",
+      "command": "assertElementPresent",
+      "target": "css=.paper",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7d6eb15f-fa81-4a10-b70c-cc917f3dffb7",
+      "comment": "",
+      "command": "click",
+      "target": "css=.closeButton path",
+      "targets": [
+        ["css=.closeButton path", "css:finder"]
+      ],
+      "value": ""
+    }, {
+      "id": "db037956-77a6-4236-8f1d-3d312afdd18b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[7]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/button", "xpath:idRelative"],
+        ["xpath=//body/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "3b36eca5-2399-4bf1-ab69-5d703f4cfef7",
+      "comment": "",
+      "command": "",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "b3e3348f-6cd0-41ea-b8ab-2dc0f03d5f5f",
+    "name": "UserSignIn",
+    "commands": [{
+      "id": "ac54819d-73b9-4c65-bd17-78a86e8a6c5c",
+      "comment": "",
+      "command": "open",
+      "target": "https://zenzone-90b7a.web.app/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "4c667b4d-490a-41ee-8d54-f35db6cd929d",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1936x1048",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "695f7e84-4b26-4833-9251-c011a317032c",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//a[contains(text(),'Sign in')]", "xpath:link"],
+        ["xpath=//div[@id='root']/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
+        ["xpath=//body/div/div/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "80dbb3e0-814f-4202-ab80-c1661593e511",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//a[contains(text(),'Sign in')]", "xpath:link"],
+        ["xpath=//div[@id='root']/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
+        ["xpath=//body/div/div/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0243fd4f-18fb-4217-9b5e-f7762ed090bd",
+      "comment": "",
+      "command": "type",
+      "target": "id=email",
+      "targets": [
+        ["id=email", "id"],
+        ["name=email", "name"],
+        ["css=#email", "css:finder"],
+        ["xpath=//input[@id='email']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/main/div/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "test@ualberta.ca"
+    }, {
+      "id": "910448ec-78c2-4dd4-aa10-ea9c78eab826",
+      "comment": "",
+      "command": "type",
+      "target": "id=password",
+      "targets": [
+        ["id=password", "id"],
+        ["name=password", "name"],
+        ["css=#password", "css:finder"],
+        ["xpath=//input[@id='password']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/main/div/div[3]/div/input", "xpath:idRelative"],
+        ["xpath=//div[3]/div/input", "xpath:position"]
+      ],
+      "value": "password"
+    }, {
+      "id": "3d10d971-6239-45c9-817d-6c082e03655b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.css-1qelgoy",
+      "targets": [
+        ["css=.css-1qelgoy", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/main/div/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7b41e722-bfed-437e-b542-3a4d562a0af1",
+      "comment": "Admin button is not present",
+      "command": "assertElementNotPresent",
+      "target": "css=.css-1yxmbwk path",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c7a30191-9de7-47ce-a25d-f66af7073feb",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(3) > div:nth-child(11) > img",
+      "targets": [
+        ["css=div:nth-child(3) > div:nth-child(11) > img", "css:finder"],
+        ["xpath=(//img[contains(@src,'https://maps.gstatic.com/mapfiles/transparent.png')])[10]", "xpath:img"],
+        ["xpath=//div[@id='gmap']/div/div[3]/div/div[2]/div/div[3]/div[10]/img", "xpath:idRelative"],
+        ["xpath=//div[3]/div[10]/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "835589ec-d2b7-4e49-bc6a-da9fca6ce6ce",
+      "comment": "Drawer is open",
+      "command": "assertElementPresent",
+      "target": "css=.paper",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f164b03b-c1ac-4dd2-ac25-905542da96f3",
+      "comment": "Favorite Button",
+      "command": "assertElementPresent",
+      "target": "css=.favoriteButton > .MuiSvgIcon-root",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "36c33d04-9865-49cc-be86-9da2e9bc549e",
+      "comment": "Modify Location button not present",
+      "command": "assertElementNotPresent",
+      "target": "css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) path",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7fb86d03-8cec-4e26-8428-4fd64dda89df",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiBackdrop-root",
+      "targets": [
+        ["css=.MuiBackdrop-root", "css:finder"],
+        ["xpath=//body/div[2]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "f8fe9944-b6d8-46bb-bec7-a67161abd55e",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[7]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/button", "xpath:idRelative"],
+        ["xpath=//body/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "f0f35ee6-48f2-47f6-a3e8-6b288ee5482b",
+    "name": "NonAuthUser",
+    "commands": [{
+      "id": "da694663-a035-407d-a482-6816ec645e50",
+      "comment": "",
+      "command": "open",
+      "target": "https://zenzone-90b7a.web.app/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "1efa203b-1239-4d42-954e-9fce8e93a90f",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1936x1048",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "39498a64-1f0b-4955-9ff9-17316b802a20",
+      "comment": "Check that button says sign in",
+      "command": "assertText",
+      "target": "css=.MuiButton-root",
+      "targets": [],
+      "value": "SIGN IN"
+    }, {
+      "id": "01da7c7d-8320-445a-b400-7ccdeaadd769",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(3) > div:nth-child(7) > img",
+      "targets": [
+        ["css=div:nth-child(3) > div:nth-child(7) > img", "css:finder"],
+        ["xpath=(//img[contains(@src,'https://maps.gstatic.com/mapfiles/transparent.png')])[6]", "xpath:img"],
+        ["xpath=//div[@id='gmap']/div/div[3]/div/div[2]/div/div[3]/div[6]/img", "xpath:idRelative"],
+        ["xpath=//div[3]/div[6]/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "289832a3-78c6-48e5-b28b-983f9b91f8db",
+      "comment": "Favorite Button",
+      "command": "assertElementNotPresent",
+      "target": "css=.favoriteButton > .MuiSvgIcon-root",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2142bdad-2088-429a-a7fe-ff06a5ba85ee",
+      "comment": "Modify Location button not present",
+      "command": "assertElementNotPresent",
+      "target": "css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) path",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "bf28e55c-bd90-455e-a435-471618417960",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiBackdrop-root",
+      "targets": [
+        ["css=.MuiBackdrop-root", "css:finder"],
+        ["xpath=//body/div[2]/div", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "d4b69861-3e77-41ff-95a9-b5b24d59bf58",
+    "name": "Test",
+    "commands": [{
+      "id": "c07388e3-61af-4842-a487-f90310543fb9",
+      "comment": "",
+      "command": "open",
+      "target": "https://zenzone-90b7a.web.app/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "80bdb07a-2ced-42d9-a754-c228425a7ef8",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1050x797",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ce071266-81bb-4d45-a855-93f84f2a0150",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//a[contains(text(),'Sign in')]", "xpath:link"],
+        ["xpath=//div[@id='root']/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
+        ["xpath=//body/div/div/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d81e4b00-843f-43fa-811c-54783064eedd",
+      "comment": "",
+      "command": "type",
+      "target": "id=email",
+      "targets": [
+        ["id=email", "id"],
+        ["name=email", "name"],
+        ["css=#email", "css:finder"],
+        ["xpath=//input[@id='email']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/main/div/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "testadmin@ualberta.ca"
+    }, {
+      "id": "9da0be15-03a2-4357-a05f-98f462b7dad5",
+      "comment": "",
+      "command": "type",
+      "target": "id=password",
+      "targets": [
+        ["id=password", "id"],
+        ["name=password", "name"],
+        ["css=#password", "css:finder"],
+        ["xpath=//input[@id='password']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/main/div/div[3]/div/input", "xpath:idRelative"],
+        ["xpath=//div[3]/div/input", "xpath:position"]
+      ],
+      "value": "password"
+    }, {
+      "id": "f08cf4e7-5d43-435f-947d-ea37c8e7d61c",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.css-1qelgoy",
+      "targets": [
+        ["css=.css-1qelgoy", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/main/div/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6dcc360d-95b2-4519-9362-4377322ef4f2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.css-1qelgoy",
+      "targets": [
+        ["css=.css-1qelgoy", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/main/div/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "58fac85e-271c-4722-ab0d-1faea3fdfc4c",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=.css-1qelgoy",
+      "targets": [
+        ["css=.css-1qelgoy", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/main/div/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0cb9b8cc-8e67-4318-bdea-94acd311a320",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(3) > div:nth-child(11) > img",
+      "targets": [
+        ["css=div:nth-child(3) > div:nth-child(11) > img", "css:finder"],
+        ["xpath=(//img[contains(@src,'https://maps.gstatic.com/mapfiles/transparent.png')])[10]", "xpath:img"],
+        ["xpath=//div[@id='gmap']/div/div[3]/div/div[2]/div/div[3]/div[10]/img", "xpath:idRelative"],
+        ["xpath=//div[3]/div[10]/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fce2ddd8-4aa2-4030-93a1-445659b165c5",
+      "comment": "",
+      "command": "click",
+      "target": "css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) path",
+      "targets": [
+        ["css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) path", "css:finder"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "ada71cb7-39a7-432c-9309-7a71cae431c1",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": []
+  }],
+  "urls": ["https://zenzone-90b7a.web.app/"],
+  "plugins": []
+}
