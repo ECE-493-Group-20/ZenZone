@@ -15,14 +15,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          sparse-checkout: app
+          sparse-checkout: |
+            app
+            Selenium_testing
       # - run: npm ci && npm run build
       #   working-directory: ./app
       # - run: npm run test
       #   working-directory: ./app
       - run: npm install -g selenium-side-runner
       - run: npm install -g chromedriver
-      - run: selenium-side-runner ./Selenium_testing/ZenZone.side
+      - run: selenium-side-runner ./Selenium_testing/*.side
       # - uses: FirebaseExtended/action-hosting-deploy@v0
       #   with:
       #     repoToken: '${{ secrets.GITHUB_TOKEN }}'
