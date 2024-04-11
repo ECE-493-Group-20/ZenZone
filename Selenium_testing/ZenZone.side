@@ -2,7 +2,7 @@
   "id": "f0bd0362-5065-457c-9e0e-1177c0af4217",
   "version": "2.0",
   "name": "ZenZone",
-  "url": "https://zenzone-90b7a.web.app/",
+  "url": "http://localhost:3000/",
   "tests": [{
     "id": "a97f5fd4-f1f5-423e-a5c6-254575370ac6",
     "name": "AuthenticationNavigation",
@@ -10,7 +10,7 @@
       "id": "6365579a-5bdd-481a-984c-c4f5eb1eb12c",
       "comment": "",
       "command": "open",
-      "target": "https://zenzone-90b7a.web.app/",
+      "target": "http://localhost:3000/",
       "targets": [],
       "value": ""
     }, {
@@ -205,7 +205,7 @@
       "id": "329f5d02-60f6-430f-8790-c429c0ac7f7d",
       "comment": "",
       "command": "open",
-      "target": "https://zenzone-90b7a.web.app/",
+      "target": "http://localhost:3000/",
       "targets": [],
       "value": ""
     }, {
@@ -260,7 +260,7 @@
       "id": "eece8e6e-66e7-46b7-bb63-5ebb08a8a181",
       "comment": "",
       "command": "click",
-      "target": "css=.css-1qelgoy",
+      "target": "xpath=//*[@id=\"root\"]/div/main/div/button[1]",
       "targets": [
         ["css=.css-1qelgoy", "css:finder"],
         ["xpath=//button[@type='submit']", "xpath:attributes"],
@@ -272,7 +272,7 @@
       "id": "8cbb91cd-91f3-4279-85f8-4ced56bd27d9",
       "comment": "",
       "command": "click",
-      "target": "css=.css-1yxmbwk path",
+      "target": "xpath=//*[@id=\"addLocationButton\"]",
       "targets": [
         ["css=.css-1yxmbwk path", "css:finder"]
       ],
@@ -333,14 +333,14 @@
       "id": "09b9e860-eec5-4edb-a3c2-ca310dc21a56",
       "comment": "Modify location button",
       "command": "assertElementPresent",
-      "target": "css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) > .MuiSvgIcon-root",
+      "target": "xpath=//*[@id=\"editButton\"]",
       "targets": [],
       "value": ""
     }, {
       "id": "081b3a07-ca0c-46ab-9422-4dec474583e2",
       "comment": "",
       "command": "click",
-      "target": "css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) > .MuiSvgIcon-root",
+      "target": "xpath=//*[@id=\"editButton\"]",
       "targets": [
         ["css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) > .MuiSvgIcon-root", "css:finder"]
       ],
@@ -388,7 +388,7 @@
       "id": "ac54819d-73b9-4c65-bd17-78a86e8a6c5c",
       "comment": "",
       "command": "open",
-      "target": "https://zenzone-90b7a.web.app/",
+      "target": "http://localhost:3000/",
       "targets": [],
       "value": ""
     }, {
@@ -456,7 +456,7 @@
       "id": "3d10d971-6239-45c9-817d-6c082e03655b",
       "comment": "",
       "command": "click",
-      "target": "css=.css-1qelgoy",
+      "target": "xpath=//*[@id=\"root\"]/div/main/div/button[1]",
       "targets": [
         ["css=.css-1qelgoy", "css:finder"],
         ["xpath=//button[@type='submit']", "xpath:attributes"],
@@ -468,7 +468,7 @@
       "id": "7b41e722-bfed-437e-b542-3a4d562a0af1",
       "comment": "Admin button is not present",
       "command": "assertElementNotPresent",
-      "target": "css=.css-1yxmbwk path",
+      "target": "xpath=//*[@id=\"addLocationButton\"]",
       "targets": [],
       "value": ""
     }, {
@@ -501,7 +501,7 @@
       "id": "36c33d04-9865-49cc-be86-9da2e9bc549e",
       "comment": "Modify Location button not present",
       "command": "assertElementNotPresent",
-      "target": "css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) path",
+      "target": "xpath=//*[@id=\"editButton\"]",
       "targets": [],
       "value": ""
     }, {
@@ -534,7 +534,7 @@
       "id": "da694663-a035-407d-a482-6816ec645e50",
       "comment": "",
       "command": "open",
-      "target": "https://zenzone-90b7a.web.app/",
+      "target": "http://localhost:3000/",
       "targets": [],
       "value": ""
     }, {
@@ -551,6 +551,13 @@
       "target": "css=.MuiButton-root",
       "targets": [],
       "value": "SIGN IN"
+    }, {
+      "id": "442b575b-fb6f-44d8-91f8-1baf60f6e243",
+      "comment": "Add location button is not present",
+      "command": "assertElementNotPresent",
+      "target": "xpath=//*[@id=\"addLocationButton\"]",
+      "targets": [],
+      "value": ""
     }, {
       "id": "01da7c7d-8320-445a-b400-7ccdeaadd769",
       "comment": "",
@@ -574,7 +581,7 @@
       "id": "2142bdad-2088-429a-a7fe-ff06a5ba85ee",
       "comment": "Modify Location button not present",
       "command": "assertElementNotPresent",
-      "target": "css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) path",
+      "target": "id=.editButton",
       "targets": [],
       "value": ""
     }, {
@@ -588,122 +595,6 @@
       ],
       "value": ""
     }]
-  }, {
-    "id": "d4b69861-3e77-41ff-95a9-b5b24d59bf58",
-    "name": "Test",
-    "commands": [{
-      "id": "c07388e3-61af-4842-a487-f90310543fb9",
-      "comment": "",
-      "command": "open",
-      "target": "https://zenzone-90b7a.web.app/",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "80bdb07a-2ced-42d9-a754-c228425a7ef8",
-      "comment": "",
-      "command": "setWindowSize",
-      "target": "1050x797",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "ce071266-81bb-4d45-a855-93f84f2a0150",
-      "comment": "",
-      "command": "click",
-      "target": "css=.MuiButton-root",
-      "targets": [
-        ["css=.MuiButton-root", "css:finder"],
-        ["xpath=//a[contains(text(),'Sign in')]", "xpath:link"],
-        ["xpath=//div[@id='root']/div/a", "xpath:idRelative"],
-        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
-        ["xpath=//body/div/div/a", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "d81e4b00-843f-43fa-811c-54783064eedd",
-      "comment": "",
-      "command": "type",
-      "target": "id=email",
-      "targets": [
-        ["id=email", "id"],
-        ["name=email", "name"],
-        ["css=#email", "css:finder"],
-        ["xpath=//input[@id='email']", "xpath:attributes"],
-        ["xpath=//div[@id='root']/div/main/div/div[2]/div/input", "xpath:idRelative"],
-        ["xpath=//input", "xpath:position"]
-      ],
-      "value": "testadmin@ualberta.ca"
-    }, {
-      "id": "9da0be15-03a2-4357-a05f-98f462b7dad5",
-      "comment": "",
-      "command": "type",
-      "target": "id=password",
-      "targets": [
-        ["id=password", "id"],
-        ["name=password", "name"],
-        ["css=#password", "css:finder"],
-        ["xpath=//input[@id='password']", "xpath:attributes"],
-        ["xpath=//div[@id='root']/div/main/div/div[3]/div/input", "xpath:idRelative"],
-        ["xpath=//div[3]/div/input", "xpath:position"]
-      ],
-      "value": "password"
-    }, {
-      "id": "f08cf4e7-5d43-435f-947d-ea37c8e7d61c",
-      "comment": "",
-      "command": "mouseOver",
-      "target": "css=.css-1qelgoy",
-      "targets": [
-        ["css=.css-1qelgoy", "css:finder"],
-        ["xpath=//button[@type='submit']", "xpath:attributes"],
-        ["xpath=//div[@id='root']/div/main/div/button", "xpath:idRelative"],
-        ["xpath=//button", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "6dcc360d-95b2-4519-9362-4377322ef4f2",
-      "comment": "",
-      "command": "click",
-      "target": "css=.css-1qelgoy",
-      "targets": [
-        ["css=.css-1qelgoy", "css:finder"],
-        ["xpath=//button[@type='submit']", "xpath:attributes"],
-        ["xpath=//div[@id='root']/div/main/div/button", "xpath:idRelative"],
-        ["xpath=//button", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "58fac85e-271c-4722-ab0d-1faea3fdfc4c",
-      "comment": "",
-      "command": "mouseOut",
-      "target": "css=.css-1qelgoy",
-      "targets": [
-        ["css=.css-1qelgoy", "css:finder"],
-        ["xpath=//button[@type='submit']", "xpath:attributes"],
-        ["xpath=//div[@id='root']/div/main/div/button", "xpath:idRelative"],
-        ["xpath=//button", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "0cb9b8cc-8e67-4318-bdea-94acd311a320",
-      "comment": "",
-      "command": "click",
-      "target": "css=div:nth-child(3) > div:nth-child(11) > img",
-      "targets": [
-        ["css=div:nth-child(3) > div:nth-child(11) > img", "css:finder"],
-        ["xpath=(//img[contains(@src,'https://maps.gstatic.com/mapfiles/transparent.png')])[10]", "xpath:img"],
-        ["xpath=//div[@id='gmap']/div/div[3]/div/div[2]/div/div[3]/div[10]/img", "xpath:idRelative"],
-        ["xpath=//div[3]/div[10]/img", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "fce2ddd8-4aa2-4030-93a1-445659b165c5",
-      "comment": "",
-      "command": "click",
-      "target": "css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) path",
-      "targets": [
-        ["css=.dashboardButtonContainer > .MuiButtonBase-root:nth-child(1) path", "css:finder"]
-      ],
-      "value": ""
-    }]
   }],
   "suites": [{
     "id": "ada71cb7-39a7-432c-9309-7a71cae431c1",
@@ -713,6 +604,6 @@
     "timeout": 300,
     "tests": []
   }],
-  "urls": ["https://zenzone-90b7a.web.app/"],
+  "urls": ["https://zenzone-90b7a.web.app/", "http://localhost:3000/"],
   "plugins": []
 }

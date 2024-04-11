@@ -37,17 +37,17 @@ function App() {
             <Logo className="logo" />
             <SearchMap heatmap={heatmapToggle} />
             {user == null ? (
-              <Button className="signinButton" component={Link} to={"/signin"}>
+              <Button id="signInButton" className="signinButton" component={Link} to={"/signin"}>
                 Sign in
               </Button>
             ) : (
-              <Button className="signinButton" onClick={signOut}>
+              <Button id="signOutButton" className="signinButton" onClick={signOut}>
                 Sign Out
               </Button>
             )}
             <div className="buttonContainer">
               {userInfo && userInfo.isAdmin ? (
-                <IconButton className="addButton" onClick={() => { setOpenAdmin(true); setLocationId(null)}}>
+                <IconButton id="addLocationButton" className="addButton" onClick={() => { setOpenAdmin(true); setLocationId(null)}}>
                   <AddLocation />
                 </IconButton>
               ) : null}

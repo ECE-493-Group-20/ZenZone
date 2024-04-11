@@ -75,7 +75,7 @@ export const Dashboard = () => {
       open={open}
       onClose={() => setOpen(false)}
     >
-      <div className="paper">
+      <div id="locationProfile" className="paper" >
         <h1>{data.name}</h1>
         <div className="description">
           <Tooltip title="Location">
@@ -180,7 +180,7 @@ export const Dashboard = () => {
         </div>
         <div className="dashboardButtonContainer">
           {userInfo && userInfo.isAdmin ? (
-            <IconButton className="addButton" onClick={openEditLocation}>
+            <IconButton id="editButton" className="addButton" onClick={openEditLocation}>
               <EditIcon />
             </IconButton>
           ) : null}
@@ -189,6 +189,7 @@ export const Dashboard = () => {
           </IconButton>
           {user ? (
             <ToggleButton
+              id = "favoriteButton"
               className="favoriteButton"
               value={favorite}
               onClick={() => {

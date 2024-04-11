@@ -87,7 +87,7 @@ function UserSignIn() {
           <Link href="/">
             <Logo className="logo" style={{ margin: 1 }} />
           </Link>
-          <Typography component="h1" variant="h5">
+          <Typography id="authSignIn" component="h1" variant="h5">
             Sign in {user?.email}
           </Typography>
 
