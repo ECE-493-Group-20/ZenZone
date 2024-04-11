@@ -92,14 +92,11 @@ export function distanceLatLon(lat1: number, lon1: number, lat2: number, lon2: n
     return earthRad * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-// Gets 
 export async function getMicrophoneStats() {
     if (!recording) {
         // Await microphone to ensure permissions are requested separately
         await toggleMicrophone();
-        //findCurrentLocation();
         recording = true;
-        //setTimeout(uploadLoudness, 15000);  // Upload microphone data after 15 seconds
     } else {
         await toggleMicrophone();
         recording = false;
@@ -139,21 +136,6 @@ const findLoc = (userLocation: GeoPoint, locations: {[id:string]:LocationData}) 
         }
     }
     console.log("Closest: ", closest);
-
-    // https://stackoverflow.com/questions/47227550/using-await-inside-non-async-function
-    // const getClosest = (async() => { 
-        // const locs = await getAllLocs("University of Alberta");
-        // locs.forEach((doc) => {
-        //     dist = distanceLatLon(loc[0], loc[1], doc.data().position.latitude, doc.data().position.longitude);
-        //     console.log(dist);
-        //     console.log(doc.data().name);
-        //     if (dist < minDist && dist < doc.data().size) {
-        //         closest = doc.id;
-        //         minDist = dist;
-        //     }
-        // });
-    // });
-    // getClosest();
 }
 
 // Send last 15s of microphone data to the database.
@@ -327,12 +309,6 @@ export async function getAllLocs(org: string, add: (location: LocationData) => v
           }
         });
       })
-    // const locs = []
-    // const queryColl = await getDocs(q);
-    // queryColl.forEach((doc) => {
-    //     locs.push(doc);
-    // })
-    // return locs;
 }
 
 // Example function for measuring data trends over time.
@@ -347,14 +323,6 @@ export async function getTrendAllLocs(org: string) {
     }
     console.log(date);
     console.log(ind);
-    
-    // Compute average sound and busy levels for all locations in a given organization.
-    // var locs = await getAllLocs(org);
-    // locs.forEach((loc) => {
-    //     console.log(loc.id);
-    //     getTrendLoc(loc.id, ind);
-    // });
-    // return locs;
 }
 
 // Similar to the above function, although only gets data for one location. Location should be a document id.
@@ -458,7 +426,7 @@ export async function updateLocation(id: string, name: string, org: string, pos:
     return true;
 }
 
-// Allow admins to delete a location from the database
+// Allow admins to delete a location from the database, mainly used for testing purposes
 export async function deleteLoc(id: string) {
     deleteDoc(doc(db, "Locations", id));
 }
@@ -482,29 +450,6 @@ export async function removeFavourite(usr: string, id: string) {
         await Users.doc(usr).update({favourites : firebase.firestore.FieldValue.arrayRemove(id)});
     }
 }
-
-// TS: For debugging purposes for all functions that don't have corresponding frontend implementations.
-// User it tests with: 4EyDNDXRXFfggZEQrlUwfFYZfJi1 (testuser@email.com)
-// export async function tester(usr: string) {
-//     console.log("New loc");
-//     deleteLoc("test");
-//     removeFavourite(usr, "test");
-//     await newLocation("Test", "University of Alberta", new GeoPoint(53.53,-113.53), 100, 10, "Hello!");
-//     console.log("Loc doesn't exist");
-//     updateLocation("fake", );
-//     console.log("Actual update");
-//     await updateLocation("test", "Test!", "University of Alberta", new GeoPoint(53.53,-113.53), 200, 2, "Bye!");
-//     const locDocQuery = doc(db, "Locations", "test");
-//     const locDoc = await getDoc(locDocQuery);
-//     if (locDoc.exists()) {
-//         console.log("Trend single location");
-//         getTrendLoc(locDoc);
-//     }
-//     userLoudUpload(63.432432, "test");
-//     userBusyUpload(45, "test");
-//     console.log(usr);
-//     addFavourite(usr, 'test');
-// }
 
 export function getUserInformation(user: string, callback: (user: UserInformationData) => void) {
     try {
