@@ -22,7 +22,7 @@ jobs:
         working-directory: ./app
       - run: npm install -g selenium-side-runner
       - run: npm install -g chromedriver
-      - run: selenium-side-runner ./Selenium_testing *.side
+      - run: selenium-side-runner ./Selenium_testing/*.side
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
