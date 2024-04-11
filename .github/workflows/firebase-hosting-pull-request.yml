@@ -18,6 +18,8 @@ jobs:
           sparse-checkout: app
       - run: npm ci && npm run build
         working-directory: ./app
+      - run: npm run test
+        working-directory: ./app
       - run: npm install -g selenium-side-runner
       - run: npm install -g chromedriver
       - run: selenium-side-runner ./Selenium_testing *.side
