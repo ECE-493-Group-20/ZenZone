@@ -101,18 +101,25 @@ function measureAudio() {
     // Don't put -Infinity into average, will ruin all values
     if (dataArray[0] != -Infinity) {
       updates++;
-      let sum = 0;
-      // Get RMS value
-      // https://community.st.com/t5/mems-sensors/is-it-possible-to-measure-sound-intensity-level-from-pcm-samples/td-p/97571
-      // https://www.ncbi.nlm.nih.gov/books/NBK236684/#:~:text=In%20air%2C%20the%20common%20reference,20%20log%2020%20%3D%2026).
-      for (let i = 0; i < bufferLen; i++) {
-        sum += dataArray[i] * dataArray[i];
-      }
-      sum = Math.sqrt(sum);
-      // 10dB used as a "clip" value as this is the about the sound level of breathing.
-      // https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
-      let db = Math.max(10, 20 * Math.log10(sum / (20 * Math.pow(10, -6))));
-      avg += db;
+      avg += calcRMSandDB(dataArray);
     }
   }
+}
+
+// Calculates the RMS power and dB level of the signal in the data array.
+export function calcRMSandDB(data: number[]) {
+  let sum = 0.0;
+  // Get RMS value
+  // https://community.st.com/t5/mems-sensors/is-it-possible-to-measure-sound-intensity-level-from-pcm-samples/td-p/97571
+  // https://www.ncbi.nlm.nih.gov/books/NBK236684/#:~:text=In%20air%2C%20the%20common%20reference,20%20log%2020%20%3D%2026).
+  for (let i = 0; i < data.length; i++) {
+    sum += data[i] * data[i];
+  }
+  sum = Math.sqrt(sum);
+  console.log("RMS:", sum);
+  // 10dB used as a "clip" value as this is the about the sound level of breathing.
+  // https://decibelpro.app/blog/decibel-chart-of-common-sound-sources/
+  let db = Math.max(10, 20 * Math.log10(sum / (20 * Math.pow(10, -6))));
+  console.log("dB:", db);
+  return db;
 }
