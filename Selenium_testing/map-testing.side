@@ -2,7 +2,7 @@
   "id": "dada8d70-2a9b-495c-8a28-9cfe79ba8960",
   "version": "2.0",
   "name": "map-testing",
-  "url": "https://zenzone-90b7a.web.app",
+  "url": "http://localhost:3000/",
   "tests": [{
     "id": "ef07336e-154c-42e0-b70e-bd6df67f0afd",
     "name": "Dashboard",
@@ -217,28 +217,13 @@
     }, {
       "id": "4cf22823-4697-4091-92b8-1b9dd7c0122f",
       "comment": "",
-      "command": "mouseOver",
-      "target": "css=.css-1yxmbwk path",
-      "targets": [
-        ["css=.css-1yxmbwk path", "css:finder"]
-      ],
-      "value": ""
-    }, {
-      "id": "d10a1f52-fa1a-4935-9c12-45a1e1c7f038",
-      "comment": "",
       "command": "click",
-      "target": "css=.css-1yxmbwk path",
+      "target": "xpath=//div[@id='locationProfile']/div[6]/button",
       "targets": [
-        ["css=.css-1yxmbwk path", "css:finder"]
-      ],
-      "value": ""
-    }, {
-      "id": "c10fbe4d-a69f-4a05-bc2c-84f7604a61e6",
-      "comment": "",
-      "command": "mouseOut",
-      "target": "css=.css-1yxmbwk path",
-      "targets": [
-        ["css=.css-1yxmbwk path", "css:finder"]
+        ["css=.css-78trlr-MuiButtonBase-root-MuiIconButton-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[9]", "xpath:attributes"],
+        ["xpath=//div[@id='locationProfile']/div[6]/button", "xpath:idRelative"],
+        ["xpath=//div[6]/button", "xpath:position"]
       ],
       "value": ""
     }, {
@@ -429,7 +414,7 @@
       "id": "66942942-526e-4ae1-b53f-6d1f59b6c23b",
       "comment": "",
       "command": "click",
-      "target": "css=.css-1yxmbwk",
+      "target": "xpath=//div[@id='locationProfile']/div[6]/button",
       "targets": [
         ["css=.css-1yxmbwk", "css:finder"],
         ["xpath=(//button[@type='button'])[9]", "xpath:attributes"],
@@ -498,20 +483,9 @@
       "id": "dae9c2af-6ede-414d-bf68-d4977c96f930",
       "comment": "",
       "command": "click",
-      "target": "css=.css-1yxmbwk > .MuiSvgIcon-root",
+      "target": "xpath=//div[@id='locationProfile']/div[6]/button",
       "targets": [
         ["css=.css-1yxmbwk > .MuiSvgIcon-root", "css:finder"]
-      ],
-      "value": ""
-    }, {
-      "id": "f4172974-5b28-4945-8c76-284c906f4164",
-      "comment": "",
-      "command": "mouseOver",
-      "target": "css=.MuiButtonBase-root:nth-child(7)",
-      "targets": [
-        ["css=.MuiButtonBase-root:nth-child(7)", "css:finder"],
-        ["xpath=(//button[@type='button'])[11]", "xpath:attributes"],
-        ["xpath=//button[2]", "xpath:position"]
       ],
       "value": ""
     }, {
@@ -553,6 +527,6 @@
     "timeout": 300,
     "tests": ["ef07336e-154c-42e0-b70e-bd6df67f0afd"]
   }],
-  "urls": ["https://zenzone-90b7a.web.app/"],
+  "urls": ["http://localhost:3000//", "http://localhost:3000/"],
   "plugins": []
 }
