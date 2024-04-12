@@ -1,3 +1,6 @@
+/**
+* Used for the overall design of our app
+*/
 .toggleContainer {
     display: flex;
     flex-direction: row;

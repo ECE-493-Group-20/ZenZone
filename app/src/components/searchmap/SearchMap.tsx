@@ -1,3 +1,6 @@
+/**
+ * FR3 - User.SearchLocation
+ */
 import { useState } from "react";
 import SearchBar from "../searchbar/SearchBar"
 import Map from "../map/Map";

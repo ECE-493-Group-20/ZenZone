@@ -1,3 +1,12 @@
+/**
+ * FR1 - User.Register
+ * FR2 - User.Authenticate
+ * FR12 - Admin.Register
+ * FR13 - Admin.Authenticate
+ * 
+ * This is used to navigate to the different screens for authentication 
+ */
+
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";

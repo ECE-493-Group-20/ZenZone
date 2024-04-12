@@ -1,3 +1,10 @@
+/**
+ * FR1 - User.Register
+ * FR2 - User.Authenticate
+ * FR12 - Admin.Register
+ * FR13 - Admin.Authenticate
+ */
+
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';

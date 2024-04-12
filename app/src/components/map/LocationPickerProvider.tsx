@@ -1,5 +1,9 @@
 /**
  * FR6 - User.ViewMap
+ * FR14 - Admin.CreateLocation
+ * FR15 - Admin.UpdateLocation
+ * 
+ * This is used for getting the latitude and longitude for creating and updating locations
  */
 
 import { createContext, useContext, useMemo, useState } from "react";
