@@ -1,3 +1,9 @@
+/**
+ * FR2, FR3, FR4, FR5, FR6, FR7, FR8, FR9, FR10, FR11, FR13, FR14, FR15, FR16, FR17, FR18, FR19
+ * 
+ * This is our main screen for our app. 
+ */
+
 import { Button, IconButton, Modal, ToggleButton } from '@mui/material';
 import './App.css';
 import Logo from './components/logo/Logo';
@@ -10,11 +16,11 @@ import { useContext } from 'react';
 import { AuthContext } from './components/authentication/AuthProvider';
 import { Link } from "react-router-dom";
 import { auth, db } from "./components/authentication/firebaseSetup";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Form from './components/form/Form';
 import Permissions from './components/permissions/Permissions';
 import { AddLocation, Map as MapIcon } from '@mui/icons-material';
-import { AdminFeatContext, AdminFeatProvider, useAdminFeat } from './components/admin/AdminFeatProvider';
+import { useAdminFeat } from './components/admin/AdminFeatProvider';
 import { ManageLocation } from './components/admin/ManageLocation';
 import { LocationPickerProvider } from './components/map/LocationPickerProvider';
 import SearchMap from './components/searchmap/SearchMap';
@@ -37,17 +43,17 @@ function App() {
             <Logo className="logo" />
             <SearchMap heatmap={heatmapToggle} />
             {user == null ? (
-              <Button className="signinButton" component={Link} to={"/signin"}>
+              <Button id="signInButton" className="signinButton" component={Link} to={"/signin"}>
                 Sign in
               </Button>
             ) : (
-              <Button className="signinButton" onClick={signOut}>
+              <Button id="signOutButton" className="signinButton" onClick={signOut}>
                 Sign Out
               </Button>
             )}
             <div className="buttonContainer">
               {userInfo && userInfo.isAdmin ? (
-                <IconButton className="addButton" onClick={() => { setOpenAdmin(true); setLocationId(null)}}>
+                <IconButton id="addLocationButton" className="addButton" onClick={() => { setOpenAdmin(true); setLocationId(null)}}>
                   <AddLocation />
                 </IconButton>
               ) : null}

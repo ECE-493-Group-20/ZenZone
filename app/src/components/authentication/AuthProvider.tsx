@@ -1,3 +1,10 @@
+/**
+ * FR2 - User.Authenticate
+ * FR13 - Admin.Authenticate
+ * FR8 - User.AddFavouriteLocation
+ * FR9 - User.UpdateFavouriteLocation
+ */
+
 import React, { useEffect, useState, useContext } from "react";
 import { auth, db } from "./firebaseSetup";
 import firebase from 'firebase/compat/app';

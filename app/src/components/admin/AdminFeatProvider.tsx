@@ -1,3 +1,7 @@
+/**
+ * FR14 - Admin.CreateLocation
+ * FR15 - Admin.UpdateLocation
+ */
 import { createContext, useContext, useMemo, useState } from "react";
 
 interface locationAttr {
