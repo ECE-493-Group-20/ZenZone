@@ -14,13 +14,6 @@
       "targets": [],
       "value": ""
     }, {
-      "id": "ba86d532-9fcf-4b9e-8c55-21695983ecd1",
-      "comment": "",
-      "command": "setWindowSize",
-      "target": "1936x1048",
-      "targets": [],
-      "value": ""
-    }, {
       "id": "e4904cce-b7f5-4779-81fc-d0dc48f9c1ef",
       "comment": "",
       "command": "mouseOver",
@@ -209,13 +202,6 @@
       "targets": [],
       "value": ""
     }, {
-      "id": "924bb6ba-49af-4966-af0a-1239dbd517e8",
-      "comment": "",
-      "command": "setWindowSize",
-      "target": "1936x1048",
-      "targets": [],
-      "value": ""
-    }, {
       "id": "b638a65b-a5a5-43c1-868c-77e1bd1bef5d",
       "comment": "",
       "command": "click",
@@ -392,13 +378,6 @@
       "targets": [],
       "value": ""
     }, {
-      "id": "4c667b4d-490a-41ee-8d54-f35db6cd929d",
-      "comment": "",
-      "command": "setWindowSize",
-      "target": "1936x1048",
-      "targets": [],
-      "value": ""
-    }, {
       "id": "695f7e84-4b26-4833-9251-c011a317032c",
       "comment": "",
       "command": "mouseOver",
@@ -535,13 +514,6 @@
       "comment": "",
       "command": "open",
       "target": "http://localhost:3000/",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "1efa203b-1239-4d42-954e-9fce8e93a90f",
-      "comment": "",
-      "command": "setWindowSize",
-      "target": "1936x1048",
       "targets": [],
       "value": ""
     }, {
